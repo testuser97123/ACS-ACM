@@ -1,0 +1,32 @@
+= Developing Workflow Applications with Red Hat JBoss BPM Suite (AD427)
+
+*Course description*
+
+Learn how to incorporate workflow processing in business applications
+
+Developing Workflow Applications with Red Hat(R) JBoss(R) BPM Suite (AD427) is for developers and architects who wish to incorporate workflow processing in business applications.
+
+*Course summary*
+
+Through hands-on labs, the student will learn the architecture and features of Red Hat JBoss BPM Suite, basic and advanced business process modeling (BPMN 2.0), and integration of workflow into Java(TM) SE and Java EE applications. In addition to creating workflow applications, the student will learn how to unit test and debug those applications using Red Hat JBoss Developer Studio. Students will learn how to deploy a business process and monitor its runtime state.
+
+* Red Hat JBoss BPM Suite 6 architecture and features 
+* Basic and advanced business process modeling 
+* Integrating workflow into applications
+* Testing and debugging BPM applications
+* Monitoring BPMS processes 
+* Process simulation	                 
+
+*Audience for this course*
+
+* Java developers and architects who need to learn how to implement applications that use business process modeling, specifically with Red Hat JBoss BPM Suite 6.		                  		
+
+*Prerequisites for this course*
+
+* Firm understanding of Java, including Java development tools (i.e. Maven and Eclipse via Red Hat JBoss Developer Studio).
+* Familiarity with general workflow concepts. Business process management (BPM) experience is not required.
+* Familiarity with Red Hat Decision Manager 7 is helpful but not required.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/ad427-developing-workflow-applications-red-hat-jboss-bpm-suite

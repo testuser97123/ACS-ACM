@@ -1,0 +1,42 @@
+= Containers, Kubernetes, and Red Hat OpenShift Administration II (DO285)
+
+*Course description*
+
+Learn to build and manage container images, administrate an OpenShift cluster, and troubleshoot applications running  on Kubernetes
+
+Containers, Kubernetes, and Red Hat OpenShift Administration II (DO285) helps you gain core knowledge in building and in configuring and managing Red Hat(R) OpenShift(R) Container Platform. This immersive and intensive, hands-on course shows you how to deploy applications to a local container engines and OpenShift clusters, manage the cluster on a day-to-day basis, and troubleshoot the deployment of containerized applications.
+
+This course is based on Red Hat OpenShift Container Platform 4.6 and combines the content from Red Hat OpenShift I: Containers & Kubernetes (DO180) and Red Hat OpenShift Administration II: Operating a Production Kubernetes Cluster (DO280).
+
+*Course content summary*
+
+* Manage containers and container images.
+* Create custom container images.
+* Describe the Red Hat OpenShift Container Platform cluster installation and update processes.
+* Troubleshoot application deployment issues.
+* Control access to projects using groups and role-based access control (RBAC).
+* Configure service and container networking.
+* Expose applications to clients external to the cluster using TLS encryption.
+* Configure network isolation between services and applications using network policies.
+* Configure application scheduling using labels and selectors.
+* Limit compute resource usage of applications with resource limits and quotas.
+* Install Kubernetes Operators with the web console.
+
+*Audience for this course*
+
+* System and software architects interested in understanding features and functionality of an OpenShift cluster
+* System administrators who who are interested in the ongoing management of clusters and containerized applications
+* Cluster operators who are interested in managing access to cluster resources by users and applications
+* Site reliability engineers interested in the ongoing maintenance and troubleshooting of a cluster
+
+*Prerequisites for this course*
+
+Become a Red Hat Certified System Administrator (RHCSA), or demonstrate equivalent Red Hat Enterprise Linux system administration experience
+
+*Technology considerations*
+
+Internet access is required.	
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do285-containers-kubernetes-and-red-hat-openshift-administration-ii

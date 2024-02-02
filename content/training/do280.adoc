@@ -1,0 +1,45 @@
+= Red Hat OpenShift Administration II: Operating a Production Kubernetes Cluster (DO280)
+
+*Course description*
+
+Configure, manage, and troubleshoot OpenShift clusters and containerized applications
+
+Red Hat OpenShift Administration II: Operating a Production Kubernetes Cluster (DO280) teaches you how to configure, troubleshoot, and manage Red Hat(R) OpenShift(R) Container Platform. This hands-on, lab-based course shows you how to verify the successful installation of a cluster, manage it on a day-to-day basis, and troubleshoot the deployment of containerized applications.
+
+This course is based on Red Hat(R) Enterprise Linux(R) 8.2 and OpenShift Container Platform 4.6.
+
+*Course summary*
+
+* Describe the Red Hat OpenShift Container Platform cluster installation and update processes
+* Troubleshoot application deployments
+* Configure authentication using local users
+* Control access to projects using role-based access control (RBAC)
+* Expose applications to clients external to the cluster using TLS encryption
+* Configure network isolation between services and applications using network policies
+* Configure application scheduling using labels and selectors
+* Limit compute resource usage of applications with resource limits and quotas
+* Manage a cluster and deployed applications with the Web Console
+* Install Kubernetes Operators with the Web Console
+
+*Audience for this course*
+
+This course is designed for system administrators, system architects, and developers who want to install and configure Red Hat OpenShift Container Platform.
+
+* System and Software Architects interested in understanding features and functionality of an OpenShift cluster.
+* System Administrators interested in the ongoing management of clusters and containerized applications.
+* Cluster Operators interested in managing access to cluster resources by users and applications.
+* Site Reliability Engineers interested in the ongoing maintenance and troubleshooting of a cluster.
+
+*Technology considerations*
+
+* Internet access is required.
+
+*Prerequisites for this course*
+
+* Become a Red Hat Certified System Administrator, or demonstrate equivalent Red Hat Enterprise Linux system administration experience
+* Complete Red Hat OpenShift I: Containers & Kubernetes (DO180), or demonstrate equivalent experience with containers, Kubernetes, and OpenShift basics
+* Take our free assessment to gauge whether this offering is the best fit for your skills. 
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do280-red-hat-openshift-administration-II-operating-production-kubernetes-cluster

@@ -1,0 +1,31 @@
+= Container Adoption Boot Camp for Developers | DO720
+
+*Course description*
+Supporting the adoption of container technology through the development of container-native applications 
+The Container Adoption Boot Camp for Developers (DO720) immerses you in intensive, hands-on development of container-native applications deployed on Red Hat's implementation of Kubernetes, Red Hat(R) OpenShift(R) Container Platform. As part of enrollment, you will receive one year of Red Hat Learning Subscription Standard, which gives you unlimited access to all of our courses online, plus up to five certification exams and two retakes. This boot camp is for those seeking to make a quantum leap in their journey toward digital transformation. Making this shift involves developing software in tight iterations so that business value can be realized sooner. In order to accomplish this goal, this offering can facilitate the adoption of container-native applications, including microservices.
+This collection of courses is based on Red Hat OpenShift Container Platform 4.6.
+*Course content summary*
+
+* Introduction to containers, Kubernetes, and Red Hat OpenShift
+* Deploy and manage applications on an OpenShift cluster
+* Build and design containerized applications for OpenShift
+* Create microservice-based applications with Quarkus
+* Deploy microservices to an OpenShift cluster
+* Build resilient services with Red Hat OpenShift Service Mesh
+* Secure an OpenShift service mesh
+
+*Audience for this course*
+
+Developers interested in adopting container technology and developing microservices.
+
+Prerequisites for this curriculum
+
+* Become a Red Hat Certified System Administrator (RHCSA), or demonstrate equivalent experience
+* Red Hat Application Development I: Programming in Java EE (AD183), or experience with Java EE development
+
+Technology considerations
+Internet access is required for this course in order to access the OpenShift shared and dedicated clusters.	
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do720-container-adoption-boot-camp-for-developers

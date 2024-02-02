@@ -1,0 +1,30 @@
+= Red Hat Satellite Technical Overview (RH053)
+
+*Course description*
+
+An overview of Red Hat Satellite
+
+Red Hat(R) Satellite is a scalable platform used to manage the patching, provisioning, and subscription management of your Red Hat infrastructure. Learn about the core capabilities of Red Hat Satellite and see how Satellite can help meet your business needs.
+
+*Course summary*
+
+Through online, on-demand videos you will learn about
+
+* Patching and software management.
+* Subscription management using Red Hat Satellite.
+* Provisioning using Red Hat Satellite.
+* Configuration management using Red Hat Satellite.
+* Integrating Red Hat Satellite with Red Hat Ansible(R) Automation and Red Hat Insights.
+
+*Audience for this course*
+
+* System administrator
+* System operator
+
+*Prerequisites for this course*
+
+Familiarity with basic Red Hat terminology and basic experience administering a Red Hat(R) Enterprise Linux(R) system. 
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh053-red-hat-satellite-technical-overview

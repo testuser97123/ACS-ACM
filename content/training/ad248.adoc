@@ -1,0 +1,39 @@
+= Red Hat JBoss Application Administration I (AD248)
+
+*Course description*
+
+Install, configure, and manage Red Hat JBoss Enterprise Application Platform
+
+Red Hat JBoss Application Administration I teaches you the best practices for installing and configuring Red Hat(R) JBoss(R) Enterprise Application Platform (JBoss EAP) 7. Through hands-on labs, learn the essential, real-world tasks that a system administrator needs to know to effectively deploy and manage applications on JBoss EAP.
+
+After completing this course, you should be prepared to take the Red Hat Certified Specialist in Enterprise Application Server Administration exam.
+
+*Course content summary*
+
+* Installing and run JBoss EAP 7 in standalone mode and domain mode
+* Configuring a domain
+* Deploying applications to JBoss EAP 7
+* Configuring the datasource subsystem
+* Configuring Java(TM) Message Service (JMS) and HornetQ
+* Configuring the logging subsystem
+* Configuring the web subsystem
+* Implementing application security in JBoss EAP 7
+* Configuring the batch subsystem
+* An introduction to clustering
+
+Unsure where your Red Hat JBoss Administration skills are? Take our JBoss Administration skills assessment to find out.
+
+*Audience for this course*
+
+System administrators who are either new to Red Hat JBoss or have experience with Red Hat JBoss Enterprise Application Platform 6
+
+*Prerequisites for this course*
+
+* Base experience with system administration on Microsoft Windows, UNIX, or Linux(R) operating systems
+* Understanding of hardware and networking
+
+Note: No prior knowledge of Java, scripting, or JBoss Developer Studio is required.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/ad248-red-hat-jboss-application-administration-i

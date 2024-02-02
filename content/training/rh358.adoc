@@ -1,0 +1,28 @@
+= Red Hat Services Management and Automation (RH358)
+
+*Course description*
+
+Learn how to configure, manage, and scale key services used in the data center
+
+Red Hat Services Management and Automation (RH358) is designed for IT professionals with some experience managing Linux(R) systems and want to learn more about how to manage and deploy network services included with Red Hat(R) Enterprise Linux which are particularly important in the modern IT data center.  You will learn how to install, configure, and manage basic configurations of these services manually, and then use Red Hat Ansible(R) Engine to automate your work in a scalable, repeatable manner.
+
+This course is based on Red Hat Ansible Engine 2.9 and Red Hat Enterprise Linux 8.1.
+
+*Course summary*
+
+* Provide key network services using software included with Red Hat Enterprise Linux 8, including DNS with Unbound and BIND9, DHCP and DHCPv6, client e-mail transmission, printing service, NFS and SMB protocol file sharing, SQL database service with MariaDB, and web services using Apache HTTPD, nginx, Varnish, and HAProxy.
+
+* Configure advanced networking for server use cases, including device teaming.
+* Use Red Hat Ansible Engine to automate the manual deployment and configuration tasks covered in this course.
+
+*Audience for this course*
+
+Linux system administrators, site reliability engineers, and other IT professionals with some Ansible experience who are interested in learning how to manage and automate the deployment, configuration, and operation of key network services included with Red Hat Enterprise Linux 8.
+
+*Prerequisites for this course*
+
+Be a Red Hat Certified Engineer (RHCE) on Red Hat Enterprise Linux 8, or demonstrate equivalent skills in Linux system administration and Ansible automation. 	
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh358-red-hat-services-management-automation

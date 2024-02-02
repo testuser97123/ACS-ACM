@@ -1,0 +1,53 @@
+////
+Purpose
+-------
+At a minimum, the initial creation date should be recorded and each time the
+document is modified just prior to being shared with a customer.
+
+Document versions are analogous to publications and should only be used to
+describe significant progress or updates and not minor corrections or
+alterations. For example, it would not be appropriate to publish a new version
+each time the daily journal is updated.
+
+Try to keep within the range of three and ten revisions. However, each
+engagement has different potential needs in terms of documentation, so good
+judgment should be used if a greater number of revisions are required.
+
+For simplicity, it is recommended that each version be represented by an
+integer (i.e. 1, 2, 3, etc...) with the initial creation being version '0'.
+
+Changes listed for each version should include completion of major sections,
+additions and customer requested updates.
+
+#TODO#
+////
+.Document Revisions
+[cols="1,2,5",options=header]
+|===
+|Version
+|Date
+|Changes
+
+// Version
+| 0
+
+// Date
+| #TODO#
+
+// Changes
+a|
+- Initial Creation
+
+
+// Version
+| #TODO#
+
+// Date
+| #TODO#
+
+// Changes
+a|
+- #TODO#
+- #TODO#
+
+|===

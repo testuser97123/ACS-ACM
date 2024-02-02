@@ -1,0 +1,27 @@
+////
+Purpose
+-------
+The statement of work (SOW) for this engagement should be provided inline in the engagement report for reference and review.  The SOW represents the work that was agreed to between Red Hat and the customer.  It can be presented as a task list, description, or another format if it makes sense.  Having the agreed to SOW included can be essential for tracking progress and managing scope changes.
+
+The SOW content can be inserted as an image or as a textual copy of the original statement of work.  Either way it, and any amendments need to be clearly legible.  To convert a PDF to an image, you can use ImageMagick:
+
+    dnf install ImageMagick
+    convert some-input.pdf some-output.png
+
+PLEASE ENSURE YOU DO NOT INCLUDE RATE INFORMATION.  This information should not be included in the CER.
+
+////
+
+#TODO#
+
+Main Task::
+
+. Subtask
+.. Detail
+.. Detail
+
+Main Task::
+
+. Subtask
+.. Detail
+.. Detail

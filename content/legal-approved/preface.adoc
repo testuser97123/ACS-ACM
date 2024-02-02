@@ -1,0 +1,40 @@
+////
+Purpose
+-------
+This section serves as a preamble to the Consulting Engagement Report.
+
+Copyright, confidentiality and disclaimer have legal implications and the
+wording so far established has been reviewed and approved by the legal
+department.  Do not alter the populated headings of this section without prior
+approval from legal.
+
+Sample
+------
+N/A
+
+////
+
+= Preface
+
+== Confidentiality, Copyright, and Disclaimer
+This is a customer-facing document between Red Hat, Inc. and {customer} (“Client”).
+
+Copyright (C) {docyear} Red Hat, Inc. All Rights Reserved. No part of the work covered by the copyright herein may be reproduced or used in any form or by any means – graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems – without permission in writing from Red Hat except as is required to share this information as provided with the aforementioned confidential parties.
+
+This document is not a quote and does not include any binding commitments by Red Hat.
+If acceptable, a formal quote can be issued upon request, which will include the scope of work, cost, and any customer requirements as necessary.
+
+This Consulting Engagement Report (CER) contains both Red Hat Confidential Information and Client Confidential Information subject to the confidentiality terms of the agreement governing the Services provided by Red Hat.
+
+== Audience
+This document is intended for Client technical staff responsible for the environment.
+
+== Additional Background and Related Documents
+This document does not contain step by step details of installation or other tasks, as they are covered in the relevant documentation on link:http://access.redhat.com/[]. Links to the appropriate documents will be made when required.
+
+== Scripts and playbooks
+Any scripts provided are being provided as-is, without any form of support or warranty. +
+All provided scripts can be modified by the customer at will.
+
+== Customer satisfaction survey (CSat)
+Red Hat is committed to a quality customer experience and continuous improvement in our services.  Your feedback is the most important factor in determining if we’ve met your expectations and what we can do to improve.  You will be receiving a customer satisfaction survey at the conclusion of our engagement.  Please take just a few minutes to provide us with an honest snapshot of your experience. In the meantime, if there are any areas of concern, issues or problems on the project, please don’t hesitate to reach out to {rhprojectmanager}.

@@ -1,0 +1,30 @@
+= Virtualization and Infrastructure Migration Technical Overview (RH018)
+
+*Course description*
+
+Learn the basics of open source virtualization and migration planning
+
+The Virtualization and Infrastructure Migration Technical Overview (RH018) will help you discover the benefits of open source virtualization, how to better manage your virtualization assets, and the best way to move traditional workloads from one virtualization provider to an open virtualization. 
+
+*Course summary*
+
+Through online, on-demand videos, you will learn to:
+
+* Easily define infrastructure mappings. 
+* Create migration plans to confidently balance your workloads. 
+* Build migration plans to reduce your expenditure on virtualization. 
+
+*Audience for this course*
+
+* IT architects
+* Systems engineers
+* IT operations 
+
+*Prerequisites for this course*
+
+* Basic virtualization knowledge
+* Basic system administration skills
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh018-virtualization-and-infrastructure-migration-technical-overview

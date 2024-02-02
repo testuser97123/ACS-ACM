@@ -1,0 +1,60 @@
+////
+Purpose
+-------
+Provide a location for capturing requirements and details as they are further
+identified during an engagement.
+
+Requirement
+------
+Provide a high-level requirement description for each requirement.
+
+Details
+------
+Provide any additional detail related to success criteria for the requirement.
+
+For more information see:  CER Best Practices - https://source.redhat.com/groups/public/kmo/engagementjournalstandardization/consulting_engagement_report_cer_wiki/cer_best_practices
+and Delivering the CER - https://source.redhat.com/groups/public/kmo/engagementjournalstandardization/consulting_engagement_report_cer_wiki/delivering_the_cer 
+
+Sample
+------
+
+[cols="3,10",options=header]
+|===
+|Requirement
+|Details
+
+// Requirement
+| hello world application
+
+// Details
+a|
+- application must load
+
+// Requirement
+| Automation of VM deployment
+
+// Details
+a|
+- Automated VM deployment with pre-configured IP address
+- Automated VM deployment with pre-configured user access
+
+
+|===
+
+
+////
+
+[cols="3,10",options=header]
+|===
+|Requirement
+|Details
+
+// Requirement
+| #TODO#
+
+// Details
+a|
+- #TODO#
+- #TODO#
+
+|===

@@ -1,0 +1,36 @@
+= Red Hat Application Development I: Programming in Java EE (AD183)
+
+*Course description*
+
+Helping Java SE developers write Java EE applications
+
+Red Hat Application Development I: Programming in Java EE (AD183) exposes experienced Java Standard Edition (Java SE) developers to the world of Java Enterprise Edition (Java EE).
+
+This course is based on Red Hat(R) Enterprise Application Platform 7.0.
+
+In this course, you will learn about the various specifications that make up Java EE. Through hands-on labs, you will transform a simple Java SE command line application into a multi-tiered enterprise application using various Java EE specifications, including Enterprise Java Beans, Java Persistence API, Java Messaging Service, JAX-RS for REST services, Contexts and Dependency Injection (CDI), and JAAS for securing the application.
+
+*Course summary*
+
+* Generating multi-tiered Java EE applications.
+* Packaging and deploying Java EE applications.
+* Creating Enterprise Java Beans, including message-driven beans.
+* Managing persistence.
+* Creating REST services with JAX-RS.
+* Implementing Contexts and Dependency Injection.
+* Creating messaging applications with JMS.
+* Securing Java EE applications with JAAS.
+
+*Audience for this course*
+
+This course is designed for Java developers who want to learn more about the specifications that comprise the world of Java Enterprise Edition (Java EE).
+
+*Prerequisites for this course*
+
+* Proficiency in developing Java SE applications, with 2+ years of experience required
+* Proficiency in using an IDE such as Red Hat Developer Studio or Eclipse
+* Experience with Maven is recommended but not required
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/ad183-red-hat-application-development-i-programming-java-ee

@@ -1,0 +1,38 @@
+= Red Hat DevOps Pipelines and Processes: CI/CD with Jenkins, Git, and Test Driven Development (TDD) (DO400)
+
+*Course description*
+
+Build essential skills to implement agile and DevOps development processes and workflows.
+
+DevOps practices have enabled organizations to undergo a digital transformation, moving from a monolithic waterfall approach to a rapidly deploying cloud-based agile process. This transformation requires a team of developers trained to use tools that enable them to spend more time coding and testing and less time troubleshooting. Red Hat DevOps Pipelines and Processes: CI/CD with Jenkins, Git, and Test-Driven Development (TDD) is a practical introduction to DevOps for developers that teaches students the necessary skills and technologies for automated building and deploying of cloud-native applications.
+
+*Course content summary*
+
+* Version control with Git
+* Build and execute Jenkins pipelines
+* Release strategies
+* Build applications with Test Driven Development
+* Security scanning and code analysis of applications
+* Monitor applications and pipelines
+* Consume and troubleshoot pipelines
+
+*Audience for this course*
+
+This course is designed for application developers.
+
+*Recommended training*
+
+Experience with application development in Java, Node.js, Python, or others is required.
+Experience with application development or Red Hat Application Development I: Programming in Java EE (AD183) is recommended, but not required.
+Proficiency in using an IDE such as Red Hat(R) Developer Studio or VSCode
+Introduction to OpenShift Applications (DO101) is recommended, but not required.
+Take our free assessment to gauge whether this offering is the best fit for your skills.
+
+*Technology considerations*
+
+Internet access required.
+You will use your own machines and must be able to install software on your device. If you are unable to do so, you may use the embedded virtual machine in ROL or be provided a machine in ILT.	
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do400-red-hat-devops-pipelines-and-processes-with-jenkins-git-and-test-driven-development

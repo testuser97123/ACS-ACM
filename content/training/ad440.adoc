@@ -1,0 +1,33 @@
+= Red Hat JBoss AMQ Administration (AD440)
+
+*Course description*
+Learn to configure, manage, and monitor broker instances
+Red Hat(R) AMQ Administration (AD440) helps system administrators, architects, and developers acquire the skills they need to administer the message broker, Red Hat JBoss AMQ. Through numerous hands-on exercises, the student will create, configure, manage, and monitor broker instances including hardened, clustered brokers that provide high availability and failover.
+This course is based on Red Hat JBoss AMQ 7.0.
+
+Red Hat JBoss AMQ, part of the Red Hat application integration suite, provides application administrators, software architects, and developers the ability to integrate disparate applications in a decoupled manner using enterprise messaging paradigms.
+
+Providing a highly performant and robust message broker, router, and client libraries for numerous languages, Red Hat JBoss AMQ is the solution for asynchronous and synchronous messaging. Red Hat AMQ Administration (AD440) helps system administrators, architects, and developers acquire the skills they need to administer Red Hat JBoss AMQ.
+
+Through numerous hands-on exercises, the student will create, configure, manage, and monitor broker instances including hardened, clustered brokers that provide high availability and failover.
+
+*Course content summary*
+
+* Install a JBoss AMQ 7 broker 
+* Configure multicast and anycast addresses 
+* Secure the AMQ broker for authentication and authorization 
+* Cluster AMQ brokers 
+* Monitor JBoss AMQ brokers 
+
+*Audience for this course*
+
+This course is intended for application administrators, developers, IT leaders, and application architects.
+
+*Prerequisites for this course*
+
+* General understanding of enterprise messaging concepts and message-oriented middleware
+* Ability to read and edit XML files
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/ad440-red-hat-jboss-amq-administration

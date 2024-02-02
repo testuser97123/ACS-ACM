@@ -1,0 +1,35 @@
+////
+Purpose
+-------
+This section should provide recommendations which are not directly related to
+the technology or related (as those each have their own place).
+One of the main goals of the Red Hat Services organization is to earn the status
+of trusted adviser with each customer.
+
+Candidates for recommendation:
+- Organizational/Policy Suggestions
+- Modernization Opportunities
+
+Sample
+
+= Service Account Credentials vs. Personal Credentials
+== Indication
+CloudForms has a documented requirement for a root-level, unrestricted administrative account to properly manage VMware.  {{cust}} has elected to attempt to use a limited-access service account for CloudForms citing security concerns and an internal security policy intended to govern individual user accounts.
+
+== Recommendation
+Cultivate a security posture specific to automation tools such as CloudForms as distinct from a security policy intended to govern individual user accounts.
+
+== Upgrading Windows XP
+Microsoft no longer supports link:https://en.wikipedia.org/wiki/Windows_XP[Windows XP]. It must be replaced as soon as possible.
+
+
+= Automation Adoption Program
+== Indication
+Although automation was not part of this delivery, several challenges encountered were related to the turnaround time required to get updates performed manually via BASH scripts.
+== Recommendation
+Many of the challenges {cust} seems to be facing may be alleviated by the introduction of an automation platform such as Ansible.  Consider speaking with your Red Hat representative about the Automation Adoption program as it seems it would be a good fit here.
+
+
+////
+
+#TODO#

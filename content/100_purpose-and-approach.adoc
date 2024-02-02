@@ -1,0 +1,28 @@
+////
+Purpose
+-------
+In a couple of sentences, briefly and at a high level describe the initiative
+that RHC is supporting including business need, the technical challenge and the
+approach to meeting the challenge.
+
+Sample
+------
+Red Hat Consulting was engaged by Acme Inc. to assist with the Application
+Standardization 2.0 Project which seeks to address the audit risk associated
+with non-compliant applications by automating the scanning, remediation and
+reporting of non-compliant apps in the environment.  Ansible automation will be
+used to establish standardized compliance scanning and remediation activities,
+and record the results in the ServiceNow CMDB.
+
+Sample 2
+------
+(Prior to running the init script to build your engagement report, you can use
+the following format to create a starter sentence using variables.  Note the
+portions in "<>" are text meant to be replaced.)
+
+Red Hat Consulting was engaged by {cust} to assist with {description} which
+seeks to <describe what the initiative is meant to achieve> by <describe how
+this engagement is going to support the initiative>.
+////
+
+Red Hat Consulting was engaged by {cust} to assist with {description} which seeks to (#TODO# describe what the initiative is meant to achieve) by (#TODO# describe how this engagement is going to support the initiative).

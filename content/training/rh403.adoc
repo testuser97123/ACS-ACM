@@ -1,0 +1,31 @@
+= Red Hat Satellite 6 Administration (RH403)
+
+*Course description*
+
+Learn how to configure Red Hat Satellite 6 to deploy and manage Red Hat Enterprise Linux systems and software
+
+Red Hat Satellite 6 Administration (RH403) is a lab-based course that explores the concepts and methods necessary for successful large-scale management of Red Hat(R) Enterprise Linux(R) systems. You will learn how to configure Red Hat Satellite 6 on a server and populate it with software packages. You will use Red Hat Satellite to manage the software development life cycle of a subscribed host and its configuration, and learn how to provision hosts integrated with software and Ansible(R) configuration management upon deployment. 
+
+This course is based on Red Hat Enterprise Linux 8 and Red Hat Satellite 6.6.
+
+*Course content summary*
+
+* Verify a Red Hat Satellite 6.6 installation.
+* Regulate Red Hat Satellite with organizations, locations, users, and roles.
+* Manage software with Red Hat Satellite environments and content views.
+* Use Red Hat Satellite to configure hosts with Ansible playbooks and roles.
+* Provision hosts with integrated software and configuration management.
+* Implement Metal-as-a-Service (MaaS) with Satellite discovery and provisioning of unprovisioned hosts.
+
+*Audience for this course*
+
+* Senior Red Hat Enterprise Linux system administrators responsible for the management of multiple servers
+
+*Recommended for this course*
+
+* Be a Red Hat Certified Engineer (RHCE(R)) or demonstrate equivalent experience
+* Have experience with Red Hat Satellite 6
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh403-red-hat-satellite-6-administration

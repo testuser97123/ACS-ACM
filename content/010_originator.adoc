@@ -1,0 +1,12 @@
+////
+Purpose
+-------
+This indicates the group who initialized this document.  It should normally be
+"Red Hat Consulting."
+
+Sample
+------
+Red Hat Consulting
+////
+
+Red Hat Consulting

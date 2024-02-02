@@ -1,0 +1,15 @@
+* 1 - How is the overload of Policies managed (for example, a policy is applied to Fixable Severity Critical and a policy to Medium severity is more) ?
+
+All policies are applied by ACS. In a situation where there is an overlap of the scope of the policies, the most severe policy will be applied to the extent that it will lead to an action. However, it is recommended to avoid policy overlaps insofar as this leads to duplicate alerts. In our example, it is therefore recommended to set an upper limit for the medium severity which will be the beginning of the high severity.
+
+* 2 - Is it possible to use Red Hat Score instead of CVSS for risk? 
+
+The Red Hat score is already taken into account for all images when calculating the risk. Otherwise, the vulnerability management dashboard is still only based on CVSS score and not severity. It is on the roadmap to redesign the dashboard to provide general information on the security score.
+
+* 3 -During the demonstration we've seen that an CVE was referenced in the dashboard as non-fixable but a fix versions was also indicated ? Why ?
+
+The CVE, in fact, was not fixable. The fix version was for the gloabl component with an upgrade that made the CVE irrelevant. 
+
+* 4 - Is it possible to use Regex with ACS Policies ?
+Yes 
+https://docs.openshift.com/acs/3.67/operating/manage-security-policies.html

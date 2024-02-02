@@ -1,0 +1,38 @@
+= Red Hat Cloud-native Microservices Development with Quarkus (DO378) | DO378
+
+*Course description*
+
+Develop microservice-based applications with Quarkus and OpenShift.
+
+Many enterprises are looking for a way to take advantage of cloud-native architectures, but many do not know the best approach. Quarkus is an exciting new technology that brings the reliability, familiarity, and maturity of Java Enterprise with a container-ready lightning fast deployment time. Red Hat Cloud-native Microservices Development with Quarkus (DO378) emphasizes learning architectural principles and implementing microservices based on Quarkus and OpenShift. You will build on application development fundamentals and focus on how to develop, monitor, test, and deploy modern microservices applications..
+
+This course is based on OpenShift 4.6 and Quarkus 1.7
+
+*Course content summary*
+
+* Deploy microservice applications on Red Hat(R) OpenShift Container Platform.
+* Build a microservice application with Quarkus.
+* Implement unit and integration tests for microservices.
+* Use the config specification to inject data into a microservice.
+* Secure a microservice using OAuth.
+* Build and deploy native Quarkus applications.
+
+*Target Audience*
+
+This course is designed for application developers.
+
+*Recommended training*
+
+* Experience with application development or Red Hat Application Development I: Programming in Java EE (JB183)
+* Be proficient in using an IDE such as Red Hat(R) Developer Studio or VSCode
+* Recommended, but not required: experience with Maven and version control.
+* Recommended, but not required: experience with OpenShift or Introduction to OpenShift Applications (DO101)
+*  Take our free assessment to gauge whether this offering is the best fit for your skills.
+
+*Technology considerations*
+
+* Internet access required	
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/red-hat-cloud-native-microservices-development-quarkus-do378

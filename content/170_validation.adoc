@@ -1,0 +1,13 @@
+////
+Purpose
+-------
+In the "Base" directory, this section is a placeholder which is to be
+overwritten by validation steps specific to the product or products being
+delivered.
+
+If "TODO" appears in your document after the init script has been run, then
+your product directory is missing a corresponding "validation.adoc" which
+should be implemented to provide a basic validation framework for that product.
+////
+
+#TODO#

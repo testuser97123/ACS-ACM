@@ -1,0 +1,77 @@
+
+= Internal
+Reference diagrams for OpenShift internal traffic.
+
+== Pod to Pod
+
+.OpenShift SDN - Pod to Pod Same Machine
+image::OCP-4x-base/OpenShift_4_SDN-Pod to Pod Same Machine.png[]
+
+.OpenShift SDN - Pod to Pod Different Machine
+image::OCP-4x-base/OpenShift_4_SDN-Pod to Pod Different Machine.png[]
+
+== Pod to Service
+
+.OpenShift SDN - Pod to Service Same Machine
+image::OCP-4x-base/OpenShift_4_SDN-Pod to Service Same Machine.png[]
+
+.OpenShift SDN - Pod to Service Different Machine
+image::OCP-4x-base/OpenShift_4_SDN-Pod to Service Different Machine.png[]
+
+== Pod to Route
+
+[NOTE]
+====
+These communication flows are not strictly internal to OpenShift as they exit the OpenShift cluster to come back in via the Route.
+====
+
+.OpenShift SDN - Pod to Service via Route via Ingress Router using Pod hostPort - Router, Source Pod, and Destination Pod Different Machine
+image::OCP-4x-base/OpenShift_4_SDN-Pod to Service via Route via Ingress Router using Pod hostPort - Router, Source Pod, and Destination Pod Different Machine.png[]
+
+.OpenShift SDN - Pod to Service via Route via Ingress Router using Pod hostPort - Router Different Machine, Source Pod and Destination Pod Same Machine
+image::OCP-4x-base/OpenShift_4_SDN-Pod to Service via Route via Ingress Router using Pod hostPort - Router Different Machine, Source Pod and Destination Pod Same Machine.png[]
+
+.OpenShift SDN - Pod to Service via Route via Ingress Router using Pod hostPort - Router and Source Pod Same Machine, Destination Pod Different Machine
+image::OCP-4x-base/OpenShift_4_SDN-Pod to Service via Route via Ingress Router using Pod hostPort - Router and Source Pod Same Machine, Destination Pod Different Machine.png[]
+
+.OpenShift SDN - Pod to Service via Route via Ingress Router using Pod hostPort - Router Different Machine, Source Pod and Destination Pod Same Machine
+image::OCP-4x-base/OpenShift_4_SDN-Pod to Service via Route via Ingress Router using Pod hostPort - Router Different Machine, Source Pod and Destination Pod Same Machine.png[]
+
+= Egress
+Reference diagrams for OpenShift Egress traffic.
+
+.OpenShift SDN - OpenShift_4_SDN-Pod to External Endpoint
+image::OCP-4x-base/OpenShift_4_SDN-Pod to External Endpoint.png[]
+
+.OpenShift SDN - Pod to External Endpoint via EgressIP on Additional Subnet Interface on Same Machine
+image::OCP-4x-base/OpenShift_4_SDN-Pod to External Endpoint via EgressIP on Additional Subnet Interface on Same Machine.png[]
+
+.OpenShift SDN - Pod to External Endpoint via EgressIP on Additional Subnet Interface on Different Machine
+image::OCP-4x-base/OpenShift_4_SDN-Pod to External Endpoint via EgressIP on Additional Subnet Interface on Different Machine.png[]
+
+= Ingress
+Reference diagrams for OpenShift Ingress traffic.
+
+== Ingress Router using Pod hostPort
+Reference diagrams for OpenShift Ingress traffic using a Pod hostPort. Default for UPI installations.
+
+.OpenShift SDN - External Consumer Initiated to Service via Route via Ingress Router using Pod hostPort - Router and Pod Same Machine
+image::OCP-4x-base/OpenShift_4_SDN-External Consumer Initiated to Service via Route via Ingress Router using Pod hostPort - Router and Pod Same Machine.png[]
+
+.OpenShift SDN - External Consumer Initiated to Service via Route via Ingress Router using Pod hostPort - Router and Pod Different Machine
+image::OCP-4x-base/OpenShift_4_SDN-External Consumer Initiated to Service via Route via Ingress Router using Pod hostPort - Router and Pod Different Machine.png[]
+
+.OpenShift SDN - External Consumer Initiated to Service via Route via Ingress Router using Pod hostPort via Non-Default Subnet Interface - Router and Pod Same Machine
+image::OCP-4x-base/OpenShift_4_SDN-External Consumer Initiated to Service via Route via Ingress Router using Pod hostPort via Non-Default Subnet Interface - Router and Pod Same Machine.png[]
+
+.OpenShift SDN - External Consumer Initiated to Service via Route via Ingress Router using Pod hostPort via Non-Default Subnet Interface - Router and Pod Different Machine
+image::OCP-4x-base/OpenShift_4_SDN-External Consumer Initiated to Service via Route via Ingress Router using Pod hostPort via Non-Default Subnet Interface - Router and Pod Different Machine.png[]
+
+== Ingress Router using Service nodePort
+Reference diagrams for OpenShift Ingress traffic using a Pod https://docs.openshift.com/container-platform/latest/networking/configuring_ingress_cluster_traffic/configuring-ingress-cluster-traffic-nodeport.html[nodePort]. Default for IPI installations.
+
+.OpenShift SDN - External Consumer Initiated to Service via Route via Ingress Router using Service nodePort - Router and Pod Same Machine
+image::OCP-4x-base/OpenShift_4_SDN-External Consumer Initiated to Service via Route via Ingress Router using Service nodePort - Router and Pod Same Machine.png[]
+
+.OpenShift SDN - External Consumer Initiated to Service via Route via Ingress Router using Service nodePort - Router and Pod Different Machine
+image::OCP-4x-base/OpenShift_4_SDN-External Consumer Initiated to Service via Route via Ingress Router using Service nodePort - Router and Pod Different Machine.png[]

@@ -1,0 +1,61 @@
+////
+Purpose
+-------
+This table should include customer personnel assigned to work with Red Hat
+Consulting on the specific tasks described in the engagement.  This should
+primarily be technical resources and the customer's project manager.  Try to
+avoid listing anyone who did not directly participate in either design,
+decision making or implementation.
+
+////
+.{cust} Participants
+[cols="3,4,5",options=header]
+|===
+|Name
+|Role
+|E-mail address
+
+// Name
+| Shailendra Bhusa
+// Role
+| SVP - Infra, DevOps, PaaS
+// Email Address
+| shailendra.bhusa@hdfcbank.com
+
+// Name
+| Lester Fernandes
+// Role
+| DevOps, DevSecOps Owner
+// Email Address
+| Fernandes.Lester@hdfcbank.com
+
+// Name
+| Anup Doijode
+// Role
+| Infra, Enterprise PaaS Owner
+// Email Address
+| anup.doijode@hdfcbank.com
+
+// Name
+| Nitin Gavali
+// Role
+| Delivery Manager
+// Email Address
+| nitin.gavli@hdfcbank.com
+
+// Name
+| Ravi Gondalia
+// Role
+| -
+// Email Address
+| ravi.gondalia@hdfcbank.com
+
+// Name
+| Parveen kumar Khera
+// Role
+| DevSecOps team
+// Email Address
+| parveen.khera@hdfcbank.com
+
+|===
+

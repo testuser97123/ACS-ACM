@@ -1,0 +1,31 @@
+////
+Purpose
+-------
+ACM Architecture canned content
+
+////
+
+{rhacm} is a management platform that enables {cust} to have end-to-end management, visibility and control of multiple Kubernetes clusters. {acm} manages cluster creation, application lifecycle, security, and compliance for all clusters across data centers and hybrid clouds. Clusters and applications are visible and managed from a single console.
+
+.{rhacm} Logical Diagram
+image::acm/RHACM-arch.png[]
+
+{acm} is deployed in a dedicated OpenShift Container Platform via the Operator tooling. This _Hub Cluster_ should not be used for other applications. {acm} can connect to, or deploy from scratch, several _Managed Clusters_. ACM itself must run in a supported version of {rhocp}, and can manage a wider range of Kubernetes clusters, both on-prem and cloud hosted, both provider or self-managed. 
+
+// https://access.redhat.com/articles/5058921
+[NOTE]
+====
+As the pace of change in public cloud features is high, constantly changing and evolving, the compatibility for {rhacm} is correct at GA of the product. Best effort basis during errata cycle for public cloud vendors introduced breaking changes (intended or unintended) to existing functionality. Any other changes or additions would be considered as a Request For Enhancement (RFE), which is evaluated for potential inclusion in future releases. An RFE can be requested via standard support mechanisms.
+====
+
+At runtime, the _hub_ communicates with the _managed clusters_ via the Open Cluster Management Agent imported into the Managed Clusters `open-cluster-management-agent` namespace. The load on the managed clusters is typically minimal. Agent addons will be installed after the managed cluster is available to the Hub Cluster. The addons will be installed in the `open-cluster-management-agent-addon` namespace.
+
+The Hub Cluster must be built to scale in proportion to the number of managed resources: clusters, namespaces, users, etc. See the {acm_install_scaling}[Performance and scalability] section of the {acm_install} product documentation.
+
+{rhacm} is able to manage the following types of Kubernetes clusters:
+
+* OpenShift Container Platform 3.11, 4.1.x - 4.4.x
+* Amazon Elastic Kubernetes Service (EKS)
+* Azure Kubernetes Service (AKS)
+* IBM Cloud Kubernetes Service (IKS)
+* Google Kubernetes Service (GKE)

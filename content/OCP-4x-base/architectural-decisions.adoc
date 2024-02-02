@@ -1,0 +1,432 @@
+////
+Purpose
+-------
+List the architectural decision for OpenShift Container Platform
+
+HINT: if something is more of a organizational mandate or standard, such as, "must conform to NIST 800-53", then use an Architectural Policy or Principle instead.
+
+////
+
+= Architectural decisions
+Architectural decisions made throughout the course of the engagement with information on the investigated alternatives and justification for the decisions made.
+
+//copy this template for each decision
+.Cluster list
+[cols="1h,3a"]
+|===
+
+| Id
+| OCP-BASE-{counter:index}
+// To unambiguously identifies the decision we use the following code: OCP-BASE-xx.”
+
+| Subject Area
+| Cluster list and purpose.
+
+| Architectural Question
+| How many OCP clusters do you plan to install? What will be the main objective of each cluster?
+// State the to-be decision as a question
+
+| Issue or Problem
+| {customer} must determine the number of clusters planned for this engagement and their primary purpose.
+//Context for why the architectural question is being asked.
+
+| Assumptions
+| * {customer} has identified the clusters on which they will run their targeted workloads.
+ * {customer} has identified the environments that will be hosted on these clusters (integration, pre-production, production, etc.)
+// What is believed to be true about the context of the problem, constraints on the solution, and so on.
+
+| Alternatives
+| * One cluster that contains all {customer} environments for targeted workloads + one sandbox cluster for OCP upgrade testing.
+ * One cluster that contains all production workloads, one that contains all non-production workloads (aka: integration, UAT, preprod), one sandbox cluster for OCP upgrades testing.
+ * One cluster per environment + one sandbox cluster for OCP upgrades testing.
+ * Any other customer choice + a sandbox cluster to test OCP updates.
+//HINT: if not alternatives were explored then this isn't an architectural decision.
+
+| Decision
+| #TODO#
+// The decision taken for the cluster list and their purpose each.
+
+| Justification
+| * Red Hat recommands at least to have a sandbox cluster for testing OCP upgrades before applying major cluster updates in {customer} production cluster(s).
+
+// Why the decision was made
+//HINT: list the policies or principles that affected the decision.
+
+| Implications
+| * Advanced multi-clusters management solutions can be considered: RHACM, RHACS and Quay.
+ * Automation of clusters installation and updates should be considered
+// The consequences and impacts of the decision taken or architectural option chosen on other elements or aspects of the solution.
+
+| Agreeing Parties
+| [cols="1,1", options="header"]
+// Key stakeholders and approvers documented as agreeing
+!===
+! Person
+! Representing
+
+! #TODO#
+// Agreeing person name
+! #TODO#
+// Team or group that person is representing and agreeing on behalf of, ex security, operations
+
+! #TODO#
+// Agreeing person name
+! #TODO#
+// Team or group that person is representing and agreeing on behalf of, ex security, operations
+
+!===
+
+|===
+
+.Infrastructure platform
+[cols="1h,3a"]
+|===
+
+| Id
+| OCP-BASE-{counter:index}
+// To unambiguously identifies the decision we use the following code: OCP-BASE-xx.”
+
+| Subject Area
+| Infrastructure platform.
+
+| Architectural Question
+| On which platform will OCP be installed?
+// State the to-be decision as a question
+
+| Issue or Problem
+| {customer} has to determinate a target infrastructure that will hold OCP.
+//Context for why the architectural question is being asked.
+
+| Assumptions
+| {customer} has N sites / N cloud tenants at (# cloud provider) available for OCP installation.
+// What is believed to be true about the context of the problem, constraints on the solution, and so on.
+
+| Alternatives
+| https://docs.openshift.com/container-platform/latest/installing/index.html#supported-platforms-for-openshift-clusters_ocp-installation-overview[Supported platforms for OpenShift Container Platform clusters].
+//HINT: if not alternatives were explored then this isn't an architectural decision.
+
+| Decision
+| #TODO#
+// The decision taken for infrastructure platform : (TODO: #Name of infrastructure platform)
+
+| Justification
+| #TODO#
+// Why the decision was made
+//HINT: list the policies or principles that affected the decision.
+
+| Implications
+| Selecting a cluster installation method and preparing it for users.
+// The consequences and impacts of the decision taken or architectural option chosen on other elements or aspects of the solution.
+
+| Agreeing Parties
+| [cols="1,1", options="header"]
+// Key stakeholders and approvers documented as agreeing
+!===
+! Person
+! Representing
+
+! #TODO#
+// Agreeing person name
+! #TODO#
+// Team or group that person is representing and agreeing on behalf of, ex security, operations
+
+! #TODO#
+// Agreeing person name
+! #TODO#
+// Team or group that person is representing and agreeing on behalf of, ex security, operations
+
+!===
+
+|===
+
+.On-premises deployment model
+[cols="1h,3a"]
+|===
+
+| Id
+| OCP-BASE-{counter:index}
+
+| Subject Area
+| Deployment model for on-premises installations.
+
+| Architectural Question
+| Where will OCP be deployed at available sites?
+
+| Issue or Problem
+| {customer} wants to ensure high availability of OCP in case one of its sites is completely down. 
+
+| Assumptions
+| {customer} has (#TODO: Number of sites) sites with (#TODO: Number of failure domains) failure domains on each of them.
+
+| Alternatives
+| * One OCP cluster stretched cluster accross the (#TODO: Number of sites).
+  * One OCP cluster on every site (multicluster approach) with a failover strategy to implement.
+
+| Decision
+| #TODO#
+
+| Justification
+| * Although 'stretched clusters' where one cluster (both the control plane and workers) is/are distributed across multiple site boundaries are supported by Red Hat, Red Hat Consulting discourages such multi-sites deployment since it involves a higher number of points of failure, additional strong requirements (network, storage) and organizational challenges to operate the platform.
+* Red Hat Consulting recommends {customer} to opt for a multicluster approach which would be simpler and faster to deploy on its own sites.
+
+| Implications
+| Failover approaches design depending the deployment model chosen. Both total and partial (failure domain) loss of a site must be considered. 
+
+| Agreeing Parties
+| [cols="1,1", options="header"]
+!===
+! Person
+! Representing
+
+! #TODO#
+! #TODO#
+
+! #TODO#
+! #TODO#
+
+!===
+|===
+
+.Internet access
+[cols="1h,3a"]
+|===
+
+| Id
+| OCP-BASE-{counter:index}
+
+| Subject Area
+| Internet access.
+
+| Architectural Question
+| Will the OCP cluster connected to the internet? 
+
+| Issue or Problem
+| Internet access is required to install/update the package and also enable the subscription entitlements. 
+
+| Assumptions
+| {customer} identify the ability or not to connect the targeted OCP clusters to the Internet.
+
+| Alternatives
+| * OCP will be connected to the Internet directly or through a proxy.
+  * OCP will be installed in a restricted environment and a mirror registry will be installed for this purpose.
+
+| Decision
+| #TODO#
+
+| Justification
+| * Customer infrastucture and organizational environment allow / not allow internet connection (even through a proxy)
+
+| Implications
+| * A mirror registry is required if OCP is installed in a restricted environment. The mirror registry is fully disconnected (air-gapped) to the Internet or act as a proxied registry.
+
+| Agreeing Parties
+| [cols="1,1", options="header"]
+!===
+! Person
+! Representing
+
+! #TODO#
+! #TODO#
+
+! #TODO#
+! #TODO#
+
+!===
+|===
+
+.Installation type
+[cols="1h,3a"]
+|===
+
+| Id
+| OCP-BASE-{counter:index}
+// To unambiguously identifies the decision we use the following code: OCP-BASE-xx.”
+
+| Subject Area
+| Installation type
+
+| Architectural Question
+| What type of installation are you targeting (UPI / IPI)?
+// State the to-be decision as a question
+
+| Issue or Problem
+| Installation type will infuence the architecture design depending the components managed or not by the installer.
+//Context for why the architectural question is being asked.
+
+| Assumptions
+| * {customer} has identified on which cluster it will run its targeted workloads.
+  * {customer} has identified which environment will be hosted on these clusters (integration, preproduction, production, etc).
+// What is believed to be true about the context of the problem, constraints on the solution, and so on.
+
+| Alternatives
+| * IPI (Installer Provisionned Installation). Recommended by Red Hat for full stack installation experience and less infrastructure configuration and maintenance overhead.
+ * UPI (User Provisionned Installation) if technical and/or organisationnal environment prevents using IPI method or IPI is not supported by Red Hat for the target infrastructure platform.
+//HINT: if not alternatives were explored then this isn't an architectural decision.
+
+| Decision
+| #TODO#
+// The decision taken for the cluster list and their purpose each.
+
+| Justification
+| * {customer} constraints allow / does not allow IPI installation method.
+* DHCP can / cannot be used. IPI installation method needs DHCP. 
+
+// Why the decision was made
+//HINT: list the policies or principles that affected the decision.
+
+| Implications
+| * Prepare the infrastructure according to the https://aodocs.altirnao.com/?locale=en_US&aodocs-domain=redhat.com#Menu_viewDoc/LibraryId_Rh5EK5y8Z72rxQEKf7/DocumentId_SRlFxPH0dkH9VacNBO[OCP Installation checklist]
+ * UPI: {customer} will have to manage infrastructure components by itself. Machine API can be enabled (if supported by the infrastructure platform) after the cluster installation.
+ * IPI: Machine API will be enabled to manage cluster machines.
+// The consequences and impacts of the decision taken or architectural option chosen on other elements or aspects of the solution.
+
+| Agreeing Parties
+| [cols="1,1", options="header"]
+// Key stakeholders and approvers documented as agreeing
+!===
+! Person
+! Representing
+
+! #TODO#
+// Agreeing person name
+! #TODO#
+// Team or group that person is representing and agreeing on behalf of, ex security, operations
+
+! #TODO#
+// Agreeing person name
+! #TODO#
+// Team or group that person is representing and agreeing on behalf of, ex security, operations
+
+!===
+
+|===
+
+.Storage
+[cols="1h,3a"]
+|===
+
+| Id
+| OCP-BASE-{counter:index}
+// To unambiguously identifies the decision we use the following code: OCP-BASE-xx.”
+
+| Subject Area
+| Storage solution for the clusters.
+
+| Architectural Question
+| Which storage provider will be deployed in each cluster?
+// State the to-be decision as a question
+
+| Issue or Problem
+| {customer} must determine the storage provider to use for the deployed clusters.
+//Context for why the architectural question is being asked.
+
+| Assumptions
+| * The infrastructure platforms are known.
+ * {customer} has identified the storage access modes required for both infrastructure components and applications.
+// What is believed to be true about the context of the problem, constraints on the solution, and so on.
+
+| Alternatives
+| * Platform-native storage (AWS ESB, VMware vSphere, ..)
+ * OpenShift Data Foundation (converged or external)
+//HINT: if not alternatives were explored then this isn't an architectural decision.
+
+| Decision
+| #TODO#
+// The decision taken for the cluster storage provider.
+
+| Justification
+| * Customer relies on platform storage capabilities
+ * A third-party storage vendor has been selected by the customer
+
+// Why the decision was made
+//HINT: list the policies or principles that affected the decision.
+
+| Implications
+| * Use OCP in-tree drivers for out-of-the-box supported storage backend.
+* Use CSI driver provided and supported by the storage vendor.
+
+// The consequences and impacts of the decision taken or architectural option chosen on other elements or aspects of the solution.
+
+| Agreeing Parties
+| [cols="1,1", options="header"]
+// Key stakeholders and approvers documented as agreeing
+!===
+! Person
+! Representing
+
+! #TODO#
+// Agreeing person name
+! #TODO#
+// Team or group that person is representing and agreeing on behalf of, ex security, operations
+
+! #TODO#
+// Agreeing person name
+! #TODO#
+// Team or group that person is representing and agreeing on behalf of, ex security, operations
+
+!===
+|===
+
+.Image registry
+[cols="1h,3a"]
+|===
+
+| Id
+| OCP-BASE-{counter:index}
+// To unambiguously identifies the decision we use the following code: OCP-BASE-xx.”
+
+| Subject Area
+| Image registry
+
+| Architectural Question
+| Which image registry will be used for image builds and image transfers between clusters?
+// State the to-be decision as a question
+
+| Issue or Problem
+| {customer} must determine the image registry to use for the deployed clusters.
+//Context for why the architectural question is being asked.
+
+| Assumptions
+| CI/CD pipeline will involves more than one OCP cluster
+// What is believed to be true about the context of the problem, constraints on the solution, and so on.
+
+| Alternatives
+| * Integrated OpenShift Container Platform registry
+  * Existing enterprise registry (Nexus, Quay or other)
+//HINT: if not alternatives were explored then this isn't an architectural decision.
+
+| Decision
+| #TODO#
+// The decision taken for the image registry.
+
+| Justification
+| * The registry need to be shared by several OCP clusters
+ * The registry don't need to be shared
+
+// Why the decision was made
+//HINT: list the policies or principles that affected the decision.
+
+| Implications
+| * Configure the internal registry
+ * Configure the external registry
+// The consequences and impacts of the decision taken or architectural option chosen on other elements or aspects of the solution.
+
+| Agreeing Parties
+| [cols="1,1", options="header"]
+// Key stakeholders and approvers documented as agreeing
+!===
+! Person
+! Representing
+
+! #TODO#
+// Agreeing person name
+! #TODO#
+// Team or group that person is representing and agreeing on behalf of, ex security, operations
+
+! #TODO#
+// Agreeing person name
+! #TODO#
+// Team or group that person is representing and agreeing on behalf of, ex security, operations
+
+!===
+|===

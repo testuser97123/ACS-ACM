@@ -1,0 +1,32 @@
+= Running Containers with Red Hat Technical Overview (RH065)
+
+*Course description*
+
+A basic introduction to container management in Red Hat Enterprise Linux
+
+Linux containers are an increasingly important technology that allows you to deploy your applications with their entire runtime environment and easily move them between different operating environments (dev, test, and production) in a reliable, scalable, and trusted way.  Containers provide your team with tools that can be used to help implement DevOps and CI/CD (continuous integration and continuous deployment) practices and other elements of a cloud-native application approach.  Running Containers with Red Hat Technical Overview (RH065) provides a basic introduction to container management in Red Hat Enterprise Linux. Students will learn what containers are and how to use them to deploy software applications on a Red Hat Enterprise Linux server.
+
+*Course content summary*
+
+* Obtain, run, and manage simple, lightweight services as containers on a single Red Hat Enterprise Linux server.
+* Explain what a container is and how to use one to manage and deploy applications with their supporting software libraries and dependencies.
+* Install container management tools and run a simple rootless container.
+* Find, retrieve, inspect, and manage container images obtained from a remote container registry and stored on your server.
+* Run containers with advanced options; list the containers running on the system; and start, stop, and kill containers.
+* Provide persistent storage for container data by mounting a directory from the container host inside a running container.
+* Start, stop, and check the status of a container as a system service.
+
+*Target audience*
+
+* This course is intended for students who are interested in a basic introduction to container management in Red Hat Enterprise Linux.
+* Students with basic Red Hat Enterprise Linux skills
+
+*Recommended training*
+
+* Basic Red Hat Enterprise Linux skills or the 
+Red Hat Certified System Administrator (RHCSA) certification
+* Red Hat OpenShift I: Containers & Kubernetes (DO180)
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh065-running-containers-red-hat-technical-overview

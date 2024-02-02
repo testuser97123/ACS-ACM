@@ -1,0 +1,35 @@
+= Introduction to OpenShift Applications | DO101
+
+*Course Description*
+
+A developer-focused introduction to OpenShift application building, deployment, scaling, and troubleshooting.
+
+Red Hat(R) OpenShift(R) Container Platform is a containerized application platform that allows enterprises to accelerate and streamline application development, delivery, and deployment on-premise or in the cloud. As OpenShift and Kubernetes continue to become widely adopted, developers are increasingly required to understand how to develop, build, and deploy applications with a containerized application platform. While some developers are interested in managing the underlying infrastructure, most developers want to focus on developing applications and using OpenShift for its simple building, deployment, and scaling capabilities.
+
+*Course content summary*
+
+* Manage application source code with Git
+* Develop applications with VSCode
+* Deploy an application to OpenShift
+* Update an application
+* Configure application secrets
+* Scale an application
+* Troubleshoot and fixing an application
+
+*Audience for this course*
+
+This course is a low prerequisite on-ramp for OpenShift development. Many developers want to find ways to use OpenShift in their organization and have heard of its many benefits, but they lack the necessary skills or interest in approaching OpenShift from a low-level, bottom-up oriented approach. Most developers are instead focused on finding ways to write and deploy applications faster and easier. Students who are interested in learning more about the underlying OpenShift infrastructure and have strong RHCSA-level skills should instead start with Red Hat OpenShift I: Containers &amp; Kubernetes (DO180).
+
+*Recommended training*
+
+Students should have a strong background in application development and object oriented programming. If not, it is recommended to first take Red Hat Application Development I: Programming in Java EE (AD183).
+
+*Technology requirements*
+
+* This course is a bring-your-own-device training.
+* You must be able to install software onto your device.
+* Internet access is required.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do101-introduction-openshift-applications

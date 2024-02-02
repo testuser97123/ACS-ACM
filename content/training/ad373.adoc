@@ -1,0 +1,30 @@
+= Red Hat Decision Manager and Red Hat Process Automation Manager 7.0 for Developers (AD373)
+
+*Course description*
+Business rules and process-driven application development 
+Red Hat Decision Manager and Process Automation Manager for Developers (AD373) teaches the core concepts behind business rules and processes, as well as how to author and test them. You will find out how to navigate the improved user interface of Red Hat(R) Decision Manager and Red Hat(R) Process Automation Manager to develop these rules and business processes. You will also learn to design and run a case management project. 
+This course is based on Red Hat(R) Enterprise Linux(R) 7.5, Red Hat Decision Manager 7.0, Red Hat Process Automation Manager 7.0, and Red Hat(R) OpenShift(R) Container Platform 3.9. 
+
+Many organizations are interested in undergoing a digital transformation from traditional applications to process-driven applications. With Red Hat Decision Manager and Red Hat Process Automation Manager 7.0, Red Hat has introduced solutions to empower developers to create and manage business rules and processes in a low-code environment. 
+
+*Course content summary*
+
+* Author business rules with decision tables and DRL. 
+* Navigate and manage projects with the Decision Manager and Process Automation user interfaces. 
+* Develop business processes. 
+* Design forms with Form Modeler. 
+* Design and run a case management project. 
+
+*Audience for this course*
+
+This course is designed for developers who are interested in adapting to a more modern approach by developing process-driven applications.
+
+*Prerequisites for this course*
+
+* Possess basic Java EE developer skills
+* Have experience with integrated development environments like Red Hat(R) Developer Studio
+* Having a basic understanding of business rules and processes is recommended, but not required
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/ad373-red-hat-decision-manager-and-red-hat-process-automation-manager-70-developers

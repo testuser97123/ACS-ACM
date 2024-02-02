@@ -1,0 +1,17 @@
+////
+Purpose
+-------
+In one or two sentences summarize the customer's business - include what
+industry they are in, whether they are local, nationwide or global, include
+some description of their size, scope of impact, or significant achievement.
+In the next one to two sentences focus on how the customer is using technology,
+if possible cite the specific technology Red Hat is
+providing/supporting/augmenting.
+
+Sample
+------
+ACME Financial is a global financial institution operating in over 100 countries.  ACME-F is the leading financier for construction projects in the United States and ranks #2 globally.  ACME-F uses machine learning to rapidly identify fraudulent activity on its personal banking platform, and to evaluate risk in its commercial ventures.
+
+////
+
+{customer}, is a (#TODO# type organization)# focused on (#TODO# main business goals).  {customer} is best known for.  (Or)  The mission of {customer} is to: (#TODO# mission).

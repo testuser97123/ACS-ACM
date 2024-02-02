@@ -1,0 +1,39 @@
+= Build and Administer APIs with Red Hat 3scale API Management (AD240)
+
+*Course description*
+Introduction to building and managing APIs using standard practices with Red Hat 3scale API Management
+Build and Administer APIs with Red Hat 3scale API Management (AD240) is a hands-on, lab-based course that gives developers and administrators an introduction to managing APIs with our technology. Red Hat(R) 3scale API Management enables developers and administrators to monetize, manage, and document APIs.
+This course is based on Red Hat 3scale API Management 2.4. 
+
+API management capabilities are becoming increasingly important as companies begin to use application programming interfaces to provide direct programmable access to their services, data, and processes. In this course, you will explore the features of Red Hat 3scale API Management and learn to create and manage a developer portal with these features:
+
+* End-user signup flows
+* ActiveDocs documentation
+* Custom workflows
+* Rate limits
+* SOAP and ODATA web services
+
+Through your understanding of these features and others, you will find out how 3scale API Management plays a critical role in digital transformation and agile integration practices.
+*Course content summary*
+
+* Understand 3scale API Management architecture and primary features.
+* Learn typical API use cases and strategies.
+* Investigate 3scale API Management deployment options.
+* Establish and configure subscription plans.
+* Configure and test API management integration.
+* Configure a developer portal.
+* Set up Red Hat SSO integration.
+
+*Audience for this course*
+
+* API developers interested in using 3scale API Management for API billing and enabling security and access control features
+* System architects and administrators who want to create a portal for monetizing their APIs
+
+*Prerequisites for this course*
+
+* Familiarity with APIs and testing APIs
+* Familiarity with containers and Red Hat(R) OpenShift is helpful, but not required
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/ad240-build-and-administer-apis-red-hat-3scale-api-management

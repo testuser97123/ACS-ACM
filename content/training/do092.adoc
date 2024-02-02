@@ -1,0 +1,24 @@
+= Developing Cloud-Native Applications with Microservices Architectures (DO092)
+
+*Course description*
+
+Identify the proper frameworks and tools to build your microservices architecture
+
+Developing Cloud-Native Applications with Microservices Architectures (DO092) is a series of on-demand, online videos that will teach you how to combine different frameworks and tools into a microservices architecture that fits your organizational needs.
+
+You’ve no doubt heard about the microservices architecture, but understanding and executing it can be a bit of a challenge. Through a series of videos, this course will introduce microservices, review multiple microservices frameworks and runtimes, and show you techniques to deploy them through a hassle-free DevOps pipeline. We’ll discuss containers, Docker, Spring Boot, NodeJS, .NET, OpenShift, Jenkins, Vert.x, Kubernetes, and much more.
+
+Note: You can view all videos or only the ones that interest you. There are no hands-on labs or course completion recognition associated with this course.                    
+
+*Audience for this course*
+
+Java(TM) developers and anyone interested in OpenShift and Kubernetes
+Understanding of software and IT system architecture
+
+*Prerequisites for this course*
+
+* Understanding of software and IT system architecture
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do092-developing-cloud-native-applications-microservices-architectures

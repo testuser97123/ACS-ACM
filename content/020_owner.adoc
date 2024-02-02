@@ -1,0 +1,13 @@
+////
+Purpose
+-------
+This indicates who is responsible for the content of this document.  It should
+generally always be "Red Hat Consulting".
+
+
+Sample
+------
+Red Hat Consulting
+////
+
+Red Hat Services

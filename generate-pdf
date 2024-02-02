@@ -1,0 +1,212 @@
+#!/usr/bin/env bash
+
+# if you want the script to show all commands it runs, then remove the '#' in front of the next 'set -x' line.
+#set -x
+
+#
+# Script to create pdfs from adoc sources
+#
+
+CUR_WORK_PTH="${BASH_SOURCE[0]}"
+CUR_WORK_DIR="${CUR_WORK_PTH%/*}"
+CUR_WORK_SCT="${CUR_WORK_PTH##*/}"
+
+# load variable file
+SC=.cer-config
+if [ -f $SC ] ; then
+  source $SC
+else
+  echo "Missing $SC file" ; exit 1
+fi
+
+MYREPORT=README.adoc
+REPORTNAME=${MYREPORT}
+
+RUN_CODE=250
+
+# Usage Function
+# Defines the Usage output
+function USAGE() {
+  USAGE_ARR=(
+    "# Usage for ${CUR_WORK_SCT}"
+    ""
+    "   ${CUR_WORK_SCT} [options] [arguments]"
+    ""
+    "   OPTIONAL ARGUMENTS:"
+    ""
+    "     -l    Provide -l <LANGUAGE> for the language of the generated document"
+    "              (legacy option) --lang=<LANGUAGE>, <LANGUAGE>"
+    "              languages available are inside locale dir"
+    ""
+    "     -f    Provide -f <REPORTNAME> for the desired input name of the report if"
+    "              differing from README.adoc"
+    "              (legacy option) --name=<NAME>, <NAME>"
+    ""
+    "     -o    Provide -o <OUTPUT> to the desired output PDF document name"
+    "              NOTE: this script automaticaly prepends \"cer-\" and appends"
+    "              \".pdf\""
+    ""
+    "     --hash       Input the git hash into the footer of each page to verify"
+    "                  the version created."
+    ""
+    "     -a|--adoc    Try to generate using the local asciidoctor-pdf software"
+    ""
+    "     -p|--podman  Try to generate using podman"
+    ""
+    "     -d|--docker  Try to generate using Docker"
+    ""
+    "     -h,--help"
+    "           Prints this help usage message."
+    ""
+  )
+}
+
+# generic error function
+function err() {
+  echo $*
+  exit 1
+}
+
+# function to use podman
+function runpodman() {
+  if command -v podman > /dev/null ; then
+    echo "Generating pdf using podman... "
+    podman run --rm --name asciidoctor \
+      --userns=keep-id \
+      --user="$(id -u):$(id -g)" \
+      -v "${TOP_LEVEL}/:/documents:Z" \
+      -w "/documents${RELATIVE}" \
+          ${IMAGE} \
+          ${ADOC_CMD} \
+      -a ej-base-dir=/documents/ \
+      -a ej-projectdir="/documents${RELATIVE}" \
+         "${REPORTNAME}"
+    GENERATE_PDF_EXIT_CODE=$?
+    RUN_CODE=0
+  else
+    GENERATE_PDF_EXIT_CODE=2
+  fi
+}
+# function to use Docker
+function rundocker() {
+  if command -v docker > /dev/null ; then
+    echo "Generating pdf using docker... "
+    docker run --rm --name asciidoctor \
+        -v "${TOP_LEVEL}/:/documents/" \
+        -w "/documents${RELATIVE}" \
+        ${IMAGE} \
+            ${ADOC_CMD} \
+                -a ej-base-dir=/documents/ \
+                -a ej-projectdir="/documents${RELATIVE}" \
+                "${REPORTNAME}"
+    GENERATE_PDF_EXIT_CODE=$?
+    RUN_CODE=0
+  else
+    GENERATE_PDF_EXIT_CODE=3
+  fi
+}
+
+# function to run with local asciidoctor-pdf installation
+function runadocpdf() {
+  if command -v  asciidoctor-pdf > /dev/null ; then
+    echo "generate pdf using local command"
+    ${ADOC_CMD} \
+        -a reportdir="${CUR_DIR}" \
+        -a ej-base-dir="${TOP_LEVEL}" \
+        "${REPORTNAME}"
+    GENERATE_PDF_EXIT_CODE=$?
+  else
+    GENERATE_PDF_EXIT_CODE=4
+  fi
+}
+
+## start script ##
+USAGE
+
+while [ -n "$1" ] ; do
+  case "$1" in
+    -l          ) LANGUAGE=$2 ; shift  ;;
+    -f          ) REPORTNAME=$2 ; shift ;;
+    -o          ) OUTPUT=$2 ; shift ;;
+    -a|--adoc   ) GENERATE=A ;;
+    -p|--podman ) GENERATE=P ;;
+    -d|--docker ) GENERATE=D ;;
+    --lang=*    ) LANGUAGE=$(echo $1 | cut -d'=' -f 2) ;;
+    --name=*    ) REPORTNAME=$(echo $1 | cut -d'=' -f 2) ;;
+    --hash      ) HASHINFILE=1 ;;
+    -h|--help   ) printf "%s\n" "${USAGE_ARR[@]}"
+                  exit 0
+                ;;
+    *           ) printf "%s\n" "${USAGE_ARR[@]}" "Unknown option $1"
+                  exit 1
+                ;;
+  esac
+  shift
+done
+
+# Check if .adoc file exists.
+if [ ! -f ${REPORTNAME} ] || [ "${REPORTNAME}" == "" ]; then
+    echo "Provided ADOC (${REPORTNAME}) does not exist, cannot make an adoc" ; exit 1
+fi
+
+# NOTE: turns '2020-03-19 12:04:26 -0400' into '2020-03-19-12-04-26'
+GIT_DATE=$(git log -1 --date=iso --pretty=format:%cd | sed -E 's/([^ ]+) ([^ ]+) (.*)/\1-\2/g' | sed 's/:/-/g')
+if [[ -n ${HASHINFILE+x} ]] ; then
+    GIT_HASH=$(git show --date local --no-patch --no-notes --pretty='%cs_%h' HEAD)
+    SET_HASH=yes
+else
+    GIT_HASH=$(git rev-parse --verify HEAD)
+    SET_HASH=no
+fi
+
+if [ "${OUTPUT}" ] ; then
+  OUTFILE="cer-${OUTPUT}.pdf"
+else
+  # get customer short name
+  CUSTOMER_SHORT_NAME=$(sed -En 's/^:cust: (.*)/\1/p' vars/customer-vars.adoc)
+  CLEAN_CUSTOMER_SHORT_NAME=$(echo "${CUSTOMER_SHORT_NAME}" | sed 's/ /_/g')
+
+  OUTFILE="cer-${CLEAN_CUSTOMER_SHORT_NAME}-${GIT_DATE}.pdf"
+fi
+
+LANG_OPT=`if [ -z "$LANGUAGE" ]; then echo ""; else echo "-a lang=$LANGUAGE"; fi`
+
+TOP_LEVEL=$(git rev-parse --show-toplevel)
+CUR_DIR=$(pwd -P)
+RELATIVE=${CUR_DIR##$TOP_LEVEL}
+
+ADOC_CMD="asciidoctor-pdf \
+    ${LANG_OPT} \
+    --verbose \
+    -r asciidoctor-diagram \
+    --failure-level=WARN \
+    --attribute=gitdate=${GIT_DATE} \
+    --attribute=githash=${GIT_HASH} \
+    --out-file ${OUTFILE}"
+
+[[ -n $HASHINFILE+x ]] && ADOC_CMD="$ADOC_CMD --attribute=sethash=${SET_HASH}"
+
+# run the correct thing one.
+if [ "${GENERATE}" = "P" ] ; then
+  runpodman
+elif [ "${GENERATE}" = "D" ] ; then
+  rundocker
+elif [ "$GENERATE" = "A" ] ; then
+  runadocpdf
+else
+  runpodman
+  [ "${RUN_CODE}" -eq "250" ] && rundocker
+  [ "${RUN_CODE}" -eq "250" ] && runadocpdf
+fi
+
+case "${GENERATE_PDF_EXIT_CODE}" in
+    0) echo "Generated: ${OUTFILE}" ;;
+    1) echo "ERROR: Something went wrong with PDF generation, see output" ;;
+    2) echo "ERROR: Podman not found, please use other option." ;;
+    3) echo "ERROR: Docker not found, please use other option." ;;
+    4) printf "ERROR: asciidoctor-pdf not found. \n\nasciidoctor-pdf is required to generate the PDF. Please follow the \ninstructions found at: \n  https://source.redhat.com/groups/public/kmo/engagementjournalstandardization" ;;
+    125) echo "ERROR: Attempted to use docker but Docker daemon wasn't running" ;;
+    *) echo "ERROR: Something unknown went wrong" ;;
+esac
+
+exit $GENERATE_PDF_EXIT_CODE

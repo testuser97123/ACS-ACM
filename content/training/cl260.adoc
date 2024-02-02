@@ -1,0 +1,36 @@
+= Cloud Storage with Red Hat Ceph Storage (CL260) | CL260
+
+*Course description*
+
+Build skills to manage hybrid cloud Red Hat Ceph Storage for medium and cloud-scale enterprise applications and for Red Hat OpenStack Platform.
+
+Cloud Storage with Red Hat Ceph Storage (CL260) is designed for storage administrators and cloud operators who deploy Red Hat Ceph Storage in a production data center environment or as a component of a Red Hat OpenStack Platform infrastructure.  Learn how to deploy, manage, and scale a Ceph storage cluster to provide hybrid storage resources, including  Amazon S3 and OpenStack Swift-compatible object storage, Ceph-native and iSCSI-based block storage, and shared file storage. This  course is based on Red Hat Ceph Storage version 4.2.
+
+*5-10 Course Topics*
+
+* Deploy and manage a Red Hat Ceph Storage cluster on commodity servers using Red Hat Ansible Automation Platform.
+* Create, expand, and control access to storage pools provided by the Ceph cluster.
+* Access Red Hat Ceph Storage from clients using object, block, and file-based methods.
+* Analyze and tune Red Hat Ceph Storage performance.
+* Integrate Red Hat OpenStack Platform image, object, block, and file storage with a Red Hat Ceph Storage cluster.    
+
+*Target Audience*
+
+This course is geared toward Windows system administrators, network administrators, and other system administrators who are interested in supplementing current skills or backstopping other team members, in addition to Linux system administrators who are responsible for these tasks:
+
+* This course is intended for storage administrators and cloud operators who want to learn how to deploy and manage Red Hat Ceph Storage for use by servers in an enterprise data center or within a Red Hat OpenStack Platform environment.
+* Developers writing applications who use cloud-based storage will learn the distinctions of various storage types and client access methods.
+
+*Recommended training*
+
+* Red Hat Certified Engineer (RHCE) certification, Red Hat Certified Specialist in Ansible Automation certification, or equivalent experience.
+* For candidates that have not earned an RHCE or equivalent, confirmation of the correct skill set knowledge can be obtained by passing the online skills assessment at http://www.redhat.com/training/skills_assessment/
+* Some experience with storage administration is recommended but not required.
+
+*Technology considerations*
+
+* No special requirements.  Not for BYOD.  Internet access not required.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/cloud-storage-red-hat-ceph-storage-cl260

@@ -1,0 +1,5 @@
+[id="environment-setup_{context}"]
+= Environment Setup
+Steps to prepare or create the environment for the deployed architecture.
+
+#TODO#

@@ -1,0 +1,26 @@
+= Red Hat System Administration III: Data Center Services for Red Hat Enterprise Linux 7 (RH254)
+
+*Course description*
+
+Broaden your ability to administer Linux systems and prepare for your Red Hat Certified Engineer (RHCE) exam
+
+Red Hat System Administration III: Data Center Services for Red Hat Enterprise Linux 7 (RH254) is designed for experienced Linux(R) system administrators who hold a Red Hat Certified System Administrator (RHCSA(R)) credential or possess equivalent skills and want to broaden their ability to administer Linux systems at an enterprise level.
+
+This course is based on Red Hat(R) Enterprise Linux 7.
+
+The course is focused on deploying and managing network servers running caching domain name service (DNS), MariaDB, Apache HTTPD, Postfix SMTP nullclients, network file sharing with network file system (NFS) and server message block (SMB), iSCSI initiators and targets, advanced networking and firewalld configurations, and the use of bash shell scripting to help automate, configure, and troubleshoot the system. Through lectures and hands-on labs, students who have already earned the RHCSA credential will be exposed to all competencies covered by the Red Hat Certified Engineer (RHCE) exam (EX300).
+
+Note: This course does not cover all RHCSA tasks. Students who need a review of RHCSA skills are encouraged to attend the RHCSA Rapid Track course (RH199).
+
+*Audience for this course*
+
+This course is intended for experienced Linux administrators wishing to learn enterprise-level automation techniques through scripting, how to deploy and secure network services, and how to manage other key security features of Red Hat Enterprise Linux. Prior to taking this course, you should have earned your RHCSA or possess equivalent skills.
+
+*Prerequisites for this course*
+
+* RHCSA certification or equivalent experience
+* For candidates who have not earned their RHCSA certification, confirmation of the correct skills and knowledge can be obtained by passing the online skills assessment
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh254-red-hat-system-administration-iii-data-center-services-red-hat-enterprise-linux-7

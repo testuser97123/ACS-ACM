@@ -1,0 +1,61 @@
+////
+Purpose
+-------
+If the customer provided documentation or other electronic artifacts in support
+of the engagement, they should be listed here.
+
+Examples of relevant documents include architecture diagrams prepared by the
+customer's architecture teams, slide decks describing the relevant customer
+project or initiative that Red Hat Consulting is supporting, spreadsheets
+listing applications, capacities, historical usage data etc...
+
+Name
+-----
+The file name is preferable, but a title page title is also acceptable.
+Example 1: "storage_layout_20190211.xlsx"
+Example 2: "2019 Storage Refresh Plan"
+
+Version
+-----
+Please include the latest version of the document provided or referred to
+during the engagement.  If the document does not use version numbering, use the
+last update time of the document file.
+Example 1: "1.2"
+Example 2: "02/11/2019 14:21:00 EST"
+
+Purpose
+-----
+For "Purpose", briefly describe the content of the document and how it was used
+by the engagement.
+Example: "This spreadsheet lists all of the VMware VMs, Resources and Clusters.
+It was referenced to calculate the resources required to move these workloads
+to RHV."
+
+Customer Link or Location
+-----
+Please provide a link to where the customer is hosting the document.  It is
+understood that this link may not be valid outside of the customer's network.
+If the customer does not host the document, you may provide a brief description
+of where the document is kept by the customer.  Red Hat does not and should not
+host customer provided material; please do provide links to Red Hat's Google
+Drive folders in this section.
+Example 1: "https://sharepoint.acme.com/Architecture_Team/Drawing23"
+Example 2: "This document is on-file with the ACME architecture team"
+
+#TODO#
+////
+.Documentation Provided by {customer}
+[cols="5a,1a,5a,5a",options=header]
+|===
+|Name
+|Version
+|Purpose
+|Customer Link or Location
+
+| #TODO - Name#
+| #TODO - Version#
+| #TODO - Purpose#
+| #TODO - Link or Location#
+
+
+|===

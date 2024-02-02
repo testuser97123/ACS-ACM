@@ -1,0 +1,28 @@
+////
+Purpose
+-------
+Describe Service Level * (Indicators, Objectives, Agreements) that the deployed systems
+aim for and/or are dependent on from other systems.
+
+Enablement
+----------
+* What is difference between SLIs, SLAs, and SLOs: https://cloud.google.com/blog/products/devops-sre/sre-fundamentals-slis-slas-and-slos
+////
+
+[id="service-levels_{context}"]
+= Service Levels
+
+== Service Level Indicators
+#TODO#
+
+== Service Level Objectives
+#TODO#
+
+== Service Level Agreements
+////
+IMPORTANT
+---------
+Unless client is using one of Red Hats Cloud Services these shouldn't be about SLAs from/to
+Red Hat, and even then, it should just be links out to the official Red Hat doc for those services.
+////
+#TODO#

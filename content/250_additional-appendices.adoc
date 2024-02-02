@@ -1,0 +1,24 @@
+////
+Purpose
+-------
+Add additional appendix includes here or optionally put them directly in line.
+
+Sample
+------
+[appendix]
+== My Additional Appendix
+//include::my_additional_appendix.adoc[]
+
+[appendix]
+== My Additional Appendix 2
+//include::my_additional_appendix_2.adoc[]
+
+[appendix]
+== My Additional Appendix 3
+My inline appendix
+////
+
+[appendix]
+= Red Hat OpenShift Container Platform 4 - SDN
+include::OCP-4x-base/ocp4x-sdn-additional-appendices.adoc[leveloffset=+1]
+

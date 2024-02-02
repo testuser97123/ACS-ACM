@@ -1,0 +1,320 @@
+{rhacs} monitors events in Kubernetes and in containers. The events are evaluated to determine if they are
+within acceptable tolerance, which are configured with policies. The heart of Red Hat Advanced Cluster Security for Kubernetes (RHACS) is the policy engine.{rhacs} includes out-of-the-box policies
+that apply to a wide range of container security events, ranging from image hygiene, deployment hygiene, vulnerabilities and behavior at runtime. Custom policies can also be created as needed.
+
+
+== Policies Overview
+
+Policy criteria can cross the build, deploy, and runtime lifecycles. For example, policies can highlight vulnerabilities in deployments with privileged containers in that deployment. Another example is runtime criteria, such as the execution of shell commands, in containers in deployments that have external network exposure. It is fairly easy to write a policy that prevents use of compilers and other build tools (except in development clusters) in namespaces for CI/CD tools. There are no silos like those in other tools that require you to manage policies for vulnerabilities and runtime separately. The unified policy engine allows for targeted conditions and targeted enforcement, easily allowing exceptions for specific applications after approval by security.
+
+To look the current policy, select Platform configuration tab from the left navigation menu and then System Policies.
+
+
+image::workshop/policies-dashboard.png[pdfwidth=95%]
+
+You can examine policy details by clicking on one of them. The following image present the detail for the "cryptocurrency mining process execution" policy. We can read the description and rationale of the policy and the sugessted remediation. The following section policy criterai show the process associated with this policy.
+
+image:workshop/policy-cryptocurrency.png[pdfwidth=95%]
+
+== Tune Security Polcies
+
+{rhacs} includes over 75 out-of-the-box policies to begin working with best practices. But it's possible to create his own policy our to custom existing one. 
+
+One intersting customization that was made during the workshop was to switrch a policy from informative to enforce. Enforcement can be enable during build, deployment or runtime.
+
+[cols="2,4",options=header]
+|===
+|State
+|Enforcement Behavior
+
+|Build
+|If enabled, StackRox will fail your CI builds when images match the conditions of this policy. Download the CLI above to get started.
+
+|Deploy
+|If enabled, StackRox will automatically block creation of deployments that match the conditions of this policy. In clusters with the StackRox Admission Controller enabled, the Kubernetes API server will block noncompliant deployments. In other clusters, StackRox will edit noncompliant deployments to prevent pods from being scheduled.
+
+|Runtime
+|If enabled, StackRox will either kill the offending pod or block the action taken on the pod. Executions within a pod that match the conditions of the policy will result in the pod being killed. Actions taken through the API server that match policy criteria will be blocked.
+
+|===
+
+The following process allow to switch the enforcement behavior: 
+
+. Select a policy
+. In the upper right of the policy, click Edit (the paper and pencil icon).
+. Click Next (right arrow) to see Policy Criteria.
+. Click Next to see Violations Preview.
+. Click Next to see Enforcement.
+. Click the ON/OFF to switch for both build-time and deploy-time enforcement.
+. Click Save (the floppy disk icon).
+
+== Manage your build with CICD Integration
+
+{rhacs} offers rich capabilities to shift-left and find vulnerabilities and misconfigurations earlier in the
+SDLC. There are two ways to integrate {rhacs} with CICD:
+
+. {rhacs} comes with the roxctl CLI binary and container image that enables integration with CICD tooling
+
+. Jenkins plugin
+
+For all CI tools, the integration works the same way, by using roxctl to scan for vulnerabilities and check
+images against policy violations. The following commands perform this actions
+
+Check images: 
+
+```shell
+roxctl -e “$ROX_CENTRAL_ADDRESS” image check --image=<image-name>
+```
+
+Scan images:
+
+```shell
+roxctl -e “$ROX_CENTRAL_ADDRESS” image scan --image <image-name>
+```
+
+NOTE: You can refer to the {contributions repo}[https://github.com/stackrox/contributions] for examples of integrations with popular CICD tools
+
+== Integration with Tekton
+
+During the workshop a demonstration of integration with Tekton has been provided. The procedure is similar with other CICD tools. 
+
+Two task has been created for the pipelines with the following yaml.
+
+rox-image-check.yaml :
+
+```yaml
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+[...]
+spec:
+  params:
+    - description: >-
+        Secret containing the address:port tuple for StackRox Central (example -
+        rox.stackrox.io:443)
+      name: rox_central_endpoint
+      type: string
+    - description: Secret containing the StackRox API token with CI permissions
+      name: rox_api_token
+      type: string
+    - description: 'Full name of image to scan (example -- gcr.io/rox/sample:5.0-rc1)'
+      name: image
+      type: string
+  results:
+    - description: Output of `roxctl image check`
+      name: check_output
+  steps:
+    - env:
+        - name: ROX_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: rox_api_token
+              name: $(params.rox_api_token)
+        - name: ROX_CENTRAL_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              key: rox_central_endpoint
+              name: $(params.rox_central_endpoint)
+      image: centos
+      name: rox-image-check
+      resources: {}
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
+        https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output
+        ./roxctl  > /dev/null
+
+        chmod +x ./roxctl  > /dev/null
+
+        ./roxctl image check --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT
+        --image $(params.image) 
+```
+rox-image-scan.yaml
+
+```yaml
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+[...]
+spec:
+  params:
+    - description: >-
+        Secret containing the address:port tuple for StackRox Central (example -
+        rox.stackrox.io:443)
+      name: rox_central_endpoint
+      type: string
+    - description: Secret containing the StackRox API token with CI permissions
+      name: rox_api_token
+      type: string
+    - description: 'Full name of image to scan (example -- gcr.io/rox/sample:5.0-rc1)'
+      name: image
+      type: string
+    - default: json
+      description: Output format (json | csv | pretty)
+      name: output_format
+      type: string
+  steps:
+    - env:
+        - name: ROX_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: rox_api_token
+              name: $(params.rox_api_token)
+        - name: ROX_CENTRAL_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              key: rox_central_endpoint
+              name: $(params.rox_central_endpoint)
+      image: centos
+      name: rox-image-scan
+      resources: {}
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        export NO_COLOR="True"
+
+        curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
+        https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output
+        ./roxctl  > /dev/null
+
+        chmod +x ./roxctl > /dev/null
+
+        ./roxctl image scan --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT
+        --image $(params.image) --format $(params.output_format) 
+
+```
+
+The script at the end of this task are used to perform the check and scan actions.  The tasks are integrate on a pipeline.
+
+rox-pipeline.yaml
+
+```yaml
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+[...]
+spec:
+  description: Rox demo pipeline
+  params:
+    - description: 'Full name of image to scan (example -- gcr.io/rox/sample:5.0-rc1)'
+      name: image
+      type: string
+  tasks:
+    - name: image-scan
+      params:
+        - name: image
+          value: $(params.image)
+        - name: rox_api_token
+          value: roxsecrets
+        - name: rox_central_endpoint
+          value: roxsecrets
+        - name: output_format
+          value: pretty
+      taskRef:
+        kind: ClusterTask
+        name: rox-image-scan
+    - name: image-check
+      params:
+        - name: image
+          value: $(params.image)
+        - name: rox_api_token
+          value: roxsecrets
+        - name: rox_central_endpoint
+          value: roxsecrets
+      taskRef:
+        kind: ClusterTask
+        name: rox-image-check
+```
+
+When we run the pipeline and past the container image URL on the windows that appear our tasks makes the call to the stackrox API to perform the scan with the image scan task and the check with the image check task.
+
+image::workshop/tekton1.png[pdfwidth=95%]
+
+image::workshop/tekton2.png[pdfwidth=95%]
+
+
+== Manage deployment with deployment policies
+
+{rhacs} works with Kubernetes Admission Controllers and OpenShift Admission plug-ins to enforce security policies before OpenShift creates workloads (for example, deployments, daemonsets or jobs). {rhacs} uses a ValidatingAdmissionWebhook to verify that the resource being provisioned complies with
+the specified {rhacs} policies. To handle this, {rhacs} creates a ValidatingWebhookConfiguration which contains multiple webhook rules. When the Kubernetes (or OpenShift) API server receives a request that
+matches one of the webhook rules, the API server sends an AdmissionReview request to {rhacs}. {rhacs} then
+accepts or rejects the request based on the policies. There are 2 approaches to enforcing deploy-time policies in RHACS: 
+
+. In cluster with listen and enforce AdmissionController options enabled, RHACS uses the admission controller to reject deployments that violate policy.
+
+. In clusters where the enforcement option is disabled, RHACS scales pod replicas to zero for deployments that violate policy.
+
+== Demonstration of an Enforce Deploy-time policy
+
+Policy can impact deployment either on an informative way or in an enforcement way by blocking the deployment. 
+
+During the workshop a demonstration of an enforcement policy has been made with the following procedure :
+
+. A policy has been defined in RHACS that check if the keywork SECRET or KEY are present has en environment on a deployment. The deployment enforcement has been set to on. 
+
+. We have create the following yaml file 
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu
+  labels:
+    app: ubuntu
+spec:
+  selector:
+    matchLabels:
+      app: ubuntu
+  template:
+    metadata:
+      labels:
+        app: ubuntu
+    spec:
+      containers:
+      - name: ubuntu
+        image: ubuntu:18.04
+        env:
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "abcdefg"
+```
+. If someone try to deploy this yaml with a clear secret as environement variables, the following output is observed
+
+```shell
+oc create -f secrets.yaml
+```
+
+Output
+
+```
+Error from server (Failed currently enforced policies from StackRox): error when creating "secrets.yaml": admission webhook "policyeval.stackrox.io" denied the request:
+The attempted operation violated 1 enforced policy, described below:
+
+Policy: Environment Variable Contains Secret
+- Description:
+    * Alert on deployments with environment variables that contain 'SECRET'
+- Rationale:
+    * Using secrets in environment variables may allow inspection into your secrets
+      from the host or even through the orchestrator UI.
+- Remediation:
+    * Migrate your secrets from environment variables to orchestrator secrets or your
+      security team's secret management solution.
+- Violations:
+    - Environment variable 'AWS_SECRET_ACCESS_KEY' is present in container 'ubuntu'
+
+In case of emergency, add the annotation {"admission.stackrox.io/break-glass": "ticket-1234"} to your deployment with an updated ticket number
+```
+
+We can observe that the deployment of applications that violate policy are prevent before they become actively running containers. 
+
+
+
+
+
+
+
+
+
+
+
+

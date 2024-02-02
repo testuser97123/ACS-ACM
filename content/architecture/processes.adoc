@@ -1,0 +1,21 @@
+////
+Purpose
+-------
+Capture information about how to use the deployed and related systems.
+
+Recommended to primarily be workflow diagrams, possible with labeled and annotated steps.
+
+Examples
+--------
+* Continues Integration and Continues Deployment/Delivery processes
+* DeclarativeOps / GitOps processes
+* Update/Upgrade processes
+* Self service processes,
+  - EX: create a CR for a custom operator to create a new namespace and attach it to the correct team RBAC.
+
+////
+[id="processes_{context}"]
+= Processes
+Information about the processes for using the deployed and related systems.
+
+#TODO#

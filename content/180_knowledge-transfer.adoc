@@ -1,0 +1,106 @@
+////
+Purpose
+-------
+This section is intended to record deliberate collaboration between Red Hat and
+the customer. Knowledge transfer is a two-way activity so this includes both
+activities where Red Hat is gathering information from the customer and where
+information is being communicated to the customer.  As this section may be used
+to demonstrate completion of certain SOW tasks it is important to record
+attendance whenever possible.
+
+Activities which should be captured
+- Discovery workshops
+- Meetings to reach consensus on in-flight decisions
+- Documentation review
+- Progress demonstrations
+- Executive briefings
+- Ad-hoc training or review for non-Participants
+
+Sample
+------
+.Working Sessions
+[cols=3*,cols="10,10,60,20",options="header"]
+|===
+| Session
+| Date
+| Purpose / Attendees
+| Outputs
+
+| Workshop 1
+| 1/5/2021
+a|
+- Purpose
+ * Architecture Review
+ * Establish Additional Use Cases
+- Attendees
+* John Wick/Red Hat
+* Shinji Mikami/ACME
+a|
+- link to / reference to image of sketched image or presentation deck
+
+| Color Decision Meeting
+| 1/7/2021
+a|
+- Purpose
+ * Choose whether to make the icons "Cornflour Blue"
+- Attendees
+ * John Wick/Red Hat
+ * Shinji Mikami/ACME
+ * Nina McInroe/ACME
+a|
+- link to documented decision either in this doc or external system
+
+| Sprint 3 Demo
+| 2/20/2021
+a|
+- Purpose
+ * Show Progress To Executive Leadership
+ * Solicit Feedback
+- Attendees
+ * John Wick/Red Hat
+ * Memphis Raines/Red Hat
+ * Pete Mitchell/Red Hat
+ * Shinji Mikami/ACME
+ * Eiji Aounuma/ACME
+a|
+- link to demo recording or slide deck
+
+| Engagement Report Review
+| 3/15/2021
+a| //Purpose / Attendees
+- Purpose
+ * Review Engagement Report
+ * Identify Gaps And Additional Information Requested
+- Attendees
+ * John Wick/Red Hat
+ * Shinji Mikami/ACME
+a|
+- location of where the CER is stored on internal client systems
+
+|===
+////
+
+#TODO#
+
+.Working Sessions
+[cols=3*,cols="10,10,60,20",options="header"]
+|===
+| Session
+| Date
+| Purpose / Attendees
+| Outputs
+
+| #TODO - session title#
+| #TODO - date#
+a|
+- Purpose
+ * #TODO#
+ * #TODO#
+- Attendees
+ * #TODO#
+ * #TODO#
+a|
+- #TODO - outputs#
+- #TODO - outputs#
+
+|===

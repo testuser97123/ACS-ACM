@@ -1,0 +1,25 @@
+= Red Hat DevOps Pipelines and Processes: Git and Test-Driven Development (TDD) (DO402) | DO402
+
+*Course description*
+
+Red Hat DevOps Pipelines and Processes: Git and Test Driven-Development (TDD) (DO402) is designed for developers to learn version control, test-driven development, Jenkins, and other tools that support a DevOps organization.
+
+*Course summary*
+
+* Version control with git
+* Analyze code quality
+* Create comprehensive test coverage
+* Automated testing
+* Consume and troubleshooting pipelines
+
+*Target Audience*
+
+This course is intended for application developers.
+
+*Technology considerations*
+
+* Internet access is required.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/red-hat-devops-pipelines-and-processes-git-and-test-driven-development-tdd-do402

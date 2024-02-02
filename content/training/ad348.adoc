@@ -1,0 +1,37 @@
+= Red Hat JBoss Application Administration II (AD348)
+
+*Course description*
+
+Manage and provision large-scale deployments of JBoss Enterprise Application Platform
+
+Red Hat JBoss Application Administration II (AD348) prepares students to provision and manage Red Hat(R) JBoss(R) Enterprise Application Platform (JBoss EAP) in large-scale production environments. Intended for experienced administrators, this course provides a deeper understanding of how to work with JBoss EAP by taking a closer look at installation, clustering, deployments, scripting, management, messaging, and security with a view towards building on the skills established in Red Hat JBoss Application Administration I (AD248). 
+
+While focusing on automating tasks using the new command line interface (CLI) features of EAP 7, this course takes a deeper dive into provisioning JBoss EAP instances, live patching, clustering, and domain management through CLI scripting, custom coding, JBoss migrations, and a deeper dive into the security systems of JBoss EAP, including the management interface, securing resources such as JMS queues, implementing SSL for the web interface, RBAC, and network considerations. JBoss Application Administration II (AD348) also covers management, clustering, and tuning of of the ActiveMQ Artemis. 
+
+This course is based on JBoss EAP 7. 
+
+*Course content summary*
+
+* Installation of JBoss EAP and optional components
+* Migration of JBoss EAP 6 to JBoss EAP 7
+* Clustering with an emphasis on tuning
+* Deployments to production and cloud environments
+* Script with CLI
+* JBoss EAP monitoring and resource management
+* Messaging with an emphasis on clustering and tuning
+* JBoss EAP and application security
+
+*Audience for this course*
+
+* Experienced system administrators responsible for deploying and administering JBoss Enterprise Application Platform 7 in large-scale production environments
+* At least 2 years of experience as a JBoss EAP administrator
+* IT professionals who have taken and passed Red Hat Certified Specialist in Enterprise Application Server Administration exam (EX248) and become a Red Hat Certified Specialist in Enterprise Application Server Administration certifications on JBoss EAP 7
+
+*Prerequisites for this course*
+
+* It is recommended to take Red Hat JBoss Application Administration I (AD248) or have equivalent experience  
+* Be a Red Hat Certified Specialist in Enterprise Application Server Administration on Enterprise Application Platform 6 (or later) or have equivalent experience  
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/ad348-red-hat-jboss-application-administration-ii

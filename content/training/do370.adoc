@@ -1,0 +1,46 @@
+= Enterprise Kubernetes Storage with Red Hat OpenShift Data Foundation (DO370)
+
+*Course description*
+
+Teaches the essential skills required to design, implement, and manage a Red Hat OpenShift Data Foundation cluster and perform day-to-day Kubernetes storage management tasks.
+
+Traditional storage options available to Kubernetes administrators are limited and lack flexibility and/or versatility. Red Hat OpenShift Data Foundation provides real advantages, even when it is backed by cloud storage such as AWS EBS and sophisticated on-prem legacy storage like SAN arrays. Many companies rely on third-party solutions to manage backup and disaster recovery in production. However, proper planning to implement these solutions requires knowledge of the Kubernetes CSI and OAPD APIs. This course walks the student through the recommended steps of configuring and managing storage services for container and Kubernetes services.
+
+*Course content coverage*
+
+* Deploy Red Hat OpenShift Data Foundation in internal and external mode.
+* Provision non-shareable block storage to applications like databases.
+* Provision shareable block storage to applications like virtual machines.
+* Provision shareable file storage to such applications as CI/CD pipelines and AI/ML.
+* Provision shareable object storage to applications, such as AI/ML and media streaming.
+* Provision storage for Red Hat OpenShift cluster services, such as monitoring and registry.
+* Monitor and expand storage capacity and performance
+* Attach and detach storage from an application for backup and archiving.
+* Create and access volume snapshots and clones.
+* Troubleshoot internal Ceph components of Red Hat OpenShift Data Foundation.
+* Perform backup and restore operations using the OADP API.
+
+*Target Audience*
+
+The intended audience for this course includes:
+
+* Cluster administrators (systems administrators, cloud administrators, cloud engineers)
+* Cluster engineers (systems administrators, cloud administrators, cloud engineers)
+* Site reliability engineers (SREs)
+
+*Recommended training*
+
+* Take our free assessment to gauge whether this offering is the best fit for your skills.
+* Red Hat Certified Specialist in OpenShift Administration exam (EX280) or equivalent knowledge for the roles of Red Hat OpenShift cluster engineer or SRE. 
+* Red Hat Certified System Administrator exam (EX200) or equivalent knowledge of Linux system administration is recommended for all roles.
+* While not required, students who have completed Red Hat OpenShift Administration III: Scaling Kubernetes Deployments in the Enterprise (DO380) will have advanced knowledge of the Red Hat OpenShift platform in preparation for implementing and working with Red Hat Openshift Data Foundation (formerly Red Hat OpenShift Container Storage).
+* Basic knowledge of Red Hat Ansible Automation Platform is recommended but not required.
+* Basic knowledge of storage technologies, such as disk types, SAN, and NAS is recommended.
+
+*Technology considerations*
+
+* Internet access is required to access the classroom environment and Red Hat OpenShift clusters in the Red Hat Training Cloud.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do370-enterprise-kubernetes-storage-with-red-hat-openshift-data-foundation

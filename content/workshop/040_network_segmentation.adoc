@@ -1,0 +1,46 @@
+RHACS approach to network segmentation is to provide a diagram that displays information about current network segmentation, actual live traffic flows, and tools to help create, test, and deploy Kubernetes Network Policies. In general, the security goal for network segmentation should be to define rules that permit only the
+network traffic required by your application components. The RedHat {rhacs} Network graph facilitate this management.
+
+== Navigate to Network Graph 
+
+To start, navigate to the Network Graph tab from the left-hand side menu in the {rhacs} Central UI. The
+default view of the network graph displays active network traffic with solid lines between namespaces
+and deployments. 
+
+image::workshop/ACS_Network_graph.png[pdfwidth=95%]
+
+You can easily navigate from the different cluster and change timefram or the legend direclty on the UI. On the large perspective 
+
+* The red dots indicate an unrestricted deployment (an open network)* which is the default in OpenShift.
+* The dashed lines indicate a namespace with no restrictions on ingress or egress. 
+
+In the complete network graph, deployments names are not visible. Details of their flows ans baselines are available when you zoom in on of them. You can also view some details of networks flows by hoverinf over the connecting lines.
+
+
+The flows selection provides 3 perspectives on network traffic active, allowed and all. 
+
+[cols="4,4",options=header]
+|===
+
+|Active
+|Provides a flow diagram of actual network activity over the past timeframe.
+
+|Allowed
+|Similar to a firewall diagram, shows the rules in place.
+
+|All
+|Allows you to compare and contrast how the rules are implemented in real time.
+
+|===
+
+Similarly that with process a baseline is created for network traffic and triggers alerts for nomalous flows. 
+
+== Network Policy simulator
+
+RHACS provide a network policy simulator that allors to build firewall rules.
+
+To simulate a policy click on the top right on Network Policy simulator and click Generate and s simulate network policies. This will generate for you a NetworkPolicy based on your actual environment's configuration base on a selected time window. You can also upoad your own custom network policy to simulate a different configuration.
+
+image::workshop/network-policy-simulator.png[pdfwidth=95%]
+
+

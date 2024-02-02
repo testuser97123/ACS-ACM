@@ -1,0 +1,11 @@
+////
+Purpose
+-------
+Provide instructions for requesting additional copies of this document.
+
+Sample
+------
+To request additional copies of this Consulting Engagement Report, please contact the Red Hat Project Manager identified in <<Participants of the Engagement>> section or your current Red Hat account team.
+////
+
+To request additional copies of this Consulting Engagement Report, please contact the Red Hat Project Manager identified in <<Participants of the Engagement>> section or your current Red Hat account team.

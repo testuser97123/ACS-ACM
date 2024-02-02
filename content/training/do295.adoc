@@ -1,0 +1,39 @@
+= Containers, Kubernetes, and Red Hat OpenShift Development II | DO295
+
+*Course description*
+
+Accelerated hands-on training to boost developer productivity powered by Red Hat OpenShift
+
+Containers, Kubernetes, and Red Hat OpenShift Development II (DO295) teaches you how to design, build, and deploy containerized software applications to an OpenShift(R) cluster. Whether you are tasked with writing container-native applications or migrating existing brownfield applications, this course provides hands-on training to boost developer productivity powered by Red Hat OpenShift. This course is based on OpenShift Container Platform 4.6.
+
+*Course summary*
+
+* Explore container and OpenShift architecture
+* Create containerized services
+* Manage containers and container images
+* Build custom container images
+* Manage and trigger application builds
+* Customize an existing source-to-image base image
+* Develop an OpenShift template
+* Generate health checks to monitor and improve application reliability
+
+*Audience for this course*
+
+* Developers who wish to containerize software applications.
+* Administrators who are new to container technology and container orchestration.
+* Architects who are considering using container technologies in software architectures.
+* Site reliability engineers who are considering using Kubernetes and OpenShift.
+
+*Technology requirements*
+
+* Internet access is required for this course in order to access the OpenShift shared and dedicated clusters.
+
+*Recommended skills*
+
+* Be able to use a Linux terminal session, issue operating system commands, and be familiar with shell scripting
+* Have experience with web application architectures and their corresponding technologies
+* Being a Red Hat Certified System Administrator is recommended, but not required
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do295-containers-kubernetes-and-red-hat-openshift-development-ii

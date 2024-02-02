@@ -1,0 +1,40 @@
+= DevOps Culture and Practice Enablement (DO500)
+
+.do500-image {
+max-width: 100%; 
+height: auto;
+padding: 10px 0 30px;
+}
+
+.training-body {
+background-color: #fff !important;
+}
+
+*Deliver faster with modern software and application development methods*
+
+Red Hat Training: DevOps Culture and Practice Enablement (DO500) is a 5-day, immersive master class that offers you the opportunity to experience and implement the cultural shift that a successful DevOps adoption journey demands.
+
+How is this course different from any other agile training?
+
+Most agile training offerings focus on a particular framework or are directed at just delivery or just technology, but this course combines the best tools from many leading frameworks. The curriculum blends continuous discovery and continuous delivery together with cultural and technical practices into a unique, highly engaging experience, packed with real-world applications.
+
+Who should attend?
+
+This course is designed for business product owners, developers, and engineers eager to deliver continuous value to customers through an enhanced understanding of changing customer needs and the ability to reduce the time needed to get new ideas to market.
+
+In addition, the course mimics a real-world delivery team, making this offering a unique fit for cross-functional teams interested in learning how collaboration can breed innovation. Armed with shared experiences and best practices, the team can apply what it has learned to benefit the business’s culture and bottom line in the pursuit of new projects and improved processes.
+
+What are the prerequisites?
+
+* Knowledge of agile practices is helpful
+* Experience using agile practices and methodologies such as scrum is beneficial
+
+Technology requirements
+
+* This class will require internet access to certain sites (AWS, youtube, google drive, online chat tools)
+* This course is a "bring your own device" (BYOD) training so you will be expected to bring your own device.
+* Chrome browser suggested
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do500-devops-culture-and-practice-enablement

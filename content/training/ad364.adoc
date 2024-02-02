@@ -1,0 +1,36 @@
+= Developing Application Business Rules with Red Hat Decision Manager (AD364)
+
+*Course description*
+
+Introduction to authoring and deploying business rules with Red Hat Decision Manager.
+
+Red Hat Decision Manager is an open source business automation platform for business rules management that facilitates business policy and rules development, access, and management. Decision Manager includes a fast and highly efficient rules engine and easy-to-use rules development tools and management system. In this course, you will learn how to author, test, and debug business rules, how to generate rule packages, and how Decision Manager’s runtime environment executes rules using both drools and Decision Model Notation (DMN).
+
+This course is based on Red Hat Decision Manager 7.9.
+
+*5-10 Course Topics*
+
+* Author rules with guided decision tables.
+* Implement test-driven rule design using Business Central.
+* Implement advanced rule field constraints with Drools Rule Language (DRL).
+* Execute rules using the KIE API.
+* Resolve rule conflicts with rule flow attributes.
+* Author decisions with Decision Model Notation.
+* Define rules for complex event processing.
+
+*Target Audience*
+
+* This course is designed for application developers and business rules developers.
+
+*Recommended training*
+
+* There are no prerequisites for this course.
+* Java SE and Java EE experience is helpful.
+
+*Technology considerations*
+
+* Internet access required.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/developing-application-business-rules-red-hat-decision-manager

@@ -1,0 +1,42 @@
+= Camel Integration and Development with Red Hat Fuse on OpenShift (AD421)
+
+*Course description*
+
+Learn to develop, implement, test, and deploy applications utilizing enterprise integration patterns (EIP)
+
+Camel Integration and Development with Red Hat Fuse on OpenShift (AD421) is a hands-on, lab-based course that gives Java(TM) developers and architects an understanding of Apache Camel and the enhancements and tools Red Hat offers in support of Camel development.
+
+This course is based on Red Hat(R) Enterprise Linux(R) 7.5, Red Hat(R) OpenShift(R) Container Platform 3.9, Red Hat(R) Fuse 7.1, and Apache Camel 2.21.
+
+Camel and Red Hat Fuse enable developers to create complex integrations in a simple and maintainable format. Camel development is organized around:
+
+* Routes that define a sequence or flow of processing.
+* Processors that transform, interpret, and modify messages within a Camel route.
+* Components that enable the creation of endpoints that interact with the outside world for acquiring and transmitting data.
+
+This course can assist in preparing for the Red Hat Certified Specialist in Camel Development exam (EX421).
+
+*Course content summary*
+
+* Create basic routes and integration solutions with Camel. 
+* Combine messages through aggregation. 
+* Develop tests with Camel test kit and mock components. 
+* Develop REST services with the REST DSL and Swagger. 
+* Deploy a route on Karaf, EAP, and Spring Boot. 
+* Increase route throughput with parallel processing. 
+* Deploy microservices with Red Hat Fuse on OpenShift.
+
+*Audience for this course*
+
+* Java developers who need to learn how to use Camel, implement enterprise integration patterns (EIPs), and develop integration applications with Camel
+* Java architects who need to understand how Apache Camel can be used in software architectures requiring integration between applications
+
+*Prerequisites for this course*
+
+* Experience in developing and deploying Java EE 7 applications
+* Experience with relational databases, JDBC, and SQL
+* Experience with Java development tools such as Maven and Eclipse
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/ad421-camel-integration-and-development-with-red-hat-fuse

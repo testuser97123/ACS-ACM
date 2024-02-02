@@ -1,0 +1,786 @@
+////
+Purpose
+-------
+Describe the architecture of the deployed and affected systems.
+
+Instructions
+------------
+The high level sections included here are intended to be relevant to ANY and ALL engagements.
+Before you remove a section thinking it is not relevant to your engagement, really think on
+whether it isn't relevant, or just hasn't been captured yet.
+
+For example, rather then removing the HA or DR section for a solution that did not have any
+HA or DR considerations takin into account, list that there was no HA or DR solution put in place
+and reference the Decision record that indicates why that is a case and/or that it was simply
+out of scope for the current engagement in which case then link to a future recommendation to
+introduce solutions for those problems later.
+////
+
+This content describes the architecture of the deployed and affected systems during this engagement.
+////
+:context: architecture
+include::architecture/diagrams.adoc[leveloffset=+0]
+
+:context: architecture
+include::architecture/processes.adoc[leveloffset=+0]
+
+:context: architecture
+include::architecture/environment-setup.adoc[leveloffset=+0]
+
+:context: architecture
+include::architecture/qos.adoc[leveloffset=+0]
+
+:context: architecture
+include::architecture/service-levels.adoc[leveloffset=+0]
+
+:context: architecture
+include::architecture/observability.adoc[leveloffset=+0]
+
+:context: architecture
+include::architecture/architectural-records.adoc[leveloffset=+0]
+////
+
+= High Level {acm} Architecture
+
+include::ACM/acm-architecture.adoc[leveloffset=+1]
+
+////
+= Red Hat OpenShift Container Platform 4 - Base architecture
+include::OCP-4x-base/introduction.adoc[leveloffset=+1]
+
+include::OCP-4x-base/installation-update.adoc[leveloffset=+1]
+
+include::OCP-4x-base/control-plane.adoc[leveloffset=+1]
+
+include::OCP-4x-base/rhcos.adoc[leveloffset=+1]
+
+include::OCP-4x-base/architectural-decisions.adoc[leveloffset=+1]
+////
+
+= {rhacm} Installation
+
+Initial installation was done as described in the {acm_install} product documentation.
+
+== Installation Summary
+
+{acm} is developed with the paradigm of being able to quickly deploy, operate, and retire clusters. Some clusters being more equal than others, during this engagement the following systems were configured to be managed by ACM.
+
+{acm} is installed on the OCP01 cluster. This location was chosen by the client considering its environment and logical disposition. The cluster is located in Non-PCI UAT CDVL as hbnputs1ocp1 cluster. 
+
+The first step we need is to be logged to the cluster API where we are going to install with the OC of the Bastion command
+
+* **Namespace:** The ACM operator was installed in to the `open-cluster-management` as defaults by the operator options.
+
+* **Approval Strategy:** The ACM operator approval strategy was installed as automatic. This means the operator will update automatically in the background.
+
+* **The ACM multicluster CR (default values used):**
+
+```yaml
+apiVersion: operator.open-cluster-management.io/v1
+kind: MultiClusterHub
+metadata:
+  name: multiclusterhub
+  namespace: open
+spec:
+  availabilityConfig: "High"
+  disableHubSelfManagement: false
+```
+
+* **Storage:** The NetApp Trident CSI Driver Operator has been installed and is the default storage class.
+
+* **Internet access:** The hub cluster does have access direct to internet to pull images through a configured proxy in the cluster itself.
+
+* **Role Binding:** A subscription administrator is needed to deploy policies from Git repos to multiple namespaces in the hub cluster. The `open-cluster-management:subscription-admin` role binding should exist if not we will create it. We will then add an entry for our group to this ClusterRoleBinding. A new entry will look like the following:
+
+```yaml
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: groupname
+```
+
+Details about this subscription administrator privilege is detailed in this link.
+
+* https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.4/html-single/applications/index#granting-subscription-admin-privilege
+
+
+== Deployment
+
+The first step we need is to be logged to the cluster API where we are going to install with the OC of the Bastion command
+
+Create the following files (you can use Nano, VI or Vim)
+
+* `00-acmproject.yaml`
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    openshift.io/node-selector: node-role.kubernetes.io/acm=true
+    scheduler.alpha.kubernetes.io/defaultTolerations: '[{"Key": "node-role.kubernetes.io/acm",
+      "Operator": "Equal", "Value": "true", "Effect": "NoExecute"}]'  
+  name: open-cluster-management
+  labels:
+    kubernetes.io/metadata.name: open-cluster-management
+spec:
+  finalizers:
+  - kubernetes
+```
+
+* `01-operatorgroup.yaml`
+
+```yaml
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: open-cluster-management
+spec:
+  targetNamespaces:
+  - open-cluster-management
+```
+
+* `02-subscription.yaml`
+
+```yaml
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: acm-operator-subscription
+spec:
+  sourceNamespace: openshift-marketplace
+  source: redhat-operators
+  channel: release-2.6
+  installPlanApproval: auto
+  name: advanced-cluster-management
+```
+
+* `03-Multiclusterhub.yaml`
+
+```yaml
+apiVersion: operator.open-cluster-management.io/v1
+kind: MultiClusterHub
+metadata:
+  name: multiclusterhub
+  namespace: open-cluster-management
+spec:
+  availabilityConfig: "High"
+  disableHubSelfManagement: false
+
+```
+
+For the deployment you must run the following steps with their respective commands:
+
+.Create the `Open-Cluster-Management` project
+[Source, Bash]
+----
+ $ oc apply -f 00-acmproject.yaml
+----
+
+.In the "Open-Cluster-Management" project
+[Source, Bash]
+----
+ $ oc project open-cluster-management
+----
+
+.Create the ACM Operatorgroup
+[Source, Bash]
+----
+ $ oc apply -f 01-operatragroup.yaml
+----
+
+.Create the subscription and deploy ACM
+[Source, Bash]
+----
+ $ oc apply -f 02-subscription.yaml
+----
+
+Wait approximately 5 minutes and verify that the operator is in Success we can do it for the web console or the web:
+
+* By web console, go to `operators -> install operators 'make sure in` project` be in `all projects` and wait for it to be in` `the operator' the operator` advanced cluster management for kubernetes`
+
+image::acm/checkoweb.png[]
+
+* By CLI console, run the following command and verify the exit as shown below:
+
+[Source, Bash]
+----
+ $ oc get operators Advanced-Cluster-management.open-cluster-manage -n open-cluster-management -o yaml | grep succeeded
+----
+[Source, Bash]
+----
+ Reason: Installsucceeded
+ Type: Succeeded
+----
+
+Create the Multicluster instance
+
+.Create the Multiclusterhub instance to administer the clusters
+[Source, Bash]
+----
+ $ oc apply -f 03-multiclusterhub.yaml
+----
+
+* Wait about 3 minutes and verify that the pod's are in `running` with the following command:
+
+[Source, Bash]
+----
+Get pods -n Open-Cluster-Management Paste output from cluster
+----
+
+* The Hub cluster is created when creating the multiclusterhub instance, verifying the route through the cli or the web console
+
+[Source, Bash]
+----
+Get Route -N Open-Cluster-Management
+----
+image::acm/image0.png[]
+
+* Select the route that is seen in the `location` column
+* Go back to log if necessary
+
+image::acm/image0a.png[]
+
+= Importing Managed clusters into the Hub ACM cluster
+
+== Take note of the URL and the cluster token that we want to import in ACM
+
+* Go to the cluster console that we want to import (https: //console-openshift-console.apps.hbnpsbs1ocp1.corp.hdfcbank.com) and logged in with an account that has as the cluster-adam role we select up to the right in the user `Copy Login Command`
+
+image::acm/image3.png[]
+
+* Go back to log if necessary
+
+* Select `Display Token`
+
+image::acm/image4.png[]
+
+* Copy and save the URL token (eg: https://api.hbnpsbs1ocp1.corp.hdfcbank.com:6443)
+
+== Import cluster
+
+* Enter the cluster web console where we install ACM.
+
+Logged with an account that has as a cluster-admin in the menu on the left go to `networking`->` routes`, choose the `open-cluster-management` project and select the route that appears in` location`
+
+image::acm/image0.png[]
+image::acm/image0a.png[]
+
+* Once on the ACM web console in the navigation menu select `Infrastructure> Clusters`
+
+* Then select `import cluster` in the dashboard of `clusters`
+
+image::acm/image1.jpeg[]
+
+* Complete the form with the name of the cluster to import and some label if necessary (recommended env = <NTTCDVLSAND>) and in the option `import mode` select `Enter your server URL and API token for the existing cluster` in `Import mode`.
+
+image::acm/image6.png[]
+
+* Complete the data in `Server Url` and `API token` with the information of the URL API of the cluster and the token previously copied and finally select `import`, see image:
+
+image::acm/image7.png[]
+
+* We wait a few minutes and in the `Overview` we will be able to see that two clusters appear
+
+image::acm/image8.jpeg[]
+
+* In the dashboard of `clusters` we can already observe the new imported cluster
+
+image::acm/checkclusterlisto.png[]
+
+* Follow the similar process to import the following clusters as well:- 
+
+  ** hbnputs2ocp1 (Non-PCI Bangalore UAT cluster)
+  ** hbpiuts2ocp1 (PCI Bangalore UAT cluster)
+  ** digitaluat (PCI CDVL UAT cluster)
+
+image::acm/checkclusterlisto.png[]
+
+= Backup & Restore
+
+{rhacm} has a cluster backup and restore operator feature that is currently in technology preview. This relies on the the OpenShift API for Data Protection (OADP) operator. The idea is that the ODAP operator is installed and configured. Then you create a BackupSchedule.cluster.open-cluster-management.io yaml file that defines backup schedule details. 
+
+.{rhacm} Backup & Restore operator
+image::acm/cluster_backup.png[]
+
+The backupSchedule.cluster.open-cluster-management.io resource will create three schedule.velero.io resources: 
+
+* acm-managed-clusters-schedule: This resource is used to schedule backups for the managed cluster resources, including managed clusters, cluster pools, and cluster sets. 
+* acm-credentials-schedule: This resource is used to schedule backups for the user created credentials and any copy of those credentials. These credentials are identified by the cluster.open-cluster-management.io/type label selector; all secrets that define the label selector are included in the backup. 
+* acm-resources-schedule: This resource is used to schedule backups for the Applications and Policy resources, including any required resources, such as: 
+
+More details are defined in the documentation: 
+
+* https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/clusters/managing-your-clusters#schedule-backup
+* https://github.com/stolostron/cluster-backup-operator
+
+
+== Configure a backup
+
+* Install the OADP Operator from the OperatorHub web interface. Details on docs site: https://docs.openshift.com/container-platform/4.10/backup_and_restore/application_backup_and_restore/installing/installing-oadp-mcg.html
+
+* Ensure the ACM is configured to have clusterbackups turned on. If not you can edit the MultiClusterHub yaml to turn it on:
+
+----
+apiVersion: operator.open-cluster-management.io/v1
+  kind: MultiClusterHub
+  metadata:
+    name: multiclusterhub
+    namespace: open-cluster-management
+  spec:
+    availabilityConfig: High
+    enableClusterBackup: true <-----
+----
+
+* Configure the OADP operator to use storage from NetApp S3 by creating a DataProtectionApplication yaml file:
+
+----
+apiVersion: oadp.openshift.io/v1alpha1
+kind: DataProtectionApplication
+metadata:
+  name: velero-sample
+  namespace: open-cluster-management-backup
+spec:
+  configuration:
+    velero:
+      defaultPlugins:
+        - aws
+        - openshift
+    restic:
+      enable: true
+  backupLocations:
+    - velero:
+        config:
+          profile: "default"
+          region: "default"
+          s3Url: https://S3NTAPUATCDVL1.corp.hdfcbank.com
+          insecureSkipTLSVerify: "false"
+          s3ForcePathStyle: "true"
+        provider: aws
+        default: true
+        credential:
+          key: cloud
+          name:  cloud-credentials
+        objectStorage:
+          bucket: acm-ut-s1
+          caCert: >-
+            ************************************************************
+          prefix: velero
+----
+
+* Create a backup schedule yaml file:
+
+----
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: BackupSchedule
+metadata:
+  name: schedule-acm
+spec:
+  maxBackups: 10 # maximum number of backups after which old backups should be removed
+  veleroSchedule:  */30 * * * * # Create a backup every 6 hours
+  veleroTtl: 72h # deletes scheduled backups after 72h; optional, if not specified, the maximum default value set by velero is used - 720h
+----
+
+== Config a restore
+
+* There are a few different options for restoring from a backup depending on the scenario so check the documentation first. 
+
+* Login to the passive OpenShift cluster in the Bangalore site, considering the openshift ACM hub in the active state is down, we can restore the backups taken from the cluster to include the managed clusters, application, credentials etc on the DR OCP cluster.
+
+To create a restore you would just create a restore yaml like below:
+
+----
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Restore
+metadata:
+  name: restore-acm
+  namespace: open-cluster-management-backup
+spec:
+  cleanupBeforeRestore: CleanupRestored
+  veleroManagedClustersBackupName: latest
+  veleroCredentialsBackupName: latest
+  veleroResourcesBackupName: latest
+----
+
+https://github.com/stolostron/cluster-backup-operator#restoring-a-backup
+
+
+= ACM Policies 
+include::ACM/acm-policy.adoc[leveloffset=+1]
+
+
+= Scaling up Baremetal Worker nodes in Managed cluster using ACM
+
+== Prerequisites to enable scaling using ACM in HDFC Enterprise Paas Cluster.
+
+* Ensure the following DNS entries are made against the hub cluster so that the assisted services are accessible via the *.apps URL from the hub cluster.
+
+ ** DNS entries:- This is needed against the *.apps vip (xx.xx.xx.12)
+      *** assisted-image-service-multicluster-engine.apps.hbnputs1ocp1.corp.hdfcbank.com
+      *** assisted-service-multicluster-engine.apps.hbnputs1ocp1.corp.hdfcbank.com
+
+ ** Network Connectivity
+      *** The newly available machines should be able to access the api VIP of the hub cluster on port 6443 (bi-directional)
+      *** The newly available machines should be able to access the *.apps VIP of the hub cluster on port 443 (bi-directional)
+    
+ ** LoadBalancer entries:- This is needed against api and api-int VIP (xx.xx.xx.10 & xx.xx.xx.11) `[Optional Not required after ACM 2.8]`
+      *** 22624 port to be opened on the LB for above two VIPs'. The backend should all three master nodes which is exact configuration like 6443.
+
+== Enabling Central Infrastructure Management for ACM.
+
+It is possible to import an existing installed OpenShift in order to be able to add more workers to it. (Day 2 operation)
+
+* Collect the details of the Cluster page on ACM to check if the cluster is imported as managed cluster or not. Here we are adding the more nodes to the Hub cluster which is known as `local-cluster` too.
+
+image::acm/list.png[]
+
+Ensure the OpenShift Hub cluster has Assisted Services Enabled. If not then enable the assisted services before attempting the scale up.
+
+* To enable the CIM service, complete the following steps:
+
+This step only applies if your hub cluster is installed on one of the following platforms: bare metal, Red Hat OpenStack Platform, VMware vSphere, or was installed by using the user-provisioned infrastructure (UPI) method and the platform is None. Skip this step if your hub cluster is on any other platform.
+Modify the Provisioning resource to allow the Bare Metal Operator to watch all namespaces by running the following command:
+
+----
+
+ $ oc patch provisioning provisioning-configuration --type merge -p '{"spec":{"watchAllNamespaces": true }}'
+
+----
+
+* Create the AgentServiceConfig custom resource by completing the following steps:
+
+----
+apiVersion: agent-install.openshift.io/v1beta1
+kind: AgentServiceConfig
+metadata:
+ name: agent
+spec:
+  databaseStorage:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Gi
+  filesystemStorage:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Gi
+  imageStorage:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Gi
+  osImages:
+    - openshiftVersion: "4.10.16"
+      version: "410.84.202205191234-0"
+      url: "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.10/4.10.16/rhcos-4.10.16-x86_64-live.x86_64.iso"
+      cpuArchitecture: "x86_64"
+
+----
+
+* Create the AgentServiceConfig custom resource by running the following command:
+
+----
+
+ $ oc create -f agent_service_config.yaml
+----
+
+* Your CIM service is configured. You can verify that it is healthy by checking the assisted-service and assisted-image-service deployments and ensuring that their pods are ready and running.
+
+image::acm/enableas.png[]
+
+== Configure the required CRDs' on the cluster to enable scaling on installed cluster
+
+*  It is important to ensure that a ClusterImageSet matching the imported cluster is present.
+
+ ** Ensure that the infrastructure owner has made this available.
+
+----
+
+cat << EOF | oc apply -f -
+apiVersion: hive.openshift.io/v1
+kind: ClusterImageSet
+metadata:
+  name: openshift-v4.10.16
+spec:
+  releaseImage: quay.io/openshift-release-dev/ocp-release@sha256:22e149142517dfccb47be828f012659b1ccf71d26620e6f62468c264a7ce7863
+EOF
+
+----
+
+* Set up a pull secret, use a valid openshift pull secret.
+
+----
+cat << EOF | oc apply -f -
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/dockerconfigjson
+metadata:
+  name: pull-secret
+  namespace: hbnputs1ocp1
+stringData:
+  .dockerconfigjson: 'YOUR_PULL_SECRET_JSON_GOES_HERE'
+EOF
+
+----
+
+* Copy the kubeconfig from the OCP cluster into the hub.
+
+  ** To obtain the KubeConfig from the OCP cluster, make sure that `KUBECONFIG` is set to the cluster being imported and then use:
+
+----
+oc get secret -n openshift-kube-apiserver node-kubeconfigs -ojson | jq '.data["lb-ext.kubeconfig"]' --raw-output | base64 -d > /tmp/kubeconfig.some-other-cluster
+----
+
+Then make sure that KUBECONFIG is set to the hub and use:
+
+----
+oc -n hbnputs1ocp1 create secret generic cluster-admin-kubeconfig --from-file=kubeconfig=/tmp/kubeconfig.some-other-cluster
+
+----
+
+* Collect the ignition ca certification so to used for Ignition Endpoint Override.
+
+----
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/dockerconfigjson
+metadata:
+  name: ignition-ca-certificate
+  namespace: hbnputs1ocp1
+stringData:
+  tls.crt: |
+    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCiAgICBNSUlDTkRDQ0FhRUNFQUt0Wm41T1JmNWVWMjg4bUJsZTNjQXdEUVlKS29aSWh2Y05BUUVDQlFBd1h6RUxNQWtHCiAgICBBMVVFQmhNQ1ZWTXhJREFlQmdOVkJBb1RGMUpUUVNCRVlYUmhJRk5sWTNWeWFYUjVMQ0JKYm1NdU1TNHdMQVlECiAgICBWUVFMRXlWVFpXTjFjbVVnVTJWeWRtVnlJRU5sY25ScFptbGpZWFJwYjI0Z1FYVjBhRzl5YVhSNU1CNFhEVGswCiAgICBNVEV3T1RBd01EQXdNRm9YRFRFd01ERXdOekl6TlRrMU9Wb3dYekVMTUFrR0ExVUVCaE1DVlZNeElEQWVCZ05WCiAgICBCQW9URjFKVFFTQkVZWFJoSUZObFkzVnlhWFI1TENCSmJtTXVNUzR3TEFZRFZRUUxFeVZUWldOMWNtVWdVMlZ5CiAgICBkbVZ5SUVObGNuUnBabWxqWVhScGIyNGdRWFYwYUc5eWFYUjVNSUdiTUEwR0NTcUdTSWIzRFFFQkFRVUFBNEdKCiAgICBBRENCaFFKK0FKTE9lc0d1Z3o1YXFvbURWNndsQVhZTXJhNk9MRGZPNnpWNFpGUUQ1WVJBVWNtL2p3amlpb0lJCiAgICAwaGFHTjFYcHNTRUNyWFpvZ1pvRm9rdkpTeVZtSWxac2lBZVA5NEZaYllRSFpYQVRjWFkrbTNkTTQxQ0pWcGhJCiAgICB1UjJuS1JvVExrb1JXWndlRmRWSlZDeHpPbW1Dc1pjNW5HMXdaMGpsM1MzV3lCNTdBZ01CQUFFd0RRWUpLb1pJCiAgICBodmNOQVFFQ0JRQURmZ0JsM1g3aHN1eXc0anJnN0hGR21oa1J1TlBIb0xRRFFDWUNQZ21jNFJLejBWcjJONlczCiAgICBZUU8yV3hacE84WkVDQXlJVXd4cmwwbkhQalhjYkxtN3F0OWN1em92azJDMnFVdE44aUQzelY5L1pIdU8zQUJjCiAgICAxL3AzeWprV1dXOE82dE8xZzM5TlRVSldkclRKWHdUNE9QanIwbDkxWDgxNy9PV09nSHo4VUE9PQogICAgLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
+----
+
+* Create an `AgentClusterInstall` and a `ClusterDeployment`, these should reference each other.
+
+Note that in the ClusterDeployment that it is very important to set installed to `true` so that the cluster will automatically be imported as a Day 2 cluster.
+Additionally, it is important to ensure that the kubeconfig created in the previous step is referenced here in `adminKubeconfigSecretRef`.
+Adding `adminKubeconfigSecretRef` requires the clusterMetaData stanza which requires definition of clusterID and infraID, for day2 purposes these may be empty strings.
+spec.baseDomain should match the domain being used for the cluster.
+
+----
+cat << EOF | oc apply -f -
+apiVersion: extensions.hive.openshift.io/v1beta1
+kind: AgentClusterInstall
+metadata:
+  name: hbnputs1ocp1
+  namespace: hbnputs1ocp1
+spec:
+  networking:
+    userManagedNetworking: false
+  clusterDeploymentRef:
+    name: hbnputs1ocp1
+  ignitionEndpoint:
+    url: "https://api-int.hbnputs1ocp1.corp.hdfcbank.com:22623/config"
+    caCertificateReference:
+      namespace: "hbnputs1ocp1"
+      name: "ignition-ca-certificate"
+  imageSetRef:
+    name: openshift-v4.10.16
+  provisionRequirements:
+    controlPlaneAgents: 1
+  sshPublicKey: "ssh-rsa ..." # This field is optional but if you want to be able to log into nodes for troubleshooting purposes then this is handy.
+EOF
+
+cat << EOF | oc apply -f -
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: hbnputs1ocp1
+  namespace: hbnputs1ocp1
+spec:
+  baseDomain: corp.hdfcbank.com
+  installed: true
+  clusterMetadata:
+      adminKubeconfigSecretRef:
+        name: cluster-admin-kubeconfig
+      clusterID: "<collect it from clusterversion CR>"
+      infraID: "<collect it from clusterversion CR>"
+  clusterInstallRef:
+    group: extensions.hive.openshift.io
+    kind: AgentClusterInstall
+    name: hbnputs1ocp1
+    version: v1beta1
+  clusterName: hbnputs1ocp1
+  platform:
+    agentBareMetal:
+      agentSelector: {}    
+  pullSecretRef:
+    name: pull-secret
+EOF
+
+----
+
+Create both the CRs' and ensure that the references are matching the requests in the configuration so that there are no content mis-match issue. 
+
+image::acm/agentclusterinstall.png[]
+
+image::acm/clusterdeployment.png[]
+
+
+* Add an infraenv representing the references of the clusterdeployment. 
+
+If using late binding, there is no need to add a clusterRef at this stage, otherwise it should be added here.
+
+----
+cat << EOF | oc apply -f -
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: hbnputs1ocp1
+  namespace: hbnputs1ocp1
+spec:
+  clusterRef:
+    name: hbnputs1ocp1
+    namespace: hbnputs1ocp1
+  pullSecretRef:
+    name: pull-secret
+  sshAuthorizedKey: "..." # Optional but it can be handy to be able to log into nodes to troubleshoot.
+  proxy:
+    httpProxy: XXXXXXXXXXXXXXXXXXXXXXX
+    httpsProxy: XXXXXXXXXXXXXXXXXXXXXXX
+    noProxy: XXXXXXXXXXXXXXXXXXXXXXXX
+  nmStateConfigLabelSelector:
+    matchLabels:
+      clustertouse: hbnputs1ocp1
+EOF
+----
+
+* Finally Create the NMState config file on the cluster to embed the network configuration in the ISO. 
+
+----
+
+apiVersion: agent-install.openshift.io/v1beta1
+kind: NMStateConfig
+metadata:
+  creationTimestamp: '2023-06-02T15:52:25Z'
+  generation: 36
+  labels:
+    clustertouse: hbnputs1ocp1
+  name: hbnputs1ocp1
+  namespace: hbnputs1ocp1
+  resourceVersion: '783960710'
+  uid: fc9b78d6-abe6-45aa-8687-bae8394daf59
+spec:
+  config:
+    dns-resolver:
+      config:
+        server:
+          - 10.226.213.117
+          - 10.225.212.174
+    interfaces:
+      - ipv4:
+          address:
+            - ip: 10.229.222.35
+              prefix-length: 24
+          dhcp: false
+          enabled: true
+        ipv6:
+          enabled: false
+        link-aggregation:
+          mode: 802.3ad
+          options:
+            lacp_rate: fast
+            miimon: '100'
+            xmit_hash_policy: layer2+3
+          slaves:
+            - ens3f0np0
+            - eno12399np0
+        name: bond0
+        state: up
+        type: bond
+      - ipv4:
+          address:
+            - ip: 192.168.160.74
+              prefix-length: 28
+          dhcp: false
+          enabled: true
+        ipv6:
+          enabled: false
+        link-aggregation:
+          mode: 802.3ad
+          options:
+            lacp_rate: fast
+            miimon: '100'
+            xmit_hash_policy: layer2+3
+          slaves:
+            - ens3f1np1
+            - eno12409np1
+        name: bond1
+        state: up
+        type: bond
+    routes:
+      config:
+        - destination: 0.0.0.0/0
+          next-hop-address: 10.229.222.1
+          next-hop-interface: bond0
+        - destination: 192.168.160.0/28
+          next-hop-interface: bond1
+  interfaces:
+    - macAddress: '00:62:0B:74:B5:E0'
+      name: ens3f0np0
+    - macAddress: '14:23:F2:16:13:F0'
+      name: eno12399np0
+    - macAddress: '14:23:F2:16:13:F1'
+      name: eno12409np1
+    - macAddress: '00:62:0B:74:B5:E1'
+      name: ens3f1np1
+
+----
+
+`At this point of time we might need to ensure the user collects the mac-addresses of each interfaces, bond ips' and route configuration are changed for every node intended to be scaled up on the cluster`
+
+* If all done correctly, an ISO download URL should quickly become available, dowload the ISO using this.
+
+----
+oc get infraenv -n spoke-cluster some-other-infraenv -ojson | jq ".status.isoDownloadURL" --raw-output | xargs curl -k -o /storage0/isos/some-other.iso
+----
+
+image::acm/infraenv.png[]
+
+image::acm/iso.png[]
+
+== Adding a Day 2 worker to the cluster
+
+
+* Boot the machine that will be used as a worker from the ISO.
+
+  ** Ensure that the node being used for this meets the requirements for an Openshift worker node.
+
+* Wait for an agent to register.
+
+----
+watch -n 5 "oc get agent -n spoke-cluster"
+----
+
+If agent registration is succesful, after a short time, you should see an agent listed, this agent will need to be approved for installation. This can take a few minutes to show up.
+
+If for any reason this step does not work, try logging into the booted node to see if the nature of the problem may be determined.
+
+(use ctrl-c to exit the watch command once the node shows up)
+
+image::acm/installed.png[]
+
+* Make sure any pending unbound agents are associated with the cluster. (this step is only required for late binding)
+
+----
+ $ oc get agent -n spoke-cluster -ojson | jq -r '.items[] | select(.spec.approved==false) |select(.spec.clusterDeploymentName==null) | .metadata.name'| xargs oc -n spoke-cluster patch -p '{"spec":{"clusterDeploymentName":{"name":"some-other-cluster","namespace":"spoke-cluster"}}}' --type merge agent
+----
+
+* Approve any pending agents for installation.
+
+----
+oc get agent -n spoke-cluster -ojson | jq -r '.items[] | select(.spec.approved==false) | .metadata.name'| xargs oc -n spoke-cluster patch -p '{"spec":{"approved":true}}' --type merge agent
+----
+
+* Await the installation of the worker.
+
+On completion of node installation, the worker node should contact the cluster with a Certificate Signing Request to begin the joining process. The CSRs should be automatically signed after a short while.
+
+
+image::acm/nodecluster.png[]

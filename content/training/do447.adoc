@@ -1,0 +1,37 @@
+= Advanced Automation: Ansible Best Practices (DO447)
+
+*Course description*
+
+Take your Red Hat Ansible Automation skills to the next level and manage automation at scale
+
+Advanced Automation: Red Hat Ansible Best Practices (DO447) is for experienced Red Hat(R) Ansible(R) Automation users who want to take their Ansible skills to the next level, enabling scalable design and operation of Ansible Automation in the enterprise. You will explore better ways to automate tasks and use Red Hat Ansible Engine effectively, as well as how to leverage advanced features of Ansible to perform more complex tasks. You will also learn how to install and use Red Hat Ansible Tower to centrally coordinate your use of Ansible, control access to hosts and systems, and manage Ansible workflows through the web interface and the Red Hat Ansible Tower API.
+
+This course is based on Red Hat Ansible Automation (Red Hat Ansible Engine 2.8 / Red Hat Ansible Tower 3.5) and Red Hat Enterprise Linux(R) 8.
+
+*Course content summary*
+
+* Investigate recommended practices for effective and efficient automation with Ansible.
+* Perform rolling updates with your Ansible Automation operations.
+* Use advanced features of Ansible to work with data, including filters and plugins.
+* Control applications through their REST API with Ansible Playbooks.
+* Implement Red Hat Ansible Tower to centrally coordinate and scale Red Hat Ansible Automation.
+* Leverage capabilities of Red Hat Ansible Tower to manage complex automation workflows.
+* Implement a CI/CD pipeline for your automation with Git and Red Hat Ansible Tower.
+
+*Audience for this course*
+
+This course is designed for users who need to set recommended design patterns and operate automation practices at scale, including these roles:
+
+* DevOps engineers
+* Linux system administrators, developers
+* Release engineers
+* Other IT professionals with basic expertise using Ansible or Red Hat Ansible Engine to automate, provision, configure, and deploy applications and services in a Linux environment
+
+*Prerequisites for this course*
+
+* Be a Red Hat Certified System Administrator (RHCSA(R)), or demonstrate equivalent Red Hat Enterprise Linux knowledge and experience
+* Be a Red Hat Certified Specialist in Ansible Automation or Red Hat Certified Engineer (RHCE(R)) on Red Hat Enterprise Linux 8, or demonstrate equivalent Ansible experience
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do447-advanced-automation-ansible-best-practices

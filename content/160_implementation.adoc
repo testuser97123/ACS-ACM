@@ -1,0 +1,1309 @@
+////
+Purpose
+-------
+In the "Base" directory, this section is a placeholder which is to be
+overwritten by implementation details specific to the product or products being
+delivered.
+
+If "TODO" appears in your document after the init script has been run, then
+your product directory is missing a corresponding "implementation.adoc" which
+should be created to provide a basic implementation framework for that product.
+////
+
+
+= Observability 
+
+ACM observability was enabled in the ACM hub cluster with the `Enable ACM Observability` policy.
+
+By doing this we installed the observability components and storage in the hub cluster. This also will install observability pods in the hub clusters that are connected to ACM. The pods collect metrics and send them back to ACM.
+
+We can disable observability by removing observability components on specific managed clusters. Add the `observability: disabled` label to the `managedclusters.cluster.open-cluster-management.io` custom resource.
+
+From the Red Hat Advanced Cluster Management console Clusters page, add the `observability=disabled` label to the specified cluster
+
+== Grafana
+
+ACM observability deploys Grafana which can be accessed by adding /grafana to the ACM console like: `https://multicloud-console.apps.ocp4.example.com/grafana/`.
+
+You can also deploy a developer instance of Grafana also if you wish to customize dashboards. This is detailed in the documentation.
+
+* Developer instance - https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.4/html-single//index#designing-your-grafana-dashboard
+
+You can also utilize an existing Grafana instance and connect it to ACM as described in this blog.
+
+* https://cloud.redhat.com/blog/how-your-grafana-can-fetch-metrics-from-red-hat-advanced-cluster-management-observability-observatorium-and-thanos
+
+
+= Governance and Risk
+
+{acm} enables consistent governance and risk policies to be easily applied to the managed clusters. The *Governance and risk* dashboard provides a summary of the governance and risk details such as policy and cluster violations.
+
+The following policies have been configured during the engagement:
+
+.Implemented Policies
+[cols="15,15,15,15,40",options="header"]
+|===
+
+|Policy Name
+|Placement Binding Name
+|Placement Rule Name
+|Remediation Action
+|Description
+
+// |policy-role
+// |binding-policy-role
+// |placement-policy-role
+// |inform
+// |Ensure sample role exists and can get, list, watch, delete, and patch
+
+|acm-observability
+|binding-policy-acm-observability-operator
+|placement-policy-acm-observability-operator
+|Enforce
+|Enable ACM Observability in Hub Cluster
+
+|compliance-operator-policy
+|binding-policy-compliance-operator
+|placement-policy-compliance-operator
+|Enforce
+|Install compliance operator in managed clusters
+
+|acs-central-policy
+|binding-policy-acs-central
+|placement-policy-acs-central
+|Enforce
+|Enable ACS Central operator and config
+
+|acs-secured-cluster-policy
+|binding-policy-acs-secured-cluster
+|placement-policy-acs-secured-cluster
+|Enforce
+|Enable ACS secured cluster
+
+|ldap-oauth-policy
+|binding-policy-ldap
+|placement-policy-ldap
+|Enforce
+|Enable Oauth/LDAP configuration on managed clusters
+
+|===
+
+== Enable ACM Observability in Hub Cluster
+
+```yaml
+# This policy installs the Advanced Cluster Management Observability functionality
+# on the Hub cluster.
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-acm-observability-operator
+  namespace: acm-policy
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: acm-observability-namespace
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: v1
+              kind: Namespace
+              metadata:
+                name: open-cluster-management-observability
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: acm-observability-pull-secret
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: v1
+              kind: Secret
+              type: kubernetes.io/dockerconfigjson
+              metadata:
+                name: multiclusterhub-operator-pull-secret
+                namespace: open-cluster-management-observability
+              data:
+                .dockerconfigjson: |
+                  {{ fromSecret "openshift-config" "pull-secret" ".dockerconfigjson" }}
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: acm-observability-objectbucketclaim
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: objectbucket.io/v1alpha1
+              kind: ObjectBucketClaim
+              metadata:
+                name: acm-object-storage
+                namespace: open-cluster-management-observability
+              spec:
+                additionalConfig:
+                  bucketclass: noobaa-default-bucket-class
+                generateBucketName: acm-object-storage
+                storageClassName: openshift-storage.noobaa.io
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: thanos-object-storage-secret
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: v1
+              kind: Secret
+              metadata:
+                name: thanos-object-storage
+                namespace: open-cluster-management-observability
+              type: Opaque
+              stringData:
+                thanos.yaml: |
+                  type: s3
+                  config:
+                    bucket: {{ fromConfigMap "open-cluster-management-observability" "acm-object-storage" "BUCKET_NAME" }}
+                    endpoint: {{ fromConfigMap "open-cluster-management-observability" "acm-object-storage" "BUCKET_HOST" }}
+                    insecure: true
+                    access_key: {{ fromSecret "open-cluster-management-observability" "acm-object-storage" "AWS_ACCESS_KEY_ID" | base64dec }}
+                    secret_key: {{ fromSecret "open-cluster-management-observability" "acm-object-storage" "AWS_SECRET_ACCESS_KEY" | base64dec }}
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: acm-observability-instance
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: observability.open-cluster-management.io/v1beta2
+              kind: MultiClusterObservability
+              metadata:
+                name: observability
+                namespace: open-cluster-management-observability
+              spec:
+                observabilityAddonSpec: {}
+                storageConfig:
+                  metricObjectStorage:
+                    name: thanos-object-storage
+                    key: thanos.yaml
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-acm-observability-operator
+placementRef:
+  name: placement-policy-acm-observability-operator
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: policy-acm-observability-operator
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-acm-observability-operator
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - {key: local-cluster, operator: In, values: ["true"]}
+```
+
+== Compliance Operator
+
+```yaml
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: compliance-operator
+  annotations:
+    policy.open-cluster-management.io/standards: NIST-CSF
+    policy.open-cluster-management.io/categories: PR.IP Information Protection Processes and Procedures
+    policy.open-cluster-management.io/controls: PR.IP-1 Baseline Configuration
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: compliance-operator-ns
+        spec:
+          remediationAction: inform
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1                    
+                kind: Namespace
+                metadata:
+                  name: openshift-compliance
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: compliance-operator
+        spec:
+          remediationAction: inform
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: operators.coreos.com/v1alpha1
+                kind: Subscription
+                metadata:
+                  name: compliance-operator
+                  namespace: openshift-compliance
+                spec:
+                  channel: release-0.1
+                  installPlanApproval: Automatic
+                  name: compliance-operator
+                  source: redhat-operators
+                  sourceNamespace: openshift-marketplace
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: operators.coreos.com/v1
+                kind: OperatorGroup
+                metadata:
+                  name: openshift-compliance
+                  namespace: openshift-compliance
+                spec:
+                  targetNamespaces:
+                    - openshift-compliance
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-compliance-cis-scan
+        spec:
+          remediationAction: inform
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: compliance.openshift.io/v1alpha1
+                kind: ScanSettingBinding
+                metadata:
+                  name: cis-compliance
+                  namespace: openshift-compliance
+                profiles:
+                  - name: ocp4-cis-node
+                    kind: Profile
+                    apiGroup: compliance.openshift.io/v1alpha1
+                  - name: ocp4-cis
+                    kind: Profile
+                    apiGroup: compliance.openshift.io/v1alpha1
+                settingsRef:
+                  name: default
+                  kind: ScanSetting
+                  apiGroup: compliance.openshift.io/v1alpha1
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-compliance-operator
+placementRef:
+  name: placement-compliance-operator
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+  - name: compliance-operator
+    kind: Policy
+    apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-compliance-operator
+spec:
+  clusterConditions:
+    - status: 'True'
+      type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: vendor
+        operator: In
+        values:
+          - "OpenShift"
+```
+
+Also updated the default ScanSetting to include the infra role.
+
+```yaml
+strictNodeScan: true
+metadata:
+  name: default
+  namespace: openshift-compliance
+kind: ScanSetting
+showNotApplicable: false
+rawResultStorage:
+  nodeSelector:
+    node-role.kubernetes.io/master: ''
+  pvAccessModes:
+    - ReadWriteOnce
+  rotation: 3
+  size: 1Gi
+  tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/master
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+schedule: 0 1 * * *
+roles:
+  - master
+  - worker
+  - infra
+apiVersion: compliance.openshift.io/v1alpha1
+scanTolerations:
+  - operator: Exists
+```
+
+== OAuth LDAP Policy
+Used this policy as a base and added in {cust} LDAP configuration.
+
+```yaml
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-ldap-oauth
+  namespace: open-cluster-management
+  annotations:
+    apps.open-cluster-management.io/cluster-admin: "true"
+    apps.open-cluster-management.io/hosting-subscription: open-cluster-management/acm-policies-subscription-1-local
+    apps.open-cluster-management.io/reconcile-option: merge
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+  labels:
+    app: acm-policies
+    app.kubernetes.io/part-of: acm-policies
+    apps.open-cluster-management.io/reconcile-rate: medium
+spec:
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: copy-secret-ldap-bind-secret
+        spec:
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                data:
+                  password: '{{hub fromSecret "open-cluster-management" "ldap-bind-secret"
+                    "bindPassword" hub}}'
+                kind: Secret
+                metadata:
+                  name: ldap-bind-secret
+                  namespace: openshift-config
+                type: Opaque
+          remediationAction: enforce
+          severity: high
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: ldap-oauth
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: config.openshift.io/v1
+                kind: OAuth
+                metadata:
+                  name: cluster
+                spec:
+                  identityProviders:
+                    - name: Loto-Quebec-AD
+                      ldap:
+                        attributes:
+                          name:
+                            - displayName
+                          email:
+                            - mail
+                          id:
+                            - sAMAccountName
+                          preferredUsername:
+                            - sAMAccountName
+                        bindDN: xxxx
+                        bindPassword:
+                          name: ldap-bind-secret
+                        ca:
+                          name: ldap-ca-cert
+                        insecure: false
+                        url: ldaps://xxxx/OU=xxxx,DC=xxxx,DC=xxxx,DC=com?sAMAccountName
+                      mappingMethod: claim
+                      type: LDAP
+          remediationAction: enforce
+          severity: low
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: ldap-ca-cert
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                data:
+                  ca.crt: >-            
+                kind: ConfigMap
+                metadata:
+                  name: ldap-ca-cert
+                  namespace: openshift-config
+                type: Opaque
+          remediationAction: enforce
+          severity: low
+  remediationAction: enforce
+status:
+  placement:
+    - placementBinding: binding-policy-ldap-oauth
+      placementRule: placement-policy-ldap-oauth
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-ldap-oauth
+  namespace: open-cluster-management
+  annotations:
+    apps.open-cluster-management.io/cluster-admin: "true"
+    apps.open-cluster-management.io/hosting-subscription: open-cluster-management/acm-policies-subscription-1-local
+    apps.open-cluster-management.io/reconcile-option: merge
+  labels:
+    app: acm-policies
+    app.kubernetes.io/part-of: acm-policies
+    apps.open-cluster-management.io/reconcile-rate: medium
+spec:
+  clusterConditions:
+    - status: "True"
+      type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: cluster.open-cluster-management.io/clusterset
+        operator: In
+        values:
+          - lab
+status: {}
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-ldap-oauth
+  namespace: open-cluster-management
+  annotations:
+    apps.open-cluster-management.io/cluster-admin: "true"
+    apps.open-cluster-management.io/hosting-subscription: open-cluster-management/acm-policies-subscription-1-local
+    apps.open-cluster-management.io/reconcile-option: merge
+  labels:
+    app: acm-policies
+    app.kubernetes.io/part-of: acm-policies
+    apps.open-cluster-management.io/reconcile-rate: medium
+  ownerReferences:
+    - name: acm-policies-subscription-1-local
+      apiVersion: apps.open-cluster-management.io/v1
+      kind: Subscription
+placementRef:
+  name: placement-policy-ldap-oauth
+  apiGroup: apps.open-cluster-management.io
+  kind: PlacementRule
+subjects:
+  - name: policy-ldap-oauth
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
+```
+
+
+== ACS Central
+
+This policy install ACS central on a cluster. It also creates an OpenShift job to generate an init-bundle for the secured cluster. That job uses a container and script located here: https://github.com/pittar/task-images/tree/main/acs-central-job
+
+```yaml
+# This policy installs the Advanced Cluster Security Operator on the ACM hub
+# cluster and it create the Central Server.
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: advanced-cluster-security-operator
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: advanced-cluster-security-namespace
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: v1
+              kind: Namespace
+              metadata:
+                name: stackrox
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: advanced-cluster-security-operator-subscription
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: operators.coreos.com/v1alpha1
+              kind: Subscription
+              metadata:
+                name: rhacs-operator
+                namespace: openshift-operators
+              spec:
+                channel: latest
+                installPlanApproval: Automatic
+                name: rhacs-operator
+                source: redhat-operators
+                sourceNamespace: openshift-marketplace
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: advanced-cluster-security-central
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: platform.stackrox.io/v1alpha1
+              kind: Central
+              metadata:
+                namespace: stackrox
+                name: stackrox-central-services
+              spec:
+                central:
+                  resources:
+                    limits:
+                      memory: 2Gi
+                    requests:
+                      cpu: 500m
+                      memory: 512Mi
+                  exposure:
+                    loadBalancer:
+                      enabled: false
+                      port: 443
+                    nodePort:
+                      enabled: false
+                    route:
+                      enabled: true
+                  persistence:
+                    persistentVolumeClaim:
+                      claimName: stackrox-db
+                egress:
+                  connectivityPolicy: Online
+                scanner:
+                  resources:
+                    limits:
+                      memory: 1Gi
+                    requests:
+                      cpu: 250m
+                      memory: 500Mi
+                  analyzer:
+                    scaling:
+                      autoScaling: Disabled
+                      maxReplicas: 5
+                      minReplicas: 2
+                      replicas: 2
+                  scannerComponent: Enabled
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: acs-central-init-bundle-sa
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: v1
+              kind: ServiceAccount
+              metadata:
+                name: create-cluster-init
+                namespace: stackrox
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: rbac.authorization.k8s.io/v1
+              kind: ClusterRole
+              metadata:
+                name: create-cluster-init
+              rules:
+                - apiGroups:
+                  - app.k8s.io
+                  resources:
+                  - applications
+                  verbs:
+                  - '*'
+                - apiGroups:
+                  - apps.open-cluster-management.io
+                  resources:
+                  - '*'
+                  verbs:
+                  - '*'
+                - apiGroups:
+                  - ""
+                  resources:
+                  - configmaps
+                  - secrets
+                  - namespaces
+                  verbs:
+                  - '*'
+                - apiGroups:
+                    - route.openshift.io
+                  resources:
+                    - routes
+                  verbs:
+                    - get
+                    - list
+                - apiGroups:
+                    - platform.stackrox.io
+                  resources:
+                    - '*'
+                  verbs:
+                    - '*'
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: rbac.authorization.k8s.io/v1
+              kind: ClusterRoleBinding
+              metadata:
+                name: create-cluster-init
+              roleRef:
+                apiGroup: rbac.authorization.k8s.io
+                kind: ClusterRole
+                name: create-cluster-init
+              subjects:
+                - kind: ServiceAccount
+                  name: create-cluster-init
+                  namespace: stackrox
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: rbac.authorization.k8s.io/v1
+              kind: ClusterRoleBinding
+              metadata:
+                name: create-cluster-init-admin
+              roleRef:
+                apiGroup: rbac.authorization.k8s.io
+                kind: ClusterRole
+                name: cluster-admin
+              subjects:
+                - kind: ServiceAccount
+                  name: create-cluster-init
+                  namespace: stackrox
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: acs-central-init-bundle
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: batch/v1
+              kind: Job
+              metadata:
+                name: create-cluster-init-bundle
+                namespace: stackrox
+              spec:
+                template:
+                  spec:
+                    containers:
+                      - image: quay.io/pittar/acs-deploy-bundle-job:latest
+                        env:
+                        - name: PASSWORD
+                          valueFrom:
+                            secretKeyRef:
+                              name: central-htpasswd
+                              key: password
+                        command:
+                          - /bin/bash
+                          - -c
+                          - |
+                            #!/usr/bin/env bash
+
+                            oc project stackrox
+                            bash deploy-bundle.sh -i bundle.yaml
+
+                            echo "Complete"
+                        imagePullPolicy: Always
+                        name: create-acs-init-bundle
+                    dnsPolicy: ClusterFirst
+                    restartPolicy: Never
+                    serviceAccount: create-cluster-init
+                    serviceAccountName: create-cluster-init
+                    terminationGracePeriodSeconds: 30
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-advanced-cluster-security-operator
+placementRef:
+  name: placement-advanced-cluster-security-operator
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: advanced-cluster-security-operator
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-advanced-cluster-security-operator
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: local-cluster
+        operator: In
+        values:
+          - "true"
+      - key: demo
+        operator: In
+        values:
+          - "devsecops"
+```
+
+== ACS Secured Cluster
+
+```yaml
+# This policy deploys the Red Hat Advanced Cluster Security Secure Cluster
+# Services to all OpenShift managed clusters. It also copies the init bundle
+# secrets over that are needed. Note that it is set to
+# enforce by default and it requires RHACM 2.5 template support.
+#
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: acs-sensor
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: acs-ns
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: v1
+              kind: Namespace
+              metadata:
+                name: stackrox
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: acs-operator-sub
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: operators.coreos.com/v1alpha1
+              kind: Subscription
+              metadata:
+                name: rhacs-operator
+                namespace: openshift-operators
+              spec:
+                channel: latest
+                installPlanApproval: Automatic
+                name: rhacs-operator
+                source: redhat-operators
+                sourceNamespace: openshift-marketplace
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: copy-secret-sensor-tls
+      spec:
+        remediationAction: enforce
+        severity: high
+        object-templates:
+          - complianceType: mustonlyhave
+            objectDefinition:
+              kind: Secret
+              apiVersion: v1
+              metadata:
+                name: sensor-tls
+                namespace: stackrox
+              data:
+                ca.pem: '{​{​hub fromSecret "open-cluster-management" "sensor-tls" "ca.pem" hub}​}​'
+                sensor-cert.pem: '{​{​hub fromSecret "open-cluster-management" "sensor-tls" "sensor-cert.pem" hub}​}​'
+                sensor-key.pem: '{​{​hub fromSecret "open-cluster-management" "sensor-tls" "sensor-key.pem" hub}​}​'
+                acs-host: '{​{​hub fromSecret "open-cluster-management" "sensor-tls" "acs-host" hub}​}​'
+              type: Opaque
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: copy-secret-collector-tls
+      spec:
+        remediationAction: enforce
+        severity: high
+        object-templates:
+          - complianceType: mustonlyhave
+            objectDefinition:
+              kind: Secret
+              apiVersion: v1
+              metadata:
+                name: collector-tls
+                namespace: stackrox
+              data:
+                ca.pem: '{​{​hub fromSecret "open-cluster-management" "collector-tls" "ca.pem" hub}​}​'
+                collector-cert.pem: '{​{​hub fromSecret "open-cluster-management" "collector-tls" "collector-cert.pem" hub}​}​'
+                collector-key.pem: '{​{​hub fromSecret "open-cluster-management" "collector-tls" "collector-key.pem" hub}​}​'
+              type: Opaque
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: copy-secret-admission-control-tls
+      spec:
+        remediationAction: enforce
+        severity: high
+        object-templates:
+          - complianceType: mustonlyhave
+            objectDefinition:
+              kind: Secret
+              apiVersion: v1
+              metadata:
+                name: admission-control-tls
+                namespace: stackrox
+              data:
+                ca.pem: '{​{​hub fromSecret "open-cluster-management" "admission-control-tls" "ca.pem" hub}​}​'
+                admission-control-cert.pem: '{​{​hub fromSecret "open-cluster-management" "admission-control-tls" "admission-control-cert.pem" hub}​}​'
+                admission-control-key.pem: '{​{​hub fromSecret "open-cluster-management" "admission-control-tls" "admission-control-key.pem" hub}​}​'
+              type: Opaque
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: acs-endpoints
+      spec:
+        remediationAction: inform
+        severity: high
+        object-templates:
+          - complianceType: mustonlyhave
+            objectDefinition:
+              apiVersion: platform.stackrox.io/v1alpha1
+              kind: SecuredCluster
+              metadata:
+                namespace: stackrox
+                name: stackrox-secured-cluster-services
+              spec:
+                clusterName: |
+                  {​{​ fromSecret "open-cluster-management-agent" "hub-kubeconfig-secret" "cluster-name" | base64dec }​}​
+                auditLogs:
+                  collection: Auto
+                centralEndpoint: |
+                  {​{​ fromSecret "stackrox" "sensor-tls" "acs-host" | base64dec }​}​
+                admissionControl:
+                  listenOnCreates: false
+                  listenOnEvents: true
+                  listenOnUpdates: false
+                perNode:
+                  collector:
+                    collection: KernelModule
+                    imageFlavor: Regular
+                  taintToleration: TolerateTaints
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-acs-sensor
+placementRef:
+  name: placement-acs-sensor
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: acs-sensor
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-acs-sensor
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: acs-secure-cluster
+        operator: In
+        values:
+          - "true"
+```
+
+= Application Management
+
+In addition to managing and providing governance of Kubernetes clusters, {acm} unifies options for constructing and deploying applications and application updates across environments. Applications are managed through channels and subscription based automation.
+
+== Channels
+
+Channels define a namespace on the Hub Cluster and a location where resources are stored for deployment. Managed clusters subscribe to channels to identify the deployables to deploy.
+
+The following channels have been configured during the engagement:
+
+.Defined Channels
+[cols="15,15,15,15,40",options="header"]
+|===
+
+|Name
+|Type
+|Namespace
+|Labels
+|Description
+
+|secrets-project-channel
+|Namespace
+|secrets-project
+|-
+|This channel was set up to sync secrets from the hub cluster to managed clusters but deleted later.
+
+|acm-policy
+|Git
+|open-cluster-management 
+|-
+|This channel was set up to sync ACM policy from {cust} GitLab. GitOps for ACM policy.
+
+|===
+
+
+== Subscriptions
+
+Subscriptions identify, retrieve, and deploy new and updated resources to the managed clusters.
+
+The following subscriptions have been configured during the engagement:
+
+.Defined Subscriptions
+[cols="15,15,15,15,40",options="header"]
+|===
+
+|Name
+|Namespace
+|Channel
+|Placement
+|Description
+
+|secrets-project-sub
+|openshift-config
+|secrets-project/secrets-project-channel
+|secrets-project-placement
+|set up to sync secrets from the hub cluster to managed clusters
+
+|acm-policies-subscription
+|open-cluster-management
+|acm-policy
+|acm-policies-placement
+|set up to sync acm policies from gitlab to the hub cluster
+
+
+|===
+
+== Placement Rules
+
+Placement rules help facilitate multi-cluster deployments of the deployables by defining the target clusters. 
+
+The following placement rules have been configured during the engagement:
+
+.Defined Placement Rules
+[cols="15,15,30,40",options="header"]
+|===
+|Name
+|Namespace
+|Rule Definition
+|Description
+
+|secrets-project-placement
+|openshift-config
+|MatchExpressions: - key: vendor operator: In values: - OpenShift
+|set up to sync secrets from the hub cluster to managed clusters
+
+|acm-policies-placement
+|open-cluster-management
+|MatchExpressions: - key: vendor operator: In values: - OpenShift
+|set up to sync acm policies from gitlab to the hub cluster
+
+|===
+
+
+= ACS
+
+{rhacs} was installed using the two ACS ACM policies.
+
+== Authentication
+
+ACS was configured to allow specific OpenShift users to log in by using the following auth provider configuration.
+
+```
+Type: OpenShift Auth
+Name: Lotto-Quebec-AD
+Minimum access role: None
+Rules: 
+  Key: groups -> 
+  Value: hpux_admin 
+  Role: Admin
+```
+
+== Backup
+
+Backup integration is available with Amazon S3 compatible object storage. With the ODF operator installed and the Multicloud Object Gateway configured we can use a noobaa bucket to hold the backup.
+
+By configuring the Amazon s3 integration this will set up a recurring backup job to dump a zip file to the object bucket. We can use this zip file to restore the cluster if something goes wrong.
+
+First we need a buck to use. We can create a object bucket claim in the OpenShift web console for ACS which will give us the details to configure.
+
+Settings used:
+```
+Backups to retain: 2
+Schedule Internal: Daily
+Schedule time of day: 12:00AN UTC
+Bucket: s3-openshift-storage
+Object prefix: acs-56b6d636-???? (This gets autogenerated from the bucket claim. Use the name generated)
+Endpoint: http://apps.<clustername>.<basename>
+Region: ''
+AWS key id: (copy over from bucket claim)
+AWS secret key: (copy over from bucket claim)
+```
+
+The ACS central will combine the bucket, prefix, and endpoint to form the URL to place the zip file backup. Something like this:
+
+`http://s3-openshift-storage.apps.ocp4.example.com/acs-backup-56b6d636-6855-44d4-91f9-89db394b5473/backup_2022-06-07T00%3A00%3A00.zip`
+
+We used http here as ACS will try to verify the https certificate if https is used. If it's a self signed or organization signed cert the corresponding CA probably isn't in the ACS central pod.
+
+
+== Compliance operator
+
+The compliance operator is installed via the ACM policy. The CIS node compliance scan is also turned on via this policy. 
+
+The results will show in the ACS dashboard.
+
+
+== ACM Hub and Managed clusters Secret Management
+
+Originally we set up a Namespace channel to sync secrets from the hub cluster to managed cluster as described above. We annotate secrets to be synced with "deployables.apps.open-cluster-management.io" which flags to ACM which ones to sync.
+
+Im ACM 2.5 the annotation process with "deployables.apps.open-cluster-management.io"  is being depreciated:
+
+* https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.5/html-single/release_notes/index#api-deprecations
+
+So we can use the new method in ACM 2.5 which is to use policy template fromSecret function. 
+
+* https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.5/html-single/governance/index#template-functions
+
+We use the support for coping from hub clusters in the function:
+
+* https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.5/html-single/governance/index#hub-templates
+
+If we want to re-sync or update the secret on the hub cluster we can annotate the secret to update to managed clusters:
+
+* https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.5/html-single/governance/index#special-annotation-processing
+
+This is an example of this process.
+
+
+```yaml
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: create-ns-copy-pass
+  namespace: acm-secrets
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: acm-secrets-ns
+        spec:
+          remediationAction: enforce
+          severity: med
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                kind: Namespace
+                metadata:
+                  name: acm-secrets
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: copy-secret
+        spec:
+          remediationAction: enforce
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                kind: Secret
+                apiVersion: v1
+                metadata:
+                  name: secret1
+                  namespace: acm-secrets
+                data:
+                  password: '{{hub fromSecret "acm-secrets" "secret1" "password" hub}}'
+                type: Opaque
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: acs-secret-binding
+  namespace: acm-secrets
+placementRef:
+  name: acs-secret-placement
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+  - name: create-ns-copy-pass
+    kind: Policy
+    apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: acs-secret-placement
+  namespace: acm-secrets
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchLabels:
+      secret: "True"
+```
+
+Then add `policy.open-cluster-management.io/trigger-update` to the `secret1` if we want to re-sync.
+
+The old method is here below for reference.
+
+```yaml
+apiVersion: apps.open-cluster-management.io/v1
+kind: Channel
+metadata:
+  name: secrets-project-channel
+  namespace: secrets-project
+spec:
+  pathname: secrets-project
+  type: Namespace
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: Subscription
+metadata:
+  name: secrets-project-sub1
+  namespace: openshift-config
+spec:
+  channel: secrets-project/secrets-project-channel
+  placement:
+    placementRef:
+      kind: PlacementRule
+      name: secrets-project-placement
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: secrets-project-placement
+  namespace: openshift-config
+spec:
+  clusterSelector:
+    matchExpressions:
+    - key: vendor
+      operator: In
+      values:
+      - OpenShift
+```
+
+== Upgrade ACM 2.5 
+
+During the engagement {rhacm} 2.5 was released so we decided to upgrade. 
+
+The upgrade process is usually quite simple as it's all operator based. So if the operator is set to automatic updates it should upgrade automatically. 
+
+As the hub cluster is a disconnected cluster we needed to update the operator hub image manually with Image Content Policy. We hit some issues where the required images for the new ACM 2.5 operators where not being installed  or downloaded. It seems a stuck job in the "openshift-marketplace" was causing the issue. Once this was deleted the ACM 2.5 update successfully.
+

@@ -1,0 +1,114 @@
+== {rhacs} overview  
+{rhacs} is a container and Kubernetes security platform. It is designed to report vulnerabilities for images, analyze and monitor Kubernetes for configuration, deployment and API activity, analyze and monitor container activity on nodes, and take enforcement actions when necessary. {rhacs} operates in three distinct container lifecycle stages: build, deploy and runtime, and can be configured to monitor or enforce policies in each of the secured clusters across all of the lifecycles.
+
+=== Architecture Overview
+
+{rhacs} consists of five main components: central, scanner, sensor, collector and admission controller.
+At a high level, {rhacs} components are deployed according to this general rule: one central and scanner per customer, one sensor and admission controller per cluster, and one collector per node. The component are generated top-down beginning with central, therefore the scanner and sensor bundles (sensor/collectr/admission controller) are specific to the respective central that they were
+generated for. Sensor bundles are also unique per cluster, and a bundle cannot be deployed to multiple
+clusters. 
+
+[cols="3,4,4",options=header]
+|===
+|Component
+|Location
+|Description
+
+|Central
+|One central for multiple clusters - can be centralized in a tools/ops management cluster, or can be located in any of the secured clusters.
+|Users interact with {rhacs} via the user
+interface or APIs on central. Central
+also sends notifications for violations
+and interacts with integrations.
+
+|Scanner and
+scanner-db
+|One instance of
+each deployed with
+central.
+|{rhacs}-developed image scanner.
+Analyzes and reports vulnerabilities
+for images. Scanner uses HPA to
+scale the number of replicas based
+on workload (default is 1-5 replicas
+with HPA).
+
+|Sensor
+|One sensor per
+cluster. Each of the
+secured clusters will
+have one sensor.
+|Analyzes and monitors the
+orchestrator in secured clusters.
+Note: requires privileged mode for
+sensor bundle upgrade functionality
+
+|Collector
+|One collector per
+node. Every node in
+each of the secured
+clusters will have one
+instance of collector.
+|Analyzes and monitors container
+activity on nodes. Collectors use
+a probe to monitor network and
+process activity for the containers
+running on the node.
+Collector will update the probe to
+match the kernel version of the
+node. Note: requires privileged
+mode to monitor process and
+network activity.
+
+|admission
+controller
+|One instance per
+cluster (multiple
+replicas).
+|ValidatingWebhookConfiguration
+for enforcing policies at the
+Deploy lifecycle stage and
+Kubernetes API abuse.
+
+|===
+
+
+
+The followings table describe the interaction between {rhacs} components :
+
+[cols="4,4",options=header]
+|===
+|Component
+|Interaction
+
+|Central <--> scanner
+|Bi-directional communications : Central requests image scans from scanner. Scanner updates its CVE database via central
+
+
+|Collector <--> sensor
+|Collectors send all of their events to the respective
+sensor for the cluster. Unidirectional 
+communication initiated by the collectors.
+
+|Admission controller -> sensor
+|Unidirectional  communication initiated by
+the admission controller pods.
+
+|Sensor -> central
+|Unidirectional  communication initiated by
+sensor:
+
+ * Periodic polling for sensor bundle configuration updates
+
+ * Events for observed activity from the sensor bundle for the secured cluster
+
+|===
+
+Here is a detailled diagram of connectivity between the components: 
+
+.{rhacm} {rhacs} Architecture
+image::workshop/archi_interaction.png[pdfwidth=95%]
+
+NOTE: Consider deploying the sensors and admission controllers and to run on master nodes, to guarantee quality of service and to reduce the potential impact of running security components alongside
+publicly accessible services.
+

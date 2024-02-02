@@ -1,0 +1,36 @@
+= Red Hat Gluster Storage Administration (RH236)
+
+*Course description*
+
+Deploy scalable, highly available storage on off-the-shelf hardware and in cloud environments
+
+This course is for senior system and storage administrators who are interested in deploying scalable, highly available storage on off-the-shelf hardware and in cloud environments.
+
+This course is based on Red Hat Gluster Storage 3.
+
+Students will learn how to install, configure, and maintain a cluster of Red Hat Storage servers. The course will also explore highly available common Internet file systems (CIFS) and network file systems (NFS) using Clustered Trivial DataBase (CTDB), unified file and object storage, and geo-replication. Finally, students will learn about the Hadoop plugin for Red Hat Storage, snapshots, and geo-replication.
+
+This course can help you prepare for the Red Hat Certified Specialist in Gluster Storage Administration exam (EX236).
+
+*Course summary*
+
+* Install and configure Red Hat Storage Server
+* Create and manage different volume types
+* Learn about IP failover for NFS and SMB
+* Explore georeplication
+* Configure network encryption
+* Manage tiering                       
+
+*Audience for this course*
+
+* Linux system administrators and storage administrators interested in, or responsible for, maintaining large storage clusters using Red Hat Storage
+
+*Prerequisites for this course*
+
+* Red Hat Certified System Administrator (RHCSA) certification or an equivalent level of knowledge is highly recommended
+
+For candidates who have not earned their RHCSA, confirmation of the needed skills can be obtained by passing the online skills assessment.	
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh236-red-hat-gluster-storage-administration

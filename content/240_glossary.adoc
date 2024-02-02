@@ -1,0 +1,103 @@
+////
+Purpose
+-------
+To define acronyms and terms.
+
+Sample
+------
+
+.General Terminology
+[cols="3,8",options=header]
+|===
+|Term|Definition
+
+// Term
+|RHEL
+
+// Definition
+|Red Hat Enterprise Linux
+
+
+// Term
+|RHC
+
+// Definition
+|Red Hat Consulting
+
+|===
+
+////
+
+.General Terminology
+[cols="3,8",options=header]
+|===
+|Term |Definition
+
+// Term
+|BZ
+// Definition
+|Bugzilla. This context refers to the specific instance of Bugzilla operated by Red Hat to track bugs, RFEs, and release information. Also, it may refer to a specific numbered Bugzilla bug when given with a definite article or number.
+
+// Term
+|Case
+// Definition
+|Support Case, RH Case,A Red Hat support case, requested and prioritized by the client, then responded to directly by GSS staff. This case number is distinct from a BZ bug number (most RH support cases do not have a corresponding BZ and vice-versa).
+
+// Term
+|DNS
+// Definition
+|Domain Name Service
+
+// Term
+|Downstream
+// Definition
+|Refers toward “productized” deployable, supported artifact (signed binary) end of open source software development process and related contracted errata, event-based support artifacts, product engineering, and product-specific documentation.
+
+// Term
+|FQDN
+// Definition
+|Fully Qualified Domain Name
+
+// Term
+|GSS (a.k.a. CEE)
+// Definition
+|Red Hat Global Support Services (“support”) aka “Customer Experience and Engagement”. Able to resolve bugs, configuration problems, and shepherd RFEs.
+
+// Term
+|KB
+// Definition
+|Knowledge Base article, a short and specific how-to guide available in the customer portal.
+
+// Term
+|RFE
+// Definition
+|Request for Enhancement. These are requests from clients or RH engineering for new product functionality or behavior. Generally tracked internally as a BZ.
+
+// Term
+|RHC
+// Definition
+|Red Hat Consulting. Able to provide on-site and remote engineering and analysis for solution creation.
+
+// Term
+|RHEL
+// Definition
+|Red Hat Enterprise Linux
+
+// Term
+|RPM
+// Definition
+|RPM Package Manager (a recursive acronym)
+
+// Term
+|TAM
+// Definition
+|Technical Account Manager. A site-designated support resource manager from GSS that maintains site-specific knowledge, awareness, and drives resolution.
+
+// Term
+|Upstream
+// Definition
+|Refers toward source-code origin end of open source software development process and related open source community collaboration, documentation, and testing.
+
+|===
+
+include::ACM/acm-glossary.adoc[leveloffset=+1]

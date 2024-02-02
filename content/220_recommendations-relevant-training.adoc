@@ -1,0 +1,107 @@
+////
+Purpose
+-------
+This section is a placeholder which should be replaced by training
+recommendations specific to the product(s) being delivered.
+
+If you are building this document for a specific product, please use the format
+shown in the examples below.
+
+
+Sample
+------
+== Red Hat Satellite
+
+include::training/rh053.adoc[leveloffset=+2]
+include::training/rh403.adoc[leveloffset=+2]
+
+////
+
+= Red Hat Training
+
+Specific course descriptions and availability can be found on Red Hat’s website under Training and Certification. The following courses are recommended:
+
+== Red Hat Learning Subscription
+
+Fill skills gaps and address business challenges by taking advantage of unlimited access to our comprehensive curriculum.
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/learning-subscription#tab.rhls.1
+
+== Red Hat Skills Assessment
+
+Use the skills assessment tool to discover what training opportunities you may benefit from.
+
+For full details, or to enroll: +
+https://www.redhat.com/rhtapps/assessment
+
+== Red Hat Enterprise Linux Courses
+
+include::training/rh124.adoc[leveloffset=+2]
+include::training/rh134.adoc[leveloffset=+2]
+include::training/rh294.adoc[leveloffset=+2]
+
+////
+// list generated with `ls -1 training/ | sed 's/\(.*\)/include::training\/\1[leveloffset=+2]/'`
+include::training/ad183.adoc[leveloffset=+2]
+include::training/ad240.adoc[leveloffset=+2]
+include::training/ad248.adoc[leveloffset=+2]
+include::training/ad348.adoc[leveloffset=+2]
+include::training/ad364.adoc[leveloffset=+2]
+include::training/ad371.adoc[leveloffset=+2]
+include::training/ad373.adoc[leveloffset=+2]
+include::training/ad421.adoc[leveloffset=+2]
+include::training/ad427.adoc[leveloffset=+2]
+include::training/ad440.adoc[leveloffset=+2]
+include::training/cl010.adoc[leveloffset=+2]
+include::training/cl110.adoc[leveloffset=+2]
+include::training/cl210.adoc[leveloffset=+2]
+include::training/cl260.adoc[leveloffset=+2]
+include::training/do007.adoc[leveloffset=+2]
+include::training/do040.adoc[leveloffset=+2]
+include::training/do080.adoc[leveloffset=+2]
+include::training/do092.adoc[leveloffset=+2]
+include::training/do101.adoc[leveloffset=+2]
+include::training/do180.adoc[leveloffset=+2]
+include::training/do250.adoc[leveloffset=+2]
+include::training/do280.adoc[leveloffset=+2]
+include::training/do285.adoc[leveloffset=+2]
+include::training/do288.adoc[leveloffset=+2]
+include::training/do295.adoc[leveloffset=+2]
+include::training/do322.adoc[leveloffset=+2]
+include::training/do326.adoc[leveloffset=+2]
+include::training/do328.adoc[leveloffset=+2]
+include::training/do370.adoc[leveloffset=+2]
+include::training/do378.adoc[leveloffset=+2]
+include::training/do380.adoc[leveloffset=+2]
+include::training/do400.adoc[leveloffset=+2]
+include::training/do401.adoc[leveloffset=+2]
+include::training/do402.adoc[leveloffset=+2]
+include::training/do417.adoc[leveloffset=+2]
+include::training/do447.adoc[leveloffset=+2]
+include::training/do457.adoc[leveloffset=+2]
+include::training/do500.adoc[leveloffset=+2]
+include::training/do700.adoc[leveloffset=+2]
+include::training/do720.adoc[leveloffset=+2]
+include::training/rh018.adoc[leveloffset=+2]
+include::training/rh024.adoc[leveloffset=+2]
+include::training/rh045.adoc[leveloffset=+2]
+include::training/rh053.adoc[leveloffset=+2]
+include::training/rh065.adoc[leveloffset=+2]
+include::training/rh124.adoc[leveloffset=+2]
+include::training/rh134.adoc[leveloffset=+2]
+include::training/rh199.adoc[leveloffset=+2]
+include::training/rh236.adoc[leveloffset=+2]
+include::training/rh254.adoc[leveloffset=+2]
+include::training/rh294.adoc[leveloffset=+2]
+include::training/rh299.adoc[leveloffset=+2]
+include::training/rh318.adoc[leveloffset=+2]
+include::training/rh342.adoc[leveloffset=+2]
+include::training/rh354.adoc[leveloffset=+2]
+include::training/rh358.adoc[leveloffset=+2]
+include::training/rh362.adoc[leveloffset=+2]
+include::training/rh403.adoc[leveloffset=+2]
+include::training/rh415.adoc[leveloffset=+2]
+include::training/rh436.adoc[leveloffset=+2]
+include::training/rh442.adoc[leveloffset=+2]
+////

@@ -1,0 +1,33 @@
+= Red Hat Enterprise Linux Diagnostics & Troubleshooting (RH342)
+
+*Course description*
+
+Diagnose problems, gather information, and fix common issues with Red Hat Enterprise Linux
+
+The Red Hat Enterprise Linux Diagnostics and Troubleshooting course (RH342) provides system administrators with the tools and techniques they need to successfully diagnose, and fix, a variety of potential issues. Students will work through hands-on problems in various subsystems to diagnose and fix common issues.
+
+Students will learn how to apply the scientific method to a structured form of troubleshooting. This approach is then used troubleshooting various types of problems, including boot issues, hardware issues, storage issues, RPM issues, network issues, third-party application issues, security issues, and kernel issues. At the end of the course students can complete various comprehensive review labs to test their skills.
+
+This course is based on Red Hat Enterprise Linux 7.2.
+
+*Course content summary*
+
+* Use the scientific method to approach troubleshooting
+* Troubleshoot boot issues
+* Troubleshoot security issues
+* Troubleshoot storage issues
+* Troubleshoot network issues
+
+*Audience for this course*
+
+The Red Hat Enterprise Linux Diagnostics and Troubleshooting course is aimed at senior system administrators who wish to learn more about troubleshooting.
+
+*Prerequisites for this course*
+Red Hat recommends these prerequisites:
+
+* Have earned a Red Hat Certified System Administrator (RHCSA) or have similar experience
+* It is recommend that students have earned a Red Hat Certified Engineer (RHCE) or have similar experience
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh342-red-hat-enterprise-linux-diagnostics-and-troubleshooting

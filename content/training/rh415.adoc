@@ -1,0 +1,34 @@
+= Red Hat Security: Linux in Physical, Virtual, and Cloud (RH415)
+
+*Course description*
+
+Manage security of Red Hat Enterprise Linux systems deployed in bare-metal, virtual, and cloud environments
+
+Red Hat Security: Linux in Physical, Virtual, and Cloud (RH415) is designed for security administrators and system administrators who need to manage the secure operation of servers running Red Hat(R) Enterprise Linux(R), whether deployed on physical hardware, as virtual machines, or as cloud instances.
+
+This course is based on Red Hat Enterprise Linux 7.5, Red Hat Satellite 6.3, Red Hat Ansible(R) Engine 2.5, Red Hat Ansible Tower 3.2, and Red Hat Insights.
+
+Maintaining security of computing systems is a process of managing risk through the implementation of processes and standards backed by technologies and tools. In this course, you will learn about resources that can be used to help you implement and comply with your security requirements.
+
+*Course summary*
+
+* Manage compliance with OpenSCAP.
+* Enable SELinux on a server from a disabled state, perform basic analysis of the system policy, and mitigate risk with advanced SELinux techniques.
+* Proactively identify and resolve issues with Red Hat Insights.
+* Monitor activity and changes on a server with Linux Audit and AIDE.
+* Protect data from compromise with USBGuard and storage encryption.
+* Manage authentication controls with PAM.
+* Manually apply provided Ansible Playbooks to automate mitigation of security and compliance issues.
+* Scale OpenSCAP and Red Hat Insights management with Red Hat Satellite and Red Hat Ansible Tower.
+
+*Audience for this course*
+
+System administrators, IT security administrators, IT security engineers, and other professionals responsible for designing, implementing, maintaining, and managing the security of Red Hat Enterprise Linux systems and ensuring their compliance with the organization's security policies.
+
+*Prerequisites for this course*
+
+* Be a Red Hat Certified Engineer (RHCE(R)), or demonstrate equivalent Red Hat Enterprise Linux knowledge and experience
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh415-red-hat-security-linux-physical-virtual-and-cloud

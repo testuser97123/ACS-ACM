@@ -1,0 +1,29 @@
+= Red Hat Decision Manager and Red Hat Process Automation Manager 7.0 for Business Users (AD371)
+
+*Course description*
+Understand and design business user rules and processes
+Red Hat Decision Manager and Process Automation Manager for Business Users (AD371) teaches the core concepts and foundational skills necessary to make the most of Red Hat(R) Decision Manager and Red Hat(R) Process Automation Manager as a business user. You will learn to navigate the improved user interface for Decision Manager and Process Automation Manager, as well as how to design basic rules and business processes and define foundational case management concepts.
+This course is based on Red Hat(R) Enterprise Linux(R) 7.5, Red Hat Decision Manager 7.0, Red Hat Process Automation Manager 7.0, and Red Hat(R) OpenShift(R) Container Platform 3.9. 
+
+Many organizations are interested in undergoing a digital transformation from traditional applications to process-driven applications. With Red Hat Decision Manager and Red Hat Process Automation Manager 7.0, Red Hat has introduced solutions to empower business users to develop and manage business rules and processes in a low-code environment.
+
+*Course content summary*
+
+* Author decision tables. 
+* Navigate the user interface for Decision Manager and Process Automation Manager. 
+* Develop business processes with Business Central. 
+* Design forms with Form Modeler. 
+* Navigate and test a case management project. 
+
+*Audience for this course*
+
+This course is designed for business analysts who want to learn how to use Decision Manager and Process Automation Manager to directly impact application decisions and processes and help their organizations improve time to market and general agility.
+*Prerequisites for this course*
+
+* Possess a basic understanding of data structures such as tables and their relationships
+* Be capable of working with spreadsheets
+* Having a basic understanding of business rules and processes is helpful
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/ad371-red-hat-decision-manager-and-red-hat-process-automation-manager-70-business-users

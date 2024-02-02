@@ -1,0 +1,30 @@
+= Red Hat DevOps Pipelines and Processes: CI/CD with Jenkins (DO401)
+
+*Course description*
+
+Red Hat DevOps Pipelines and Processes: Git and Test Driven Development (TDD) (DO401) is designed for developers to learn how to create, manage, and secure Jenkins and other tools that support a DevOps organization.
+
+*Course summary*
+
+* Build declarative Jenkins pipelines.
+* Use conditional and parallel pipelines.
+* Implement release strategies that minimize downtime and risk.
+* Scan applications for security vulnerabilities.
+* Identify and monitor pipeline performance metrics.
+
+*Target Audience*
+
+This course is intended for developers who are responsible for application pipelines and release strategies.
+
+* Configuring, installing, upgrading, and maintaining Linux systems using established standards and procedures
+* Providing operational support
+* Managing systems for monitoring system performance and availability
+* Writing and deploying scripts for task automation and system administration
+
+*Technology considerations*
+
+* Internet access is required.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/red-hat-devops-pipelines-and-processes-cicd-jenkins-do401

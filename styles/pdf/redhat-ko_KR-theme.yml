@@ -1,0 +1,24 @@
+extends:
+- ./base-theme.yml
+- ./default-theme.yml
+- ./redhat-theme.yml
+font:
+  catalog:
+    merge: true
+    KaiGenGothic:
+      normal: KaiGenGothicKR-Regular.ttf
+      bold: KaiGenGothicKR-Bold.ttf
+      italic: KaiGenGothicKR-Regular-Italic.ttf
+      bold_italic: KaiGenGothicKR-Bold-Italic.ttf
+    M+ 1p Fallback: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
+    Noto Emoji: GEM_FONTS_DIR/notoemoji-subset.ttf
+  fallbacks: [M+ 1p Fallback, Noto Emoji]
+
+base:
+  font_family: KaiGenGothic
+
+title_page:
+  title:
+    font_family: KaiGenGothic
+
+

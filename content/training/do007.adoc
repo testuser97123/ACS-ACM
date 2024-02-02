@@ -1,0 +1,32 @@
+= Ansible Basics: Automation Technical Overview (DO007)
+
+*Course description*
+
+Create, scale, and manage automation with Red Hat Ansible Automation Platform
+
+Ansible Basics: Automation Technical Overview (DO007) is a series of on-demand, online videos that introduce you to the Red Hat Ansible Automation Platform. Learn configuration management, provisioning, deploying, and managing compute infrastructure across cloud, virtual, and physical environments with Ansible.
+
+*Course content summary*
+
+*  Intro to Ansible Automation Platform 
+*  How it works
+*  Understanding modules, tasks, playbooks
+*  How to execute Ansible commands
+*  Using variables and templates
+*  Automation controller - where it fits in
+*  Automation controller basics
+*  Automation controller features - RBAC, workflows
+
+Note: You can view all videos or only the ones that interest you. There are no hands-on labs or course completion recognition associated with this course.
+
+*Audience for this course*
+
+IT leaders, administrators, engineers, architects, and anyone else seeking a high-level understanding of Ansible and to learn to build Ansible from the ground up.
+
+*Prerequisites for this course*
+
+* We recommend having basic Linux(R) system administration skills.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do007-ansible-essentials-simplicity-automation-technical-overview

@@ -1,0 +1,23 @@
+#!/bin/env bash
+
+if [[ ! -f .add-to-parcer ]]; then
+  echo "INFO: .add-to-parcer not found - will not add this document to par/CER"
+  exit 0
+fi
+
+echo "Queueing the document to par/CER"
+
+if [[ -z ${PARCER_QUEUE_URL} ]]; then
+  echo "WARNING: PARCER_QUEUE_URL is not set. Doing nothing"
+  exit 0
+fi
+
+echo "Uploading to ${PARCER_QUEUE_URL}"
+echo
+
+curl -s -k \
+  --connect-timeout 5 --max-time 10 \
+  -X POST \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{"branch": "'${CI_COMMIT_BRANCH}'", "repository": "'${CI_PROJECT_URL}'"}' ${PARCER_QUEUE_URL}

@@ -1,0 +1,12 @@
+[id="qos_{context}"]
+= Quality of Service Strategy
+The following considerations were made to ensure enterprise ready uptime.
+
+:context: qos
+include::ha.adoc[leveloffset=+1]
+
+:context: qos
+include::failover.adoc[leveloffset=+1]
+
+:context: qos
+include::dr.adoc[leveloffset=+1]

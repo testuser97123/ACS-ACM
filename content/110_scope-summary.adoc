@@ -1,0 +1,113 @@
+////
+Purpose
+-------
+This section should provide a description of the length of the engagement as
+well as how the engagement is organized in terms of sprints and epics, etc...
+
+Sample
+------
+.Engagement Scope Summary
+[cols=3*,cols="1,2,5",options="header"]
+|===
+| Sprint
+| Week
+| Objectives
+
+// Sprint
+.2+|1
+
+// Week
+|Jan 8 - 14
+
+// Objectives
+a|
+- Design and MVP Review
+- Trello Tasks Defined and Assigned
+- Generate Engagement Report
+- Product Installation and Basic Function Test
+- Customization Begins
+- Integration with ServiceNow Begins
+
+// Week
+|Jan 15 - 21
+
+// Objectives
+a|
+- Customization Continues
+- ServiceNow integration Completed and Tested
+
+
+// Sprint
+.2+|2
+
+// Week
+|Jan 22 - 28
+
+// Objectives
+a|
+- Customization Workflow Testing
+- Trello Tasks Reviewed and Updated
+- Integration with InfoBlox Begins
+
+// Week
+|Jan 29 - Feb 4
+
+// Objectives
+a|
+- Testing live in Dev environment
+- ServiceNow integration Completed and Tested
+- Progress demo for Management
+
+|===
+////
+
+This section details Red Hat's strategy to assist {cust} with meeting their goals for this engagement.  The following table outlines the focus of each phase.
+
+.Engagement Scope Summary
+[cols=3*,cols="1,2,5",options="header"]
+|===
+| Sprint
+| Week
+| Objectives
+
+// Sprint
+.2+|1
+
+// Week
+|#TODO#
+
+// Objectives
+a|
+- #TODO#
+- #TODO#
+
+
+// Week
+|#TODO#
+
+// Objectives
+a|
+- #TODO#
+- #TODO#
+
+
+// Sprint
+.2+|2
+
+// Week
+|#TODO#
+
+// Objectives
+a|
+- #TODO#
+- #TODO#
+
+// Week
+|#TODO#
+// Objectives
+a|
+- #TODO#
+- #TODO#
+
+
+|===

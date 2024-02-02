@@ -1,0 +1,32 @@
+= Red Hat Virtualization (RH318)
+
+*Course description*
+
+Deploy, configure, manage, and migrate virtual environments
+
+Red Hat Virtualization (RH318) teaches you the skills needed to deploy, administer, and operate virtual machines in your organization using Red Hat(R) Virtualization. Through numerous hands-on exercises, you will demonstrate the ability to deploy and configure the Red Hat Virtualization infrastructure and use it to provision and manage virtual machines. This offering also prepares you for the Red Hat Certified Specialist in Virtualization exam.
+
+This course is based on Red Hat Enterprise Virtualization 4.3 and Red Hat Enterprise Linux(R) 7.6 and 8, as well as Red Hat Hyperconverged Infrastructure for Virtualization 1.6.
+
+*Course content summary*
+
+* Configure Red Hat Virtualization
+* Configure networking and storage for use with Red Hat Virtualization
+* Manage user accounts and access to the Red Hat Virtualization environment
+* Install and manage virtual machines in Red Hat Virtualization
+* Use templates for rapid virtual machine deployment
+* Manage virtual machine snapshots and images
+* Migrate virtual machines and explore high-availability options
+
+*Audience for this course*
+
+Linux system administrators, virtualization administrators, and hybrid infrastructure engineers interested in deploying large-scale virtualization solutions and managing virtual servers in their datacenters, based on the Red Hat Virtualization open virtualization management platform.
+
+*Recommendations for this course*
+
+* Become a Red Hat Certified System Administrator (RHCSA(R)), or demonstrate equivalent experience
+* Being a Red Hat Certified Engineer (RHCE(R)) is strongly recommended for Ansible(R) automation comprehension
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh318-red-hat-virtualization

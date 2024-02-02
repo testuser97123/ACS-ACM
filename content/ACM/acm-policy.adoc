@@ -1,0 +1,980 @@
+
+We can use ACM policies for items that don't require a lifecycle. Installing an operator is usually a one off event that doesn't have a lifecycle. The operator may update a later date but that could be automatic. ACM policies can also be used to reference things like secrets or configmaps which make them quite flexible.
+
+An application deployment on the other hand would be something that gets re-deployed multiple times as well as updated and added to throughout the application lifecycle. ArgoCD would be the tool of choice for this.
+
+.{rhacm} ACM Policy Flow
+image::acm/acm-flow.png[]
+
+
+We can use a GitOps approach to store ACM policies in a git repo. Then we set up a ACM application to sync the policies to the hub cluster. Updating or adding new policies is done via a git flow. Create working branch, add code/policy, submit for a merge/review, then an approve and merge will actually apply the policy into the hub cluster and managed clusters.
+
+Below are some example ACM policy yaml files that can be copied and modified to work with {cust} environment.
+
+* GitOps Operator Install
+* OpenShift Pipelines Operator Install
+* Create cluster-admin group with cluster-admin role binding for specific users 
+* ETCD backup cronjob creation
+* OAuth LDAP Configuration
+* NTP/Chrony configuration
+* Apply Network Policy
+* Enabled ETCD Backups
+
+More example polices are available at this GitHub repository:  https://github.com/stolostron/policy-collection
+
+
+= ACM Application for ACM policy from Git 
+
+You can use and update this yaml to create an ACM Application that will sync/apply all ACM policy stored in a Git repo as described above.
+
+This can be done manually via the ACM web interface too.
+
+----
+apiVersion: app.k8s.io/v1beta1
+kind: Application
+metadata:
+  name: acm-policies
+  namespace: acm-policy
+spec:
+  componentKinds:
+  - group: apps.open-cluster-management.io
+    kind: Subscription
+  descriptor: {}
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: 
+          - acm-policies
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: Channel
+metadata:
+  annotations:
+    apps.open-cluster-management.io/reconcile-rate: high
+  name: githubcom-org-ocp
+  namespace: acm-policy
+spec:
+  type: Git
+  pathname: 'https://github.com/org/ocp'
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: Subscription
+metadata:
+  annotations:
+    apps.open-cluster-management.io/git-branch: main
+    apps.open-cluster-management.io/git-path: acm/policy
+    apps.open-cluster-management.io/reconcile-option: merge
+  labels:
+    app: acm-policies
+  name: acm-policies-subscription
+  namespace: acm-policy
+spec:
+  channel: githubcom-org-ocp
+  placement:
+    placementRef:
+      kind: PlacementRule
+      name: acm-policies-placement
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  labels:
+    app: acm-policies
+  name: acm-policies-placement
+  namespace: acm-policy
+spec:
+  clusterSelector:
+    matchLabels:
+      'local-cluster': 'true'
+----
+
+
+
+
+////
+== Configure NTP/Chrony
+
+----
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: config-chrony
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+spec:
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: add-chrony-worker
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: machineconfiguration.openshift.io/v1
+                kind: MachineConfig
+                metadata:
+                  name: 50-worker-chrony
+                  labels:
+                    machineconfiguration.openshift.io/role: worker
+                spec:
+                  config:
+                    ignition:
+                      version: 2.2.0
+                    storage:
+                      files:
+                      - contents:
+                          filesystem: root
+                          mode: 420
+                          path: /etc/chrony.conf
+                          source: >-
+                            data:,server%200.fedora.pool.ntp.org%0A%0Aserver%201.fedora.pool.ntp.org%0A%0Aserver%202.fedora.pool.ntp.org%0A%0Adriftfile%20/var/lib/chrony/drift%0A%0Amakestep%201.0%203%0A%0Artcsync%0A%0Akeyfile%20/etc/chrony.keys%0A%0Aleapsectz%20right/UTC%0A%0Alogdir%20/var/log/chrony%0A
+          remediationAction: enforce
+          severity: low
+  remediationAction: inform
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-add-chrony
+placementRef:
+  name: placement-add-chrony
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: add-chrony
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-add-chrony
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: ntp-config
+        operator: In
+        values:
+          - "true"
+----
+
+= Install OpenShift Pipelines Operator 
+
+----
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-pipelines-operator
+  namespace: acm-policy
+  annotations:
+    policy.open-cluster-management.io/categories: operators
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-pipelines-operator
+        spec:
+          remediationAction: inform
+          severity: high
+          object-templates:   
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: operators.coreos.com/v1alpha1
+                kind: Subscription
+                metadata:
+                  name: openshift-pipelines-operator
+                  namespace: openshift-operators
+                spec:
+                  channel: stable
+                  installPlanApproval: Automatic
+                  name: openshift-pipelines-operator-rh
+                  source: redhat-operators
+                  sourceNamespace: openshift-marketplace
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-pipelines-operator
+  namespace: acm-policy
+placementRef:
+  name: placement-policy-pipelines-operator
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+  - name: policy-pipelines-operator
+    kind: Policy
+    apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-pipelines-operator
+  namespace: acm-policy
+spec:
+  clusterConditions:
+    - status: 'True'
+      type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: pipelines-operator
+        operator: In
+        values:
+          - "true"
+----
+
+= Install Compliance Operator and Enable CIS Scans
+
+----
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-compliance-operator
+  namespace: acm-policy
+  annotations:
+    policy.open-cluster-management.io/standards: NIST-CSF
+    policy.open-cluster-management.io/categories: PR.IP Information Protection Processes and Procedures
+    policy.open-cluster-management.io/controls: PR.IP-1 Baseline Configuration
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-compliance-operator-ns
+        spec:
+          remediationAction: inform
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1                    
+                kind: Namespace
+                metadata:
+                  name: openshift-compliance
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-compliance-operator
+        spec:
+          remediationAction: inform
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: operators.coreos.com/v1alpha1
+                kind: Subscription
+                metadata:
+                  name: compliance-operator
+                  namespace: openshift-compliance
+                spec:
+                  channel: release-0.1
+                  installPlanApproval: Automatic
+                  name: compliance-operator
+                  source: redhat-operators
+                  sourceNamespace: openshift-marketplace
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: operators.coreos.com/v1
+                kind: OperatorGroup
+                metadata:
+                  name: openshift-compliance
+                  namespace: openshift-compliance
+                spec:
+                  targetNamespaces:
+                    - openshift-compliance
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-compliance-cis-scan
+        spec:
+          remediationAction: inform
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: compliance.openshift.io/v1alpha1
+                kind: ScanSettingBinding
+                metadata:
+                  name: cis-compliance
+                  namespace: openshift-compliance
+                profiles:
+                  - name: ocp4-cis-node
+                    kind: Profile
+                    apiGroup: compliance.openshift.io/v1alpha1
+                  - name: ocp4-cis
+                    kind: Profile
+                    apiGroup: compliance.openshift.io/v1alpha1
+                settingsRef:
+                  name: default
+                  kind: ScanSetting
+                  apiGroup: compliance.openshift.io/v1alpha1
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-compliance-operator
+  namespace: acm-policy
+placementRef:
+  name: placement-policy-compliance-operator
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+  - name: policy-compliance-operator
+    kind: Policy
+    apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-compliance-operator
+  namespace: acm-policy
+spec:
+  clusterConditions:
+    - status: 'True'
+      type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: vendor
+        operator: In
+        values: 
+          - "OpenShift"
+----
+
+
+= Configure OAuth 
+
+----
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-oauth
+  namespace: acm-policy
+  annotations:
+    policy.open-cluster-management.io/categories: cluster-config
+spec:
+  remediationAction: inform
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: ldap-oauth
+        spec:
+          remediationAction: inform
+          severity: low
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: config.openshift.io/v1
+                kind: OAuth
+                metadata:
+                  name: cluster
+                spec:
+                  identityProviders:
+                    - ldap:
+                        attributes:
+                          email:
+                            - mail
+                          id:
+                            - dn
+                          name:
+                            - cn
+                          preferredUsername:
+                            - uid
+                        bindDN: 'uid=admin,cn=users,cn=accounts,dc=ocp4,dc=example,dc=com'
+                        bindPassword:
+                          name: ldap-secret
+                        ca:
+                          name: ca-config-map
+                        insecure: false
+                        url: >-
+                          ldap://idm.ocp4.example.com/cn=users,cn=accounts,dc=ocp4,dc=example,dc=com?uid
+                      mappingMethod: claim
+                      name: Red Hat Identity Management
+                      type: LDAP
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: ldap-secret
+        spec:
+          remediationAction: inform
+          severity: low
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                kind: Secret
+                metadata:
+                  name: ldap-secret
+                  namespace: openshift-config
+                type: Opaque
+                data:
+                  clientSecret: PUTSECRETHERE
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-github-oauth
+placementRef:
+  name: placement-policy-github-oauth
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: policy-github-oauth
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-github-oauth
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - {key: environment, operator: In, values: ["dev"]}
+----
+
+= Create OpenShift Admin Group and Binding to cluster-admin role
+
+----
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-ocpadmin-group-binding
+  namespace: acm-policy
+  annotations:
+    policy.open-cluster-management.io/categories: Access Control
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-ocpadmin-group-binding
+        spec:
+          remediationAction: inform
+          severity: high
+          object-templates:   
+            - complianceType: musthave
+              objectDefinition:
+                kind: Group
+                apiVersion: user.openshift.io/v1
+                metadata:
+                  name: ocp-admins
+                users:
+                  - bob
+                  - tim
+                  - tom
+            - complianceType: musthave
+              objectDefinition:
+                kind: ClusterRoleBinding
+                apiVersion: rbac.authorization.k8s.io/v1
+                metadata:
+                  name: ocp-admins-rb-cluster-admin
+                subjects:
+                  - kind: Group
+                    apiGroup: rbac.authorization.k8s.io
+                    name: ocp-admins
+                roleRef:
+                  apiGroup: rbac.authorization.k8s.io
+                  kind: ClusterRole
+                  name: cluster-admin
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-ocpadmin-group-binding
+  namespace: acm-policy
+placementRef:
+  name: placement-policy-ocpadmin-group-binding
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+  - name: policy-ocpadmin-group-binding
+    kind: Policy
+    apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-ocpadmin-group-binding
+  namespace: acm-policy
+spec:
+  clusterConditions:
+    - status: 'True'
+      type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: ocp-admin-group
+        operator: In
+        values:
+          - "true"
+----
+
+
+= Network Policy
+
+----
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: sample-network-policy-99
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+spec:
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: allow-http-and-https
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: networking.k8s.io/v1
+                kind: NetworkPolicy
+                metadata:
+                  name: allow-http-and-https
+                spec:
+                  ingress:
+                    - ports:
+                        - port: 80
+                          protocol: TCP
+                        - port: 443
+                          protocol: TCP
+                  podSelector:
+                    matchLabels:
+                      role: frontend
+          remediationAction: inform
+          severity: low
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: deny-all
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: networking.k8s.io/v1
+                kind: NetworkPolicy
+                metadata:
+                  name: deny-all
+                spec:
+                  podSelector:
+                    ingress: []
+          severity: low
+          remediationAction: inform
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: allow-same-namespace
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: networking.k8s.io/v1
+                kind: NetworkPolicy
+                metadata:
+                  name: allow-same-namespace
+                spec:
+                  podSelector:
+                    ingress:
+                      - from:
+                          - podSelector: {}
+          severity: low
+          remediationAction: inform
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: allow-pod-and-namespace-both
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: networking.k8s.io/v1
+                kind: NetworkPolicy
+                metadata:
+                  name: allow-pod-and-namespace-both
+                spec:
+                  podSelector:
+                    matchLabels: 
+                      name: test-pods
+                  ingress:
+                    - from:
+                      - namespaceSelector: 
+                          matchLabels: 
+                            project: project_name
+                        podSelector:
+                          matchLabels: 
+                            name: test-pods
+              severity: low
+              remediationAction: inform
+  remediationAction: inform
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-sample-network-policy
+placementRef:
+  name: placement-sample-network-policy
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: sample-network-policy-99
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-sample-network-policy
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - {key: network-config, operator: In, values: ["true"]}
+----
+
+= ETCD Backup
+
+----
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-etcd-backup
+  annotations:
+    policy.open-cluster-management.io/categories: NIST SP 800-53
+    policy.open-cluster-management.io/controls: CM Configuration Management 
+    policy.open-cluster-management.io/standards: CM-2 Baseline Configuration
+spec:
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-etcd-backup
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                kind: ServiceAccount
+                metadata:
+                  name: approver
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: rbac.authorization.k8s.io/v1
+                kind: ClusterRoleBinding
+                metadata:
+                  name: cluster-admin-approver-sa-crb
+                roleRef:
+                  name: cluster-admin
+                  apiGroup: rbac.authorization.k8s.io
+                  kind: ClusterRole
+                subjects:
+                  - name: approver
+                    kind: ServiceAccount
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                kind: PersistentVolumeClaim
+                metadata:
+                  name: etcd-backup
+                spec:
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 20Gi
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                data:
+                  etcd-backup.sh: |+
+                    
+                    DATE=$(date +%Y%m%dT%H%M%S)
+
+                    /usr/local/bin/etcd-snapshot-backup-disconnected.sh /assets/backup
+ 
+                    if [ $? -eq 0 ]; then
+                        mkdir /etcd-backup/${DATE}
+                        cp -r /assets/backup/*  /etcd-backup/${DATE}/
+                        echo 'Copied backup files to PVC mount point.'
+                        exit 0
+                    fi
+ 
+                    echo "Backup attempts failed. Please FIX !!!"
+                    exit 1
+
+                  etcd-snapshot-backup-disconnected.sh: |+
+                    
+                    set -o errexit
+                    set -o pipefail
+                    set -o errtrace
+
+                    if [[ $EUID -ne 0 ]]; then
+                      echo "This script must be run as root"
+                      exit 1
+                    fi
+
+                    function usage {
+                      echo 'Path to backup dir required: ./cluster-backup.sh <path-to-backup-dir>'
+                      exit 1
+                    }
+
+
+                    if [ -z "$1" ] || [ -f "$1" ]; then
+                      usage
+                    fi
+                    
+                    if [ ! -d "$1" ]; then
+                      mkdir -p $1
+                    fi
+
+                    function backup_latest_kube_static_resources {
+                      
+                      RESOURCES=("$@")
+
+                      LATEST_RESOURCE_DIRS=()
+                      for RESOURCE in "${RESOURCES[@]}"; do
+                        LATEST_RESOURCE=$(ls -trd "${CONFIG_FILE_DIR}"/static-pod-resources/${RESOURCE}-[0-9]* | tail -1) || true
+                        if [ -z "$LATEST_RESOURCE" ]; then
+                          echo "error finding static-pod-resource ${RESOURCE}"
+                          exit 1
+                        fi
+
+                        echo "found latest ${RESOURCE}: ${LATEST_RESOURCE}"
+                        LATEST_RESOURCE_DIRS+=("${LATEST_RESOURCE#${CONFIG_FILE_DIR}/}")
+                      done
+
+                      tar -cpzf $BACKUP_TAR_FILE -C ${CONFIG_FILE_DIR} "${LATEST_RESOURCE_DIRS[@]}"
+                     }
+
+                      BACKUP_DIR="$1"
+                      
+                      DATESTRING=$(date "+%F_%H%M%S")
+                      
+                      BACKUP_TAR_FILE=${BACKUP_DIR}/static_kuberesources_${DATESTRING}.tar.gz
+                      
+                      SNAPSHOT_FILE="${BACKUP_DIR}/snapshot_${DATESTRING}.db"
+                      
+                      BACKUP_RESOURCE_LIST=("kube-apiserver-pod" "kube-controller-manager-pod" "kube-scheduler-pod" "etcd-pod")
+
+                      trap "rm -f ${BACKUP_TAR_FILE} ${SNAPSHOT_FILE}" ERR
+
+                      source /etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-scripts/etcd.env
+                      
+                      source /etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-scripts/etcd-common-tools
+
+                      if [ ! -f "$ETCDCTL_CACERT" ] && [ ! -d "${CONFIG_FILE_DIR}/static-pod-certs" ]; then
+                        ln -s ${CONFIG_FILE_DIR}/static-pod-resources/etcd-certs ${CONFIG_FILE_DIR}/static-pod-certs
+                      fi
+
+                      backup_latest_kube_static_resources "${BACKUP_RESOURCE_LIST[@]}"
+                      
+                      etcdctl snapshot save ${SNAPSHOT_FILE}
+                      
+                      echo "snapshot db and kube resources are successfully saved to ${BACKUP_DIR}"
+
+                kind: ConfigMap
+                metadata:
+                  name: etcd-backup-script
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: batch/v1beta1
+                kind: CronJob
+                metadata:
+                  name: cronjob-etcd-backup
+                  labels:
+                    purpose: etcd-backup
+                spec:
+                  concurrencyPolicy: Forbid
+                  jobTemplate:
+                    spec:
+                      backoffLimit: 0
+                      template:
+                        spec:
+                          activeDeadlineSeconds: 200
+                          containers:
+                            - name: etcd-backup
+                              command:
+                                - /bin/sh
+                                - '-c'
+                                - >-
+                                  /usr/local/bin/etcd-backup.sh && ls -1
+                                  /etcd-backup/* | sort -r | tail -n +6 | xargs
+                                  rm -rf > /dev/null 2>&1
+                              env: null
+                              image: >-
+                                quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:6a2378154881e6f9a4638f41242518d850e19b0d7d9ef74a2be55b87f4625e87
+                              imagePullPolicy: IfNotPresent
+                              resources:
+                                requests:
+                                  cpu: 300m
+                                  memory: 250Mi
+                              securityContext:
+                                privileged: true
+                              terminationMessagePath: /dev/termination-log
+                              terminationMessagePolicy: FallbackToLogsOnError
+                              volumeMounts:
+                                - name: certs
+                                  mountPath: /etc/ssl/etcd/
+                                - name: conf
+                                  mountPath: /etc/etcd/
+                                - name: kubeconfig
+                                  mountPath: /etc/kubernetes/
+                                - name: etcd-backup-script
+                                  mountPath: /usr/local/bin/etcd-backup.sh
+                                  subPath: etcd-backup.sh
+                                - name: etcd-backup-script
+                                  mountPath: >-
+                                    /usr/local/bin/etcd-snapshot-backup-disconnected.sh
+                                  subPath: etcd-snapshot-backup-disconnected.sh
+                                - name: etcd-backup
+                                  mountPath: /etcd-backup
+                                - name: scripts
+                                  mountPath: /usr/local/bin
+                          hostNetwork: true
+                          nodeSelector:
+                            node-role.kubernetes.io/master: ''
+                          restartPolicy: Never
+                          serviceAccount: approver
+                          serviceAccountName: approver
+                          tolerations:
+                            - effect: NoSchedule
+                              operator: Exists
+                            - effect: NoExecute
+                              operator: Exists
+                          volumes:
+                            - name: certs
+                              hostPath:
+                                path: >-
+                                  /etc/kubernetes/static-pod-resources/etcd-member
+                                type: ''
+                            - name: conf
+                              hostPath:
+                                path: /etc/etcd
+                                type: ''
+                            - name: kubeconfig
+                              hostPath:
+                                path: /etc/kubernetes
+                                type: ''
+                            - name: scripts
+                              hostPath:
+                                path: /usr/local/bin
+                                type: ''
+                            - name: etcd-backup
+                              persistentVolumeClaim:
+                                claimName: etcd-backup
+                            - name: etcd-backup-script
+                              configMap:
+                                name: etcd-backup-script
+                                defaultMode: 493
+                  schedule: '0 */6 * * *'
+                  startingDeadlineSeconds: 200
+                  suspend: false
+          remediationAction: inform
+          severity: low
+  remediationAction: inform
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-etcd-backup
+placementRef:
+  name: placement-policy-etcd-backup
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: policy-etcd-backup
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-etcd-backup
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - {key: environment, operator: In, values: ["dev"]}
+----
+
+////

@@ -1,0 +1,33 @@
+= Red Hat OpenStack Technical Overview (CL010)
+
+*Course description*
+
+An overview of Red Hat OpenStack Platform
+
+Red Hat OpenStack Technical Overview (CL010) is a series of on-demand, online videos to help you better understand the basics of cloud computing and Red Hat(R) OpenStack(R) Platform. Several online demonstrations and use cases are included.
+
+This course is available in English (as well as closed-captioned for English), Japanese, French, German, Chinese, Spanish, Korean, and Italian.
+
+*Course summary*
+
+Through online, on-demand videos you will learn about:
+
+* Cloud computing
+* Red Hat OpenStack Platform 
+* Compute, storage, and network in relation to Red Hat OpenStack Platform
+* High availability with Red Hat OpenStack Platform
+* Deploying Red Hat OpenStack Platform
+
+Note: You can view all videos or only the ones that interest you. There are no hands-on labs or course completion recognition associated with this course.
+
+*Audience for this course*
+
+IT leaders, administrators, engineers, architects, and anyone else seeking a high-level understanding of Red Hat OpenStack Platform capabilities
+
+*Prerequisites for this course*
+
+There are no prerequisites for this course.	
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/cl010-red-hat-openstack-technical-overview

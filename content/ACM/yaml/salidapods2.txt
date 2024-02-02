@@ -1,0 +1,13 @@
+NAME                                                      READY   STATUS    RESTARTS   AGE
+cluster-manager-placement-controller-74f6ddc6bd-2qq9s     1/1     Running   0          2m8s
+cluster-manager-placement-controller-74f6ddc6bd-kp9kx     1/1     Running   0          2m8s
+cluster-manager-placement-controller-74f6ddc6bd-lsm58     1/1     Running   0          2m8s
+cluster-manager-registration-controller-978d4468b-55hsl   1/1     Running   0          2m8s
+cluster-manager-registration-controller-978d4468b-bvjqh   1/1     Running   0          2m8s
+cluster-manager-registration-controller-978d4468b-sb9xg   1/1     Running   0          2m8s
+cluster-manager-registration-webhook-5b6f978868-4pg7n     1/1     Running   0          2m8s
+cluster-manager-registration-webhook-5b6f978868-5rzl2     1/1     Running   0          2m8s
+cluster-manager-registration-webhook-5b6f978868-j7xnv     1/1     Running   0          2m8s
+cluster-manager-work-webhook-79d8bfdf5d-68sdg             1/1     Running   0          2m8s
+cluster-manager-work-webhook-79d8bfdf5d-9nm6r             1/1     Running   0          2m8s
+cluster-manager-work-webhook-79d8bfdf5d-pt9fd             1/1     Running   0          2m8s

@@ -1,0 +1,39 @@
+= RHCSA Rapid Track Course (RH199)
+
+*Course description*
+
+Learn essential Red Hat Enterprise Linux configuration, administration, and maintenance in a condensed format
+
+The RHCSA Rapid Track course (RH199) combines Red Hat System Administration I (RH124) and Red Hat System Administration II (RH134), reviewing the tasks at an accelerated pace. This course relates to Red Hat(R) Enterprise Linux(R) and is designed for experienced Linux system administrators.
+
+This course is based on Red Hat(R) Enterprise Linux 8.2
+
+*Course content summary*
+
+* Package management with new repository structure and appstream modules
+* Create storage devices, volumes, and file systems, including Stratis storage management
+* Configure network services and security
+* Manage processes, scheduling, and tuning
+* Manage users, groups, and authentication
+* Perform server management with the Cockpit web management utility
+* Troubleshoot and obtain support
+* Run containers 
+
+*Audience for this course*
+
+This course is geared toward Windows system administrators, network administrators, and other system administrators who are interested in supplementing current skills or backstopping other team members, in addition to Linux system administrators who are responsible for these tasks:
+
+* Configuring, installing, upgrading, and maintaining Linux systems using established standards and procedures
+* Providing operational support
+* Managing systems for monitoring system performance and availability
+* Writing and deploying scripts for task automation and system administration
+
+*Recommended training*
+
+* You will be expected to already understand fundamental Linux computing concepts and be ready to practice the Red Hat Enterprise Linux methods for performing system administration tasks. Significant field experience working with Linux as a system administrator is recommended.
+* If you do not have experience with fundamental Linux computer concepts, we advise you to start with the Red Hat System Administration I (RH124) course instead.
+* Take our free assessment to gauge whether this offering is the best fit for your skills. 	
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh199-rhcsa-rapid-track-course

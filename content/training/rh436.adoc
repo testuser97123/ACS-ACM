@@ -1,0 +1,38 @@
+= Red Hat High Availability Clustering (RH436)
+
+*Course description*
+
+Deploy reliable, available critical production services in a high availability cluster
+
+In the Red Hat High Availability Clustering (RH436) course, you will learn how to provide highly available network services to a mission-critical enterprise environment through the deployment and management of shared storage and server clusters. Created for senior Linux system administrators, this 4-day course strongly emphasizes lab-based activities.
+
+You will set up a cluster of systems running the Pacemaker component of the Red Hat Enterprise Linux High-Availability Add-On, and deploy Linux-based services such as web servers and databases on that cluster. Cluster storage components from the Resilient Storage Add-On are also covered; installations and applications that require multiple cluster nodes can access the same storage simultaneously. This includes Logical Volume Manager (LVM) Shared Volume Groups, Red Hat Global File System 2 (GFS2), and Device-Mapper Multipath.
+
+This course is based on Red Hat Enterprise Linux 8.3.
+
+*Course content summary*
+
+* Install and configure a Pacemaker-based high availability cluster.
+* Create and manage highly available services.
+* Troubleshoot common cluster issues.
+* Work with shared storage (iSCSI) and configure multipathing.
+* Implement Logical Volume Manager (LVM) in cluster-aware configurations.
+* Configure GFS2 file systems on storage shared by multiple nodes.
+
+*Audience for this course*
+
+* Senior Linux system administrators who use high-availability clustering and fault-tolerant shared storage technologies to maximize resiliency of production services.
+
+*Prerequisites for this course*
+
+* Take our free assessment to gauge whether this offering is the best fit for your skills.
+* Red Hat Certified System Administrator (RHCSA) exam (EX200) and associated courses.
+* Red Hat Cerfitied Engineer (RHCE) exam (EX294) and associated courses.
+
+*Technology considerations *
+
+* Internet access is required.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh436-red-hat-high-availability-clustering

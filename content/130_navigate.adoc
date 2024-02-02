@@ -1,0 +1,21 @@
+////
+Purpose
+-------
+
+To describe what navigate is and does, how to use it and subsequently include it.
+
+
+Sample
+------
+
+////
+Navigate is a Red Hat® Consulting experience-driven framework that helps customers understand, plan, and move toward the successful adoption of Red Hat technologies.
+
+Regardless of the current implementation stage of a modernization project, a Navigate engagement aligns a customer’s existing and future digital transformation goals with Red Hat technologies.
+
+Navigate begins with an assessment that establishes customer context in the areas of business strategy and technology landscape. Experienced Red Hat architects then run a series of workshops covering technical and business topics to help customers realize the best value from Red Hat products and technologies.
+
+A Navigate engagement provides ways for customers to use Red Hat open source technology to achieve their defined business priorities and goals. Red Hat’s architects and consultants help clients create a phased, sprint-based engagement to develop a foundational platform as a proving ground for IT capabilities and operations.
+
+include::navigate-report.adoc[opts=optional]
+

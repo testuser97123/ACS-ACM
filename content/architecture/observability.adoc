@@ -1,0 +1,14 @@
+////
+Purpose
+-------
+Information about how deployed systems can be observed.
+
+Examples
+--------
+* Logging
+* Monitoring
+////
+
+[id="observability_{context}"]
+= Observability
+Information about how deployed systems can be observed.

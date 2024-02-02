@@ -1,0 +1,33 @@
+= Red Hat Training: Open Practices for your DevOps Journey (DO250) | DO250
+
+*Course description*
+
+Discover open practices for incremental process changes to assist in your DevOps transformation journey.
+
+Open Practices for your DevOps Journey (DO250) prepares a student to facilitate and participate in discovery, planning, and delivery of projects where DevOps transformation is desired.  At the end of this course, you will establish a toolbox of select practices and rethink your approach to cross-functional team projects. Utilizing new skills will enable your organization to effectively discover team purpose, align on project options, and deliver value that achieves target outcomes.
+
+*Course content summary*
+
+* Discovery practices that support creating alignment on who and what is desired to be created.
+* Delivery practices that support creating quick and effective means to deliver and reflect.
+* Options-pivot practices that support prioritization and organizing work to be logically completed.
+* Foundational team practices that support team collaboration and communication, and technical concepts.
+* How work visualization and remote collaboration can be done to support DevOps delivery methods.
+
+*Target audience*
+
+* Project Managers, Agile Coaches, Scrum Masters: Individuals facilitating project planning and execution who wish to adjust their approach and incrementally move the organization toward DevOps.
+* System Administrators, SRE, application developers: Technical project team members participating in discovery, planning, and execution phases will accelerate the completion of these practices with greater detail.
+* Leadership, product owners, key stakeholders: Individuals with a vested interest in project success or who provide oversight, goals, and objectives for why the project is needed will have greater insight into the process and ensure their requirements are captured.
+
+*Recommended training*
+
+* There are no prerequisites for this course.
+
+*Technology considerations*
+
+* This course does not have accompanying labs but may require the use of an internet browser to access several collaboration tools such as Miro or Trello.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/red-hat-training-open-practices-your-devops-journey-do250

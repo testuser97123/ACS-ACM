@@ -1,0 +1,43 @@
+[id="policies_{context}"]
+= Policies
+Architectural policies are statements of _how things will be done_, typically legally binding and imposed from outside the organization. The policies documented here were provided throughout the course of the engagement from various teams and key stakeholders and affected the documented Architectural Decisions.
+
+// copy this template for each policy
+// update the ID to equal the ID and the title to equal the title, useful for linking to this section
+[id=POLICY-???,title='#TODO a title for this policy record#'']
+[cols="1h,3a"]
+|===
+
+| ID
+| POLICY-#TODO unique number#
+// A unique code that unambiguously identifies the decision; for example: “POLICY-42.”
+
+| Title
+| #TODO a title for this policy record#
+
+| Description
+| #TODO#
+// What the policy is
+
+| Date in Force
+| #TODO date this policy is in force, ex, current, planned for X date#
+
+| Source
+| #TODO external groups, law, or internal team who says this policy must be enforced, might be multiple levels, ex Chief Security Officer due to Federal Memorandum XYZ#
+
+| Related Policies
+| * #TODO list links to policies that this record is related to in some way and the way in which,
+they are related. EX: other policy acts in cooperation with this policy.#
+//HINT: syntax for inline link is <<POLICY-?>>
+
+| Related Principles
+| * #TODO list links to policies that this record is related to in some way and the way in which,
+they are related. EX: principle is a result of this policy.#
+//HINT: syntax for inline link is <<PRINCIPLE-?>>
+
+| Related Decisions
+| * #TODO list links to policies that this record is related to in some way and the way in which,
+they are related. EX: decision made is due in part to this policy#
+//HINT: syntax for inline link is <<ADR-?>>
+
+|===

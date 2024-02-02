@@ -1,0 +1,40 @@
+= Red Hat System Administration I (RH124)
+
+*Course description*
+
+The first of two courses covering the core system administration tasks needed to manage Red Hat Enterprise Linux servers
+
+Red Hat System Administration I (RH124) equips you with Linux(R) administration "survival skills" by focusing on foundational Linux concepts and core tasks. You will learn how to apply command-line concepts and enterprise-level tools, starting you on your journey toward becoming a full-time Linux system administrator. This path continues with the follow-on course, Red Hat System Administration II (RH134).
+
+This course is based on Red Hat(R) Enterprise Linux 8.2.
+
+*Course content summary*
+
+* Introduction to the command line
+* Managing physical storage
+* Install and configure software components and services
+* Establish network connections and control firewall restrictions
+* Monitor and manage running processes
+* Manage and secure files and file systems
+* Administer users and groups
+* Review the system log files and journal for issues
+* Troubleshoot problems and analyze systems with Red Hat Insights
+* Remotely manage systems with SSH and the Web Console
+
+*Audience for this course*
+
+This course is geared toward Windows system administrators, network administrators, and other system administrators who are interested in supplementing current skills or backstopping other team members, in addition to Linux system administrators who are responsible for these tasks:
+
+* Configuring, installing, upgrading, and maintaining Linux systems using established standards and procedures
+* Providing operational support
+* Managing systems for monitoring system performance and availability
+* Writing and deploying scripts for task automation and system administration
+
+*Prerequisites for this course*
+
+* Basic technical user skills with computer applications on some operating systems are expected.
+* Take our free assessment to gauge whether this offering is the best fit for your skills.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh124-red-hat-system-administration-i

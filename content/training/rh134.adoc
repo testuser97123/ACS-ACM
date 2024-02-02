@@ -1,0 +1,41 @@
+= Red Hat System Administration II (RH134)
+
+*Course Description*
+
+Focuses on the key tasks needed to become a full-time Linux administrator
+
+Red Hat System Administration II (RH134) serves as the second part of the RHCSA training track for IT professionals who have taken Red Hat System Administration I (RH124).  The course goes deeper into core Linux system administration skills in storage configuration and management, installation and deployment of Red Hat(R) Enterprise Linux(R), management of security features such as SELinux, control of recurring system tasks, management of the boot process and troubleshooting, basic system tuning, and command-line automation and productivity. .
+
+Experienced Linux administrators looking for rapid preparation for the RHCSA certification should instead start with RHCSA Rapid Track (RH199).
+
+This course is based on Red Hat Enterprise Linux 8.2.
+
+*Course summary*
+
+* Install Red Hat Enterprise Linux using scalable methods
+* Access security files, file systems, and networks
+* Execute shell scripting and automation techniques
+* Manage storage devices, logical volumes, and file systems
+* Manage security and system access
+* Control the boot process and system services
+* Running containers
+
+*Audience for this course*
+
+This course is geared toward Windows system administrators, network administrators, and other system administrators who are interested in supplementing current skills or backstopping other team members, in addition to Linux system administrators who are responsible for these tasks:
+
+* Configuring, installing, upgrading, and maintaining Linux systems using established standards and procedures
+* Providing operational support
+* Managing systems for monitoring system performance and availability
+* Writing and deploying scripts for task automation and system administration
+
+*Recommended training*
+
+* Successful completion of Red Hat System Administration I (RH124) is recommended.
+*  Experienced Linux administrators seeking to accelerate their path toward becoming a Red Hat Certified System Administrator should start with the RHCSA Rapid Track course (RH199).
+
+* Take our free assessment to gauge whether this offering is the best fit for your skills. 
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh134-red-hat-system-administration-ii

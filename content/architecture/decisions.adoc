@@ -1,0 +1,71 @@
+[id="decisions_{context}"]
+= Decisions
+Architectural decisions made throughout the course of the engagement with information on the investigated alternatives and justification for the decisions made.
+
+// copy this template for each decision
+// update the ID to equal the ID and the title to equal the title, useful for linking to this section
+[id=ADR-???,title='#TODO Title#'']
+[cols="1h,3a"]
+|===
+
+| ID
+| ADR-#TODO unique number#
+// A unique code that unambiguously identifies the decision; for example: “ADR-42.”
+
+| Title
+| #TODO a title for this decision record#
+
+| Subject Area(s)
+| #TODO subject areas, can think of this like hashtags#
+
+| Question
+| #TODO State the to-be decision as a question#
+//HINT: if something is more of a organizational mandate or standard, such as, "must conform to NIST 800-53", then use an Architectural Policy or Principle instead. But if there is a decision to be made between alternatives for HOW to conform to NIST 800-53 then you would create an ADR.
+
+| Issue or Problem
+| #TODO Context for why the architectural question is being asked.#
+
+| Assumptions
+| #TODO What is believed to be true about the context of the problem, constraints on the solution, and so on.#
+
+| Alternatives
+| #TODO An enumerated list of alternatives and explanations.#
+//HINT: if not alternatives were explored then this isn't an architectural decision.
+
+| Decision
+| #TODO  The decision taken. This should be one of the named Alternatives; for example: “Alternative 2 is chosen.”#
+
+| Justification
+| #TODO Why the decision was made#
+//HINT: list the policies or principles that affected the decision.
+
+| Agreeing Parties
+| [cols="1,1", options="header"]
+// Key stakeholders and approvers documented as agreeing
+!===
+! Person
+! Representing
+
+! #TODO Agreeing person name#
+! #TODO Team or group that person is representing and agreeing on behalf of, ex security, operations#
+
+! #TODO Agreeing person name#
+! #TODO Team or group that person is representing and agreeing on behalf of, ex security, operations#
+!===
+
+| Related Policies
+| * #TODO list links to policies that this record is related to in some way and the way in which,
+they are related. EX: policy affected decision in some way.#
+//HINT: syntax for inline link is <<POLICY-?>>
+
+| Related Principles
+| * #TODO list links to policies that this record is related to in some way and the way in which,
+they are related. EX: principle affected decision in some way.#
+//HINT: syntax for inline link is <<PRINCIPLE-?>>
+
+| Related Decisions
+| * #TODO list links to policies that this record is related to in some way and the way in which,
+they are related. EX: other decision limited options for this decision#
+//HINT: syntax for inline link is <<ADR-?>>
+
+|===

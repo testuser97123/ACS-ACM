@@ -1,0 +1,41 @@
+{rhacs} provides tools to detect, provides informations and response to threat. 
+
+== Runtime detection
+
+Runtime defense is the set of features that provides both predictive and threat-based protection for
+running containers. Predictive protection includes capabilities like determining abnormal process executions or network connections initiated that are blocked by existing network policy configurations. Threat
+based protection includes capabilities like detecting when a known suspicious process such as netcat,
+nmap etc., executes inside your containers. 
+
+The advent of container infrastructure provides a unique opportunity to solve some of the long standing
+problems in security. The immutable nature of containers means that we have a container specification
+from a base image that should not change during the lifetime of the container. When a process executes
+inside a container that is not part of the original image, it shows that the container specification has
+changed, which is an indicator of potential malicious activity. This combined with discovering processes
+that have never executed before allows the {rhacs} to discover abnormal
+process executions in your environment.
+
+The {rhacs} has built-in policies and you can define custom multi-factor policies that help identify known threats as well as suspicious runtime behaviors in your environment. Based
+on these policies, {rhacs} can trigger violations and alerts for security/DevOps teams, and/or automatically
+perform runtime enforcement by restarting the containers.
+The {rhacs} uses process baselining to proactively minimize your risks and
+keep your infrastructure secure. The {rhacs} first discovers existing processes and creates a baseline. Then, it operates in the default deny-all mode and only allows baselined
+processes to run.
+
+
+
+== Incident Response 
+
+{rhacs} provides two kind of answers when he faced an Incident : Informative or Enforcement. 
+
+In informative case the team can view discovered violations via the Violations tab from the left side menu panel. The Violation tab of the Details panel explains how the policy was violated. For policies that target runtime activity, you are shown detailed information about the process(es) that violated the policy, including its arguments and the ancestor processes that created it.
+
+In the enforcement case with a runtime incident, because the scope of functionality is so much smaller for a given entity (a container ideally
+supports a single service) the appropriate response to anomalous behavior is simply to kill the container or pod as soon as that anomaly is detected. We can take such “drastic” action for two main reasons :
+
+* one, the impact is limited to that single service vs. taking down a full application.
+
+* two, Kubernetes will restart a healthy version of that container or pod. 
+
+
+

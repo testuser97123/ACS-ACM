@@ -1,0 +1,75 @@
+////
+Purpose
+-------
+This section describes the basic RHEL subscription model which generally
+applies to most Red Hat products.  This section has language which has been
+reviewed and approved by the legal department.  Do not alter this section
+without prior approval from legal.
+
+For further details or to resolve specific queries about subscriptions which
+arise during a consulting engagement, customers should be directed to their
+Red Hat sales representative, TSM, or open a request with support.
+
+Sample
+------
+N/A
+
+////
+
+[appendix]
+= Red Hat Subscriptions Overview
+
+Three factors play an important part in selecting the right RHEL subscription:
+
+* The (Service Level Agreement) SLA
+* The number of (physical) Sockets and,
+* The number of Virtual Machines.
+
+Red Hat Enterprise Linux can have layered products, like clustering. These require a separate subscription.
+
+== Service Level Agreement
+An important part of a subscription is access to Red Hat support. The SLA associated with a subscription plays an important part for the customer here as this defines response times.
+
+.Service level agreement response times
+image::subscriptions/sla_response_time.png[pdfwidth=80%]
+
+== Socket Pairs
+A conventional RHEL subscription is based upon socket-pairs. A socket meant here is the _physical_ CPU socket.
+
+Any subset of one or two sockets counts for one pair, so a node with 16 cores and two sockets requires one subscription to be compliant. A node with four sockets requires two single socket-pair subscriptions to be compliant.
+
+A node with one socket will then require one subscription to be compliant, and a node with three sockets will require two subscriptions.
+
+Of course, exceptions rule, so a node with four physical sockets of which only two have a seated CPU, will require just one subscription to be compliant.
+
+== Virtualization
+A conventional RHEL subscription can alternatively be used to subscribe RHEL virtual machines. The number of Virtual machines included with a subscription is two.
+
+One subscription which would apply to a _physical_ dual socket machine can also be used for two Virtual Machines.  The number of virtual sockets or vCPUs assigned to the two Virtual Machines being subscribed by a conventional RHEL subscription are not relevant.
+
+=== Virtual Datacenter Subscriptions
+Virtual Datacenter (VDC) Subscriptions differ from conventional RHEL subscriptions in that they subscribe VMs per hypervisor rather than individually.
+
+VDC subscriptions use a parent-child relationship to validate a VM's subscription: the parent (the hypervisor) consumes a subscription while the children (the VMs running on that particular hypervisor) "piggy back" on that subscription. Any supported RHEL VMs running on a hypervisor with a valid VDC subscription have a valid subscription.
+
+Similar to conventional subscriptions, VDC subscriptions are applied to hypervisors per socket-pair. See <<Socket Pairs>>.
+
+
+[NOTE]
+====
+A VDC subscription is only valid for the virtual machines running on a hypervisor, not for the hypervisor itself (the hypervisor must have a separate subscription for its own operating system).
+====
+
+== Layered products
+Layered products require the same SLA and number of socket-pairs as the RHEL OS these products are deployed upon.
+
+== Red Hat Enterprise Linux life cycle
+.life cycle phases
+image::subscriptions/lifecycle_phases.png[pdfwidth=80%]
+The Life-cycle has different phases with different types of support. Depending on the applications, the deployment of nodes could be aligned with the different phases; deploy in Full Support, maintain in Maintenance Support 1 and replace in Maintenance Support 2 would be an ideal model.
+
+.Life-cycle dates
+image::subscriptions/lifecycle_dates.png[pdfwidth=80%]
+
+The RHEL lifecycle can be found here: +
+link:https://access.redhat.com/support/policy/updates/errata[]

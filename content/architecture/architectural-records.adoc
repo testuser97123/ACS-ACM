@@ -1,0 +1,12 @@
+[id="architectural-records_{context}"]
+= Architectural Records
+Information that affects how and why the deployed system was deployed the way it was.
+
+:context: architectural-records
+include::policies.adoc[leveloffset=+1]
+
+:context: architectural-records
+include::principles.adoc[leveloffset=+1]
+
+:context: architectural-records
+include::decisions.adoc[leveloffset=+1]

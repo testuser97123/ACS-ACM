@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+# 2020/03/30 jtudelag
+# 2020/08 mth revised script
+#
+# Use podman instead of the ruby script to coalesce asciidoc, avoid installing deps in the host.
+
+# From README
+# ./scripts/coalesce-asciidoc README.adoc --output README-coalesced.adoc
+
+CUR_WORK_PTH="${BASH_SOURCE[0]}"
+CUR_WORK_DIR="${CUR_WORK_PTH%/*}"
+CUR_WORK_SCT="${CUR_WORK_PTH##*/}"
+
+# load variable file
+SC=.cer-config
+if [ -f $SC ] ; then
+  source $SC
+else
+  echo "Missing $SC file" ; exit 1
+fi
+
+MYREPORT=README.adoc
+REPORTNAME=${MYREPORT}
+
+RUN_CODE=250
+
+function USAGE() {
+  USAGE_ARR=(
+    "# Usage for ${CUR_WORK_SCT}"
+    ""
+    "   ${CUR_WORK_SCT} [options] [arguments]"
+    ""
+    "   OPTIONAL ARGUMENTS:"
+    ""
+    "     -l    Provide -l <LANGUAGE> for the language of the generated document"
+    "              (legacy option) --lang=<LANGUAGE>, <LANGUAGE>"
+    "              languages available are inside locale dir"
+    ""
+    "     -f    Provide -f <REPORTNAME> for the desired input name of the report if"
+    "              differing from README.adoc"
+    "              (legacy option) --name=<NAME>, <NAME>"
+    ""
+    "     -o|--output   Provide -o <OUTPUT> to the desired output PDF document name"
+    "              NOTE: this script automaticaly prepends \"cer-\" and appends"
+    "              \".pdf\""
+    ""
+    "     -a|--adoc    Try to generate using the local asciidoctor-pdf software"
+    ""
+    "     -p|--podman  Try to generate using podman"
+    ""
+    "     -d|--docker  Try to generate using Docker"
+    ""
+    "      The script asciidoc-coalescer.rb is required to coalesce asciidocs. "
+    "      Please follow the instructions found in the toplevel README.md to ensure "
+    "      your environment provides this. "
+    ""
+    "     -h,--help"
+    "           Prints this help usage message."
+    ""
+  )
+}
+
+
+
+# generic error function
+function err() {
+  printf "%s\n" "${USAGE_ARR[@]}" "$*"
+  exit 1
+}
+
+
+## start script ##
+USAGE
+
+while [ -n "$1" ] ; do
+  case "$1" in
+    -f          ) REPORTNAME=$2 ; shift ;;
+    -o|--output ) OUTPUT=$2 ; shift ;;
+    -a|--adoc   ) GENERATE=A; shift ;;
+    -p|--podman ) GENERATE=P; shift ;;
+    -d|--docker ) GENERATE=D; shift ;;
+    -h|--help   ) printf "%s\n" "${USAGE_ARR[@]}"
+                  exit 0
+                ;;
+    *           ) if [[ $1 =~ .*\.adoc$ ]] ; then
+                    REPORTNAME=$1
+                  else
+                    err "Unknown option $1"
+                  fi
+                ;;
+  esac
+  shift
+done
+
+if [ ! $OUTPUT ] ; then
+  BOUTPUT=$(basename ${REPORTNAME} .adoc)
+  OUTPUT=${BOUTPUT}-coalesced.adoc
+fi
+
+function runpodman() {
+  if command -v podman > /dev/null ; then
+    podman run --rm --name coalesce-asciidoc \
+    -w /cer/ \
+    -v "$(pwd)":/cer:z \
+    --entrypoint ./scripts/asciidoc-coalescer.rb ${IMAGE} ${REPORTNAME} --output ${OUTPUT}
+    GENERATE_PDF_EXIT_CODE=$?
+    RUN_CODE=0
+  else
+    COALESCE_PDF_EXIT_CODE=2
+  fi
+}
+
+function rundocker() {
+  if command -v docker > /dev/null ; then
+    docker run --rm --name coalesce-asciidoc \
+           -w /cer/
+           -v "$(pwd)":/cer:z \
+           --entrypoint ./scripts/asciidoc-coalescer.rb ${IMAGE} ${REPORTNAME} --output ${OUTPUT}
+    GENERATE_PDF_EXIT_CODE=$?
+    RUN_CODE=0
+  else
+    COALESCE_PDF_EXIT_CODE=3
+  fi
+}
+
+# function to run with local asciidoctor-pdf installation
+function runadocpdf() {
+  if command -v  asciidoctor-pdf > /dev/null ; then
+    echo "coalesce asciidoc using local command"
+    ./scripts/asciidoc-coalescer.rb  ${REPORTNAME} --output ${OUTPUT}
+  GENERATE_PDF_EXIT_CODE=$?
+  else
+    exit 1
+  fi
+}
+
+# run the correct thing once.
+if [ "${GENERATE}" = "P" ] ; then
+ runpodman
+elif [ "${GENERATE}" = "D" ] ; then
+ rundocker
+elif [ "$GENERATE" = "A" ] ; then
+ runadocpdf
+else
+ runpodman
+ [ "${RUN_CODE}" -eq "250" ] && rundocker
+ [ "${RUN_CODE}" -eq "250" ] && runadocpdf
+fi
+
+
+case "${GENERATE_PDF_EXIT_CODE}" in
+    0) echo "Generated: ${OUTPUT}" ;;
+    1) echo "ERROR: Something went wrong coalescing." ;;
+    2) echo "ERROR: Podman not found, please use other option." ;;
+    3) echo "ERROR: Docker not found, please use other option." ;;
+    4) printf "ERROR: aasciidoc-coalescer.rb not found." ;;
+    125) echo "ERROR: Attempted to use docker but Docker daemon wasn't running" ;;
+    *) echo "ERROR: Something currenlty unknown went wrong" ;;
+esac
+
+exit $GENERATE_PDF_EXIT_CODE

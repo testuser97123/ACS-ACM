@@ -1,0 +1,42 @@
+= Red Hat OpenStack Administration II: Day 2 Operations for Cloud Operators (CL210)
+
+*Course description*
+
+Build advanced skills for performing Red Hat OpenStack Platform day 2 operations and management of hybrid cloud infrastructure
+
+Red Hat OpenStack Administration II: Day 2 Operations for Cloud Operators (CL210) is designed for cloud operators, service administrators, and automation engineers who operate and manage a full-featured hybrid and private cloud-computing environment using Red Hat OpenStack Platform. You will learn how to manage, monitor, troubleshoot, and scale a Red Hat OpenStack Platform infrastructure. This course focuses on using the OpenStack Client command-line user interface to configure metrics, policies, and architecture in order to support enterprise cloud applications and daily operations.
+
+This course is based on Red Hat OpenStack version 16.1 and Red Hat Enterprise Linux version 8.2
+
+*Course content summary*
+
+* Managing overcloud service containerization technology.
+* Providing metrics for performance tuning and governance.
+* Monitoring and troubleshooting Open Virtual Networking (OVN) network flow.
+* Configuring Identity service using an external Red Hat IdM store.
+* Managing the core control plane, including Pacemaker.
+* Customizing images, with techniques for multiple use cases.
+* Managing block and object storage back-ends.
+* Managing compute nodes, including tuning and hyperconverged.
+* Troubleshooting Red Hat OpenStack Platform.
+
+*Audience for this course*
+
+* Cloud operators responsible for managing daily operations and automation.
+* Infrastructure architects interested in or responsible for maintaining a large-scale private or hybrid cloud.
+
+*Prerequisites for this course*
+
+* Be a Red Hat Certified Engineer (RHCE), Red Hat Certified Specialist in Ansible Automation, or demonstrate equivalent experience.
+* For candidates that have not earned an RHCE or equivalent, confirmation of the correct skill-set knowledge can be obtained by taking our free assessment to gauge whether this offering is the best fit for your skills.
+* Attend Red Hat OpenStack Administration I: Core Operations for Domain Operators (CL110), or demonstrate equivalent experience.
+
+*Technology considerations*
+
+* There are no current special requirements or technical considerations.
+* No BYOD support.
+* No Internet access required.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/cl210-red-hat-openstack-administration-ii

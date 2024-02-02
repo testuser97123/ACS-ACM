@@ -1,0 +1,35 @@
+////
+Purpose
+-------
+In the "Base" directory, this section is a placeholder which is to be extended
+by vars specific to the product or products being delivered.
+
+If the product directory is missing a corresponding "vars.adoc", vars are not
+used for it or can be found in the default vars/redhat-vars.adoc
+////
+
+// Documentation Links
+
+:acm_docs_list: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/[Product Documentation for Red Hat Advanced Cluster Management for Kubernetes]
+
+:acm_rel_notes: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/release_notes/[Release Notes]
+
+:acm_install: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/install/[Install]
+
+:acm_install_scaling: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/install/installing#performance-and-scalability
+
+:acm_manage_apps: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/manage_applications/[Manage Applications]
+
+:acm_manage_cluster: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/manage_cluster/[Manage Cluster]
+
+:acm_security: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/security/[Security]
+
+:acm_services: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/services/[Services]
+
+:acm_web_console: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/web_console/[Web Console]
+
+:acm_troubleshooting: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/troubleshooting/[Troubleshooting]
+
+:acm_api: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.6/html/apis/[APIs]
+:ocp_version: 4.10
+

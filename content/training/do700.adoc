@@ -1,0 +1,33 @@
+= Container Adoption Boot Camp (DO700)
+
+*Course description*
+Supporting the infrastructure for adoption of container technology and container-native applications, Kubernetes, and DevOps practices 
+The Container Adoption Boot Camp for Administrators (DO700) immerses you in intensive, hands-on management of container-native applications deployed on Red Hat's implementation of Kubernetes, Red Hat(R) OpenShift(R) Container Platform, at enterprise scale. This course is for those seeking to make a quantum leap in their digital transformation journey. Making this shift requires the ability to support a growing number of clusters, stakeholders, applications, and users to achieve large-scale deployments. As part of enrollment, you will receive one year of Red Hat Learning Subscription Standard, which gives you unlimited access to all of our courses online, plus up to five certification exams and two retakes.
+This collection of courses is based on Red Hat OpenShift Container Platform 4.5.
+
+*Course content summary*
+
+* Introduction to Containers, Kubernetes, and Red Hat OpenShift
+* Manage local containers and building container images
+* Deploy and troubleshoot containerized applications for OpenShift
+* Control access to projects using role-based access control (RBAC)
+* Control resource usage through quotas and limits
+* Isolate applications though network policies
+* Automate OpenShift administration tasks using Ansible and Jenkins
+* Provision persistent storage tailored for application requirements
+* Manage monitoring metrics and alerts
+* Deploying and configuring log aggregation
+
+*Audience for this course*
+
+This course is for administrators who want to progress in their journey toward digital leadership within organizations. Making this shift involves developing software in tight iterations so that business value can be realized sooner. This offering enables IT operations staff to support their organization’s adoption of container-native applications, including microservices. 
+
+Prerequisites for this training
+Become a Red Hat Certified System Administrator (RHCSA), or demonstrate equivalent experience
+
+Technology requirements
+Internet access is required for this course in order to access the OpenShift shared and dedicated clusters.	
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do700-container-adoption-boot-camp

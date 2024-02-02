@@ -1,0 +1,27 @@
+= Deploying Containerized Applications Tech Overview (DO080)
+
+*Course description*
+
+An introduction to containerization concepts
+
+Containers, Kubernetes and Red Hat OpenShift Technical Overview (DO080) is a series of on-demand, online videos that introduces you to Linux(R) containers and container orchestration technology using Docker, Kubernetes, and Red Hat(R) OpenShift Container Platform.
+
+This course is based on Red Hat OpenShift Container Platform 4.1.
+
+*Course content summary*
+
+In this series of short lectures and in-depth demonstrations, you will learn about the concepts of containerization—and see it in action. Learn about containerizing applications and services, testing them using Docker, and deploying them on a Kubernetes cluster using Red Hat OpenShift. You will also learn how to build and deploy an application from source code using the source-to-image facility of OpenShift. 
+
+Note: You can view all videos or only the ones that interest you. There are no hands-on labs associated with this course, and you will not receive course completion recognition.
+
+*Audience for this course*
+
+Anyone interested in learning the value of container technology, containerizing applications, and deploying them at scale on a Kubernetes cluster.
+
+*Prerequisites for this course*
+
+There are no prerequisites for this course.	
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do080-deploying-containerized-applications-technical-overview

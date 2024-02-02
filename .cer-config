@@ -1,0 +1,5 @@
+# CER config file which gets sourced by several scripts
+IMAGE=quay.io/redhat-cop/ubi8-asciidoctor:v2.0
+
+# LANGUAGE variable is set by init-cer
+LANGUAGE=en_US

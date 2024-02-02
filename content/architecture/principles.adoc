@@ -1,0 +1,45 @@
+[id="principles_{context}"]
+= Principles
+Architectural principles are rules or guidelines at the organizational or team level used to make architectural decisions.
+The principles documented here were provided throughout the course of the engagement from various teams and key stakeholders and affected the documented Architectural Decisions.
+
+// copy this template for each principle
+// update the ID to equal the ID and the title to equal the title, useful for linking to this section
+[id=PRINCIPLE-???,title='#TODO a title for this principle record#'']
+[cols="1h,3a"]
+|===
+
+| ID
+| PRINCIPLE-#TODO unique number#
+// A unique code that unambiguously identifies the principle; for example: “PRINCIPLE-42.”
+
+| Title
+| #TODO a title for this principle record#
+// EX: Apache HTTPD for Static Web Content
+
+| Description
+| #TODO long form of what the principle is#
+//EX: When serving static web content the preference is to use containerized Apache HTTPD
+
+| Motivation
+| #TODO why was this principle put in place, ex no deployments on fridays, because they had a history of bad deployments causing people to work all weekend#
+
+| Source
+| #TODO team name or key stake holder name who provided the applicable principle#
+
+| Related Policies
+| * #TODO list links to policies that this record is related to in some way and the way in which,
+they are related. EX: policy is reason for this principle#
+//HINT: syntax for inline link is <<POLICY-?>>
+
+| Related Principles
+| * #TODO list links to policies that this record is related to in some way and the way in which,
+they are related. EX: other principle works in cooperation with this principle#
+//HINT: syntax for inline link is <<PRINCIPLE-?>>
+
+| Related Decisions
+| * #TODO list links to policies that this record is related to in some way and the way in which,
+they are related. EX: decision made is due in part to this principle#
+//HINT: syntax for inline link is <<ADR-?>>
+
+|===

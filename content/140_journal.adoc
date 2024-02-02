@@ -1,0 +1,310 @@
+////
+Purpose
+-------
+
+Activities
+------
+Provide a single-line summary for each activity performed on a given day.  The
+recommended format is "<summary><verb>", where "summary" is a brief description
+of the activity, and "verb" is either "started", "progressed" or "completed".
+This will help to capture tasks which span multiple days.
+
+Note that this journal can be tracked daily or weekly, depending on how the 
+project decides to record the information.
+
+When an activity correlates with a task from the Statement of Work, try to use
+the same verbiage as in the SOW to describe it.  This will greatly simplify
+later reviews of this document.
+
+Use good judgment when deciding which activities to list and which to omit.
+A good starting point is to add:
+- Any activity which requires 30 minutes or more to complete
+- Tasks which are foundational or critical to the engagement regardless of time
+  required
+- Tasks which were not part of the Statement of Work but added per customer
+  request
+
+It is strongly recommended that the consultant update this part of the CER on a
+daily basis to ensure all significant activity is captured.
+
+Blockers
+------
+Provide a single-line summary for each blocker present in a given day.   The
+recommended format is "<summary><verb>" where "summary" is a brief description
+of the activity and "verb" is either "encountered", "ongoing" or "resolved".
+This will help to capture the duration and impact of blockers.
+
+Try to refrain from detailed explanations of blockers in this section.  Place
+relevant details in the "Challenges" area of the CER and try to use the first
+sentence of the Challenge description as the summary here.
+
+PROTIP: Avoid duplication of effort with project status reports.  
+If a delivery team elects to use the optional "Journal" component in the 
+CER then those updates should be used by the Project Manager to compile updates 
+for the project status report. If the "Journal" is not in use then 
+information for the status report will be provided separately to the 
+Project Manager by the Consultant/Architect(s) on the engagement. 
+
+For more information see:  CER Best Practices - https://source.redhat.com/groups/public/kmo/engagementjournalstandardization/consulting_engagement_report_cer_wiki/cer_best_practices
+and Delivering the CER - https://source.redhat.com/groups/public/kmo/engagementjournalstandardization/consulting_engagement_report_cer_wiki/delivering_the_cer 
+
+Sample
+------
+
+[cols="1,5,5",options=header]
+|===
+|Date
+|Activities
+|Blockers
+
+// Date
+| 06/05/2021
+
+// Activities
+a|
+- Primary cluster deployment completed
+- Automation for workload deployment started
+- Image repository creation progressed
+// Blockers
+a|
+- Groups for RBAC not defined in Active Directory discovered
+
+
+// Date
+| 06/06/2021
+
+// Activities
+a|
+- Automation for workload deployment progressed
+- Image repository creation completed
+
+// Blockers
+a|
+- Groups for RBAC not defined in Active Directory resolved
+- No Internet access for Satellite to pull in images from CDN discovered
+
+|===
+
+
+////
+
+[cols="1,5,5",options=header]
+|===
+|Date
+|Activities
+|Blockers
+
+// Date
+| Week of 09/05/2022
+
+// Activities
+a|
+- Deploy ACM hub cluster, operator has already been deployed. Used hub cluster default options, the yaml file captured in the CER.
+- Troubleshoot storage in the hub cluster. Cluster installed via UPI so no default storage. Added Vsphere CSI storage.
+- Issues with ACM hub cluster deploy and storage so we destroyed and re-created which picked up the storage config.
+- Infra node size in the hub cluster only had 8GB of RAM which is going to be too small. Added more CPU and RAM to nodes and rebooted.
+- Troubleshoot adding managed node to ACM hub cluster. Issue seemed to be network access between clusters. Network changes made and connection worked. 
+- Deploy ODF operator to hub cluster.
+- Deploy multicloud objbect gateway from ODF operator. Use default values.
+- Add more CPU to infra nodes as ODF and Nooba deployments along with ACM running there was not enough room to reserve CPU.
+- Work through setting up observability policy in ACM doing this via GitOps and setting up an ACM application to sync policies down.
+- Create and Update CER document.
+
+// Blockers
+a|
+- nill
+
+
+// Date
+| Week of 16/05/2022
+
+// Activities
+a|
+- Update role binding for acm policy syncing from git to work.
+- Deploy observability to ACM with policy stored in git and test.
+- Deploy Grafana instance as described in docs to get access to ACM dashboards.
+- Look at alerting metrics that come through Grafana ACM.
+- Discuss oauth ACM policy and  how to handle secrets .
+- Create policy for ImageContentSourcePolicy and configure to work with gitops in ACM.
+
+// Blockers
+a|
+- Phil to look at secret for oauth ldap policy. May be able to use policy template functions (https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.4/html/governance/governance#template-functions)
+- Phil to look into deleting configuration ACM policy to ensure it won't delete the actual OpenShift object.
+- Phil to check resources needed for ACS deployment.
+
+// Date
+| Week of 23/05/2022
+
+// Activities
+a|
+- Go over ACS architecture and sizing
+- Install ACS central with ACM policy 
+- install acs secure cluster in hub cluster with acm policy
+- troubleshoot cluster resources for ACS and update node cpu/mem
+- troubleshoot image pull issues with quay.io image
+- troubleshoot and test acm policy to deploy acs secured cluster and cluster url
+
+
+// Blockers
+a|
+- Phil look into observability - retention period
+- Phil look into init bubdle copy process
+- Phil look into two acs secure polices needed
+
+
+// Date
+| Week of 30/05/2022
+
+// Activities
+a|
+- Go over ACS secured deployment with ACM
+- Troubleshoot/re-configure ACM policies for ACS secured cluster
+- Add in ACM subscription for init bundle secrets to the ACS secured cluster. Using script available on the stolostron github - https://github.com/stolostron/advanced-cluster-security
+- Configure ACS with OpenShift log in and set up admin group
+
+// Blockers
+a|
+- nill
+
+
+
+| Week of 06/06/2022
+
+// Activities
+a|
+- Test config ACS S3 back up in lab environment
+- Set up ACS S3 backup in {cust} environment
+- Go over compliance operator demo
+- Go over ACS compliance and how to report and remediate different standards
+- Go through process and update ACS to 3.70
+
+// Blockers
+a|
+- nill
+
+| Week of 13/06/2022
+
+// Activities
+a|
+- Complaiance operator troubleshoot and update the default scan setting to us infra node
+- Talk about removing ACM policy with mustnothave and other options
+- Configure observability renteion period 
+
+// Blockers
+a|
+- nill
+
+
+| Week of 27/06/2022
+
+// Activities
+a|
+- Talk about roadmap for ACM 2.6
+- Oauth config set up and testing 
+
+
+// Blockers
+a|
+- Copy over configmap for oatuh policy?
+- Replace instead of merge or addition oauth config
+
+
+| Week of 04/07/2022
+
+// Activities
+a|
+- Work on updating ACM to 2.5
+
+// Blockers
+a|
+- Update to ACM seems to be blocked. Multicluster-engine 2.0.0 operator doesn't seem to want to install. Maybe something to do with the disconnected state of the mng cluster.
+
+| Week of 11/07/2022
+
+// Activities
+a|
+- Discuss resolution of ACM 2.5 install.
+- Update the LDAP/OAuth ACM policy to use the newer hub and fromsecret policy function to copy the secret.
+- Look at notification config in ACS for teams
+
+// Blockers
+a|
+- nill
+
+
+| Week of 26/07/2022
+
+// Activities
+a|
+- Added devops group to analyst access in ACS so that team can log in an action items.
+- Talked about ODF and {cust} to come up with requirements for an ODF architecture.
+- Talked about `mustonlyhave` configuration option in ACM Policy vs `musthave`
+- Phil got a copy of configs to update documentation.
+- Talked about the Jenkins plugin for ACS and shared documentation.
+- Talked about Argocd/Openshift Gitops working with ACM and ACM applications. We will chat and demo more of this next week.
+- {cust} to get a Teams integration webhook set up so we can test notifications with ACS.
+- Phil to look into kustomize with ACM application and policies 
+
+// Blockers
+a|
+- nill
+
+
+| Week of 01/08/2022
+
+// Activities
+a|
+- Talk about ArgoCD/OpenShift GitOps and ACM and how they work together.
+- Demo ArgoCD and ACM config
+- Set up ACM ArgoCD Application sets on {cust} cluster.
+- Test OpenShift GitOps/ArgoCD applications on {cust} cluster.
+- Sent through links on ArgoCD and GitOps configurations:
+- https://github.com/tosin2013/acm-multi-cluster-argocd-dashboard
+- https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.5/html-single/applications/index#register-gitops
+- https://argocd-vault-plugin.readthedocs.io/en/stable/howitworks/
+- https://github.com/gnunn-gitops/cluster-config
+- https://gexperts.com/wp/bootstrapping-openshift-gitops-with-rhacm/
+
+// Blockers
+a|
+- nill
+
+
+| Week of 29/08/2022
+
+// Activities
+a|
+- Troubleshoot ACS failing on secured clusters.
+- Update ACS secured clusters AMC policy to use the new {{hub fromsecret function.
+- Test and use the mustonlyhave setting. https://github.com/stolostron/governance-policy-framework/blob/main/doc/configuration-policy/README.md
+- Determine secrets need to be in namespace where ACM policy is created in.
+- Copy secrets over using:
+
+----
+oc get secret sensor-tls -n stackrox -o json "pipe" jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","selfLink","uid","ownerReferences"]) "pipe" oc apply -n open-cluster-management -f -
+----
+
+- ACM Policy wouldn't apply to cluster even though we had the right labels. Had to delete policy then re-add. Maybe this? https://access.redhat.com/solutions/6380131
+// Blockers
+a|
+- nill
+
+
+| Week of 05/09/2022
+
+// Activities
+a|
+- Discus depreciated APIs in ACS - issues.redhat.com/browse/ROX-8675.
+- Discus depreciated APIs and report from github.com/doitintl/kube-no-trouble tool and how it's used in pipelines.
+- Update ACS to central to version 3.71.
+
+// Blockers
+a|
+- nill
+
+|===
+
+
+
+

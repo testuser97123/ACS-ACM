@@ -1,0 +1,174 @@
+////
+Purpose
+-------
+This page gives an overview to OpenShift Container Platform control plane
+////
+
+= Control plane
+
+The control plane, which is composed of control plane machines (also known as the master machines), manages the OpenShift Container Platform cluster. The control plane machines manage workloads on the compute machines, which are also known as worker machines. The cluster itself manages all upgrades to the machines by the actions of the Cluster Version Operator, the Machine Config Operator, and a set of individual Operators.
+
+== Node configuration management with machine config pools
+
+Machines that run control plane components or user workloads are divided into groups based on the types of resources they handle. These groups of machines are called machine config pools (MCP). Each MCP manages a set of nodes and its corresponding machine configs. The role of the node determines which MCP it belongs to; the MCP governs nodes based on its assigned node role label. Nodes in an MCP have the same configuration; this means nodes can be scaled up and torn down in response to increased or decreased workloads.
+
+By default, there are two MCPs created by the cluster when it is installed: `master` and `worker`. Each default MCP has a defined configuration applied by the Machine Config Operator (MCO), which is responsible for managing MCPs and facilitating MCP upgrades. {customer} can create additional MCPs, or custom pools, to manage nodes that have custom use cases that extend outside of the default node types.
+
+Custom pools are pools that inherit their configurations from the worker pool. They use any machine config targeted for the worker pool, but add the ability to deploy changes only targeted at the custom pool. Since a custom pool inherits its configuration from the worker pool, any change to the worker pool is applied to the custom pool as well. Custom pools that do not inherit their configurations from the worker pool are not supported by the MCO.
+
+NOTE: A node can only be included in one MCP. If a node has multiple labels that correspond to several MCPs, like `worker,infra`, it is managed by the infra custom pool, not the worker pool. Custom pools take priority on selecting nodes to manage based on node labels; nodes that do not belong to a custom pool are managed by the worker pool.
+
+It is recommended to have a custom pool for every node role {customer} want to manage in its cluster. For example, if {customer} create `infra` nodes to handle infra workloads, it is recommended to create a custom infra MCP to group those nodes together. If {customer} apply an infra role label to a worker node so it has the worker,infra dual label, but do not have a custom infra MCP, the MCO considers it a worker node. If {customer} remove the worker label from a node and apply the infra label without grouping it in a custom pool, the node is not recognized by the MCO and is unmanaged by the cluster.
+
+IMPORTANT: Any node labeled with the infra role that is only running `infra` workloads is not counted toward the total number of subscriptions. The MCP managing an infra node is mutually exclusive from how the cluster determines subscription charges; tagging a node with the appropriate `infra` role and using taints to prevent user workloads from being scheduled on that node are the only requirements for avoiding subscription charges for infra workloads.
+
+The MCO applies updates for pools independently; for example, if there is an update that affects all pools, nodes from each pool update in parallel with each other. If {customer} add a custom pool, nodes from that pool also attempt to update concurrently with the master and worker nodes.
+
+== Machine roles
+
+OpenShift Container Platform assigns hosts different roles. These roles define the function of the machine within the cluster. The cluster contains definitions for the standard master and worker role types.
+
+NOTE: The cluster also contains the definition for the bootstrap role. Because the bootstrap machine is used only during cluster installation, its function is explained in the cluster installation documentation.
+
+=== Cluster workers
+
+In a Kubernetes cluster, the worker nodes are where the actual workloads requested by Kubernetes users run and are managed. The worker nodes advertise their capacity and the scheduler, which is part of the master services, determines on which nodes to start containers and pods. Important services run on each worker node, including CRI-O, which is the container engine, Kubelet, which is the service that accepts and fulfills requests for running and stopping container workloads, and a service proxy, which manages communication for pods across workers.
+
+In OpenShift Container Platform, machine sets control the worker machines. Machines with the worker role drive compute workloads that are governed by a specific machine pool that autoscales them. Because OpenShift Container Platform has the capacity to support multiple machine types, the worker machines are classed as _compute_ machines. In this release, the terms _worker machine_ and _compute machine_ are used interchangeably because the only default type of compute machine is the worker machine. In future versions of OpenShift Container Platform, different types of compute machines, such as infrastructure machines, might be used by default.
+
+NOTE: Machine sets are groupings of machine resources under the `machine-api` namespace. Machine sets are configurations that are designed to start new machines on a specific cloud provider. Conversely, machine config pools (MCPs) are part of the Machine Config Operator (MCO) namespace. An MCP is used to group machines together so the MCO can manage their configurations and facilitate their upgrades.
+
+=== Cluster masters
+
+In a Kubernetes cluster, the control plane nodes (also known as the master nodes) run services that are required to control the Kubernetes cluster. In OpenShift Container Platform, the control plane machines are the control plane. They contain more than just the Kubernetes services for managing the OpenShift Container Platform cluster. Because all of the machines with the control plane role are control plane machines, the terms master and control plane are used interchangeably to describe them. Instead of being grouped into a machine set, control plane machines are defined by a series of standalone machine API resources. Extra controls apply to control plane machines to prevent {customer} from deleting all control plane machines and breaking its cluster.
+
+NOTE: Exactly three control plane nodes must be used for all production deployments.
+
+Services that fall under the Kubernetes category on the master include the Kubernetes API server, etcd, the Kubernetes controller manager, and the Kubernetes scheduler.
+
+.Kubernetes services that run on the control plane
+[cols="1,2",options="header"]
+|===
+|Component |Description
+|Kubernetes API server
+|The Kubernetes API server validates and configures the data for pods, services,
+and replication controllers. It also provides a focal point for the shared state of the cluster.
+
+|etcd
+|etcd stores the persistent master state while other components watch etcd for
+changes to bring themselves into the specified state.
+//etcd can be optionally configured for high availability, typically deployed with 2n+1 peer services.
+
+|Kubernetes controller manager
+|The Kubernetes controller manager watches etcd for changes to objects such as
+replication, namespace, and service account controller objects, and then uses the
+API to enforce the specified state. Several such processes create a cluster with
+one active leader at a time.
+
+|Kubernetes scheduler
+|The Kubernetes scheduler watches for newly created pods without an assigned node and selects the best node to host the pod.
+|===
+
+There are also OpenShift services that run on the control plane, which include the OpenShift API server, OpenShift controller manager, OpenShift OAuth API server, and OpenShift OAuth server.
+
+.OpenShift services that run on the control plane
+|===
+|Component |Description
+|OpenShift API server
+|The OpenShift API server validates and configures the data for OpenShift resources, such as projects, routes, and templates.
+
+The OpenShift API server is managed by the OpenShift API Server Operator.
+|OpenShift controller manager
+|The OpenShift controller manager watches etcd for changes to OpenShift objects, such as project, route, and template controller objects, and then uses the API to enforce the specified state.
+
+The OpenShift controller manager is managed by the OpenShift Controller Manager Operator.
+|OpenShift OAuth API server
+|The OpenShift OAuth API server validates and configures the data to authenticate to OpenShift Container Platform, such as users, groups, and OAuth tokens.
+
+The OpenShift OAuth API server is managed by the Cluster Authentication Operator.
+|OpenShift OAuth server
+|Users request tokens from the OpenShift OAuth server to authenticate themselves to the API.
+
+The OpenShift OAuth server is managed by the Cluster Authentication Operator.
+|===
+
+Some of these services on the control plane machines run as systemd services, while others run as static pods.
+
+Systemd services are appropriate for services that {customer} need to always come up on that particular system shortly after it starts. For control plane machines, those include sshd, which allows remote login. It also includes services such as:
+
+The CRI-O container engine (crio), which runs and manages the containers. OpenShift Container Platform {ocp_version} uses CRI-O instead of the Docker Container Engine.
+
+Kubelet (kubelet), which accepts requests for managing containers on the machine from master services.
+
+CRI-O and Kubelet must run directly on the host as systemd services because they need to be running before {customer} can run other containers.
+
+The [x-]`installer-*` and [x-]`revision-pruner-*` control plane pods must run with root permissions because they write to the `/etc/kubernetes` directory, which is owned by the root user. These pods are in the following namespaces:
+
+* `openshift-etcd`
+
+* `openshift-kube-apiserver`
+
+* `openshift-kube-controller-manager`
+
+* `openshift-kube-scheduler`
+
+== Operators
+
+In OpenShift Container Platform, Operators are the preferred method of packaging, deploying, and managing services on the control plane. They also provide advantages to applications that users run. Operators integrate with Kubernetes APIs and CLI tools such as `kubectl` and `oc` commands. They provide the means of watching over an application, performing health checks, managing over-the-air updates, and ensuring that the applications remain in its specified state.
+
+Because CRI-O and the Kubelet run on every node, almost every other cluster function can be managed on the control plane by using Operators. Operators are among the most important components of OpenShift Container Platform {ocp_version}. Components that are added to the control plane by using Operators include critical networking and credential services.
+
+The Operator that manages the other Operators in an OpenShift Container Platform cluster is the Cluster Version Operator.
+
+OpenShift Container Platform {ocp_version} uses different classes of Operators to perform cluster operations and run services on the cluster for its applications to use.
+
+=== Platform operators
+
+In OpenShift Container Platform {ocp_version}, all cluster functions are divided into a series of platform Operators. Platform Operators manage a particular area of cluster functionality, such as cluster-wide application logging, management of the Kubernetes control plane, or the machine provisioning system.
+
+Each Operator provides {customer} with a simple API for determining cluster functionality. The Operator hides the details of managing the lifecycle of that component. Operators can manage a single component or tens of components, but the end goal is always to reduce operational burden by automating common actions. Operators also offer a more granular configuration experience. {customer} configure each component by modifying the API that the Operator exposes instead of modifying a global configuration file.
+
+=== Operators managed by OLM
+
+The Cluster Operator Lifecycle Management (OLM) component manages Operators that are available for use in applications. It does not manage the Operators that comprise OpenShift Container Platform. OLM is a framework that manages Kubernetes-native applications as Operators. Instead of managing Kubernetes manifests, it manages Kubernetes Operators. OLM manages two classes of Operators, Red Hat Operators and certified Operators.
+
+Some Red Hat Operators drive the cluster functions, like the scheduler and problem detectors. Others are provided for {customer} to manage itself and use in its applications, like etcd. OpenShift Container Platform also offers certified Operators, which the community built and maintains. These certified Operators provide an API layer to traditional applications so {customer} can manage the application through Kubernetes constructs.
+
+== Machine Config Operator
+
+OpenShift Container Platform {ocp_version} integrates both operating system and cluster management. Because the cluster manages its own updates, including updates to Red Hat Enterprise Linux CoreOS (RHCOS) on cluster nodes, OpenShift Container Platform provides an opinionated lifecycle management experience that simplifies the orchestration of node upgrades.
+
+OpenShift Container Platform employs three daemon sets and controllers to simplify node management. These daemon sets orchestrate operating system updates and configuration changes to the hosts by using standard Kubernetes-style constructs. They include:
+
+The `machine-config-controller`, which coordinates machine upgrades from the control plane. It monitors all of the cluster nodes and orchestrates their configuration updates.
+
+The `machine-config-daemon` daemon set, which runs on each node in the cluster and updates a machine to configuration as defined by machine config and as instructed by the MachineConfigController. When the node detects a change, it drains off its pods, applies the update, and reboots. These changes come in the form of Ignition configuration files that apply the specified machine configuration and control kubelet configuration. The update itself is delivered in a container. This process is key to the success of managing OpenShift Container Platform and RHCOS updates together.
+
+The `machine-config-server` daemon set, which provides the Ignition config files to control plane nodes as they join the cluster.
+
+The machine configuration is a subset of the Ignition configuration. The `machine-config-daemon` reads the machine configuration to see if it needs to do an OSTree update or if it must apply a series of systemd kubelet file changes, configuration changes, or other changes to the operating system or OpenShift Container Platform configuration.
+
+When {customer} perform node management operations, {customer} create or modify a `KubeletConfig` custom resource (CR).
+
+[IMPORTANT]
+====
+When changes are made to a machine configuration, the Machine Config Operator (MCO) automatically reboots all corresponding nodes in order for the changes to take effect.
+
+To prevent the nodes from automatically rebooting after machine configuration changes, before making the changes, {customer} must pause the autoreboot process by setting the `spec.paused` field to `true` in the corresponding machine config pool. When paused, machine configuration changes are not applied until {customer} set the `spec.paused` field to `false` and the nodes have rebooted into the new configuration.
+
+The following modifications do not trigger a node reboot:
+
+When the MCO detects any of the following changes, it applies the update without draining or rebooting the node:
+
+Changes to the SSH key in the `spec.config.passwd.users.sshAuthorizedKeys` parameter of a machine config.
+
+Changes to the global pull secret or pull secret in the `openshift-config` namespace.
+
+Automatic rotation of the `/etc/kubernetes/kubelet-ca.crt` certificate authority (CA) by the Kubernetes API Server Operator.
+
+When the MCO detects changes to the `/etc/containers/registries.conf` file, such as adding or editing an `ImageContentSourcePolicy` object, it drains the corresponding nodes, applies the changes, and uncordons the nodes.
+====
+
+
+
+

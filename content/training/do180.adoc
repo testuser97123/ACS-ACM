@@ -1,0 +1,39 @@
+= Red Hat OpenShift I: Containers & Kubernetes (DO180)
+
+*Course description*
+
+Introduction to building and managing containers for deployment on a Kubernetes and OpenShift 4 cluster
+
+Red Hat OpenShift I: Containers & Kubernetes (DO180) introduces students to building and managing containers for deployment on a Kubernetes cluster. This course helps students build core knowledge and skills in managing containers through hands-on experience with containers, Kubernetes, and the Red Hat OpenShift Container Platform needed for multiple roles, including developers, administrators and site reliability engineers.
+
+This course is based on Red Hat(R) Enterprise Linux(R) 8.2 and OpenShift(R) Container Platform 4.6.
+
+*Course content summary*
+
+* Container and OpenShift architecture
+* Creating containerized services
+* Managing containers and container images
+* Creating custom container images
+* Deploying containerized applications on OpenShift
+* Deploying multi-container applications
+
+*Audience for this course*
+
+* Developers who want to containerize software applications.
+* Administrators who are new to container technology and container orchestration.
+* Architects who are looking to use container technologies in software architectures.
+* Site Reliability Engineers who want to support their technology infrastructure using Kubernetes and OpenShift.
+
+*Prerequisites for this course*
+
+* Take our free assessment to gauge whether this offering is the best fit for your skills.
+* Experience in the use of  a Linux terminal session, issuing operating system commands, and familiarity with shell scripting. A Red Hat Certified System Administrator (RHCSA) certification is recommended but not required.
+* Some experience with web application architectures and their corresponding technologies.
+
+*Technology considerations*
+
+This course requires Internet connectivity to access public facing resources.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do180-red-hat-openshift-I-containers-kubernetes

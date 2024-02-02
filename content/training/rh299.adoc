@@ -1,0 +1,46 @@
+= RHCE Certification lab (RH299)
+
+*Course description*
+
+Prepare for the Red Hat Certified Engineer exam (EX300)
+
+The RHCE(R) Certification lab (RH299) is a facilitated lab environment for students to work at their own pace through a hands-on review prior to taking the Red Hat Certified Engineer (RHCE) exam (EX300).
+
+Students attending this lab should have already completed their classroom training and simply be preparing to take or retake the exam. The delivery is focused primarily on lab time.
+
+During the 4-day lab, students will work on their own through the complete set of labs from both the RHCSA (Red Hat Certified System Administrator) Rapid Track (RH199) and Red Hat System Administration III (RH254). The RHCE Certification Lab includes a few lectures designed to review key technologies such as systemd, firewalld, and IPv6. For the classroom and virtual classroom versions of this lab, a facilitator will be available throughout the week to assist students as they work through the exercises.
+
+*Lab content summary*
+
+* Managing and troubleshooting systemd services during the boot process
+* Network configuration and basic troubleshooting
+* Managing local storage, creating and using file systems
+* Firewall management with firewalld
+* Automating installation of Red Hat Enterprise Linux(R) using kickstart
+* Manage SELinux settings
+* Using NFS and Samba shared filesystems
+* iSCSI initiator and target configuration
+* Domain Name System (DNS) troubleshooting and caching name server
+* Providing Network File System (NFS) and Server Message Block (SMB) file servers
+* Apache HTTPD web server management
+* MariaDB SQL database configuration
+* Postfix Simple Mail Transfer Protocol (SMTP) nullclient for servers
+* Bash scripting for automation
+
+*Audience for this course*
+
+* RHCEs on Red Hat Enterprise Linux 6 or earlier who wish to recertify on Red Hat Enterprise Linux 7
+* Students who previously attempted the RHCE exam, did not pass, and wish to retake the exam
+* Students who have completed the RHCE track courses (Red Hat System Administration I (RH124), Red Hat System Administration II (RH134), and Red Hat System Administration III (RH254) or equivalent) and would like additional hands-on practice prior to taking the RHCE exam
+
+*Prerequisites for this lab*
+
+To qualify for this course, students must:
+
+* Students should have already completed Red Hat System Administration I (RH124), Red Hat System Administration II (RH134), and Red Hat System Administration III (RH254) or equivalent training.
+* It is highly recommended students take our online skills assessment prior to enrolling in this course.
+* Extensive UNIX administration experience by itself is not adequate for most students.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh299-rhce-certification-lab

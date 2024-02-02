@@ -1,0 +1,29 @@
+= Red Hat Performance Tuning: Linux in Physical, Virtual, and Cloud (RH442)
+
+*Course description*
+
+Performance tuning and capacity planning for Red Hat Enterprise Linux
+
+Red Hat Performance Tuning: Linux in Physical, Virtual, and Cloud (RH422) teaches senior Linux(R) system administrators the methodology of performance tuning. This course discusses system architecture with an emphasis on understanding its implications on system performance, performance adjustments, open source benchmarking utilities, networking performance, and tuning configurations for specific server use cases and workloads.
+This course is based on Red Hat(R) Enterprise Linux 8.
+
+*Course content summary*
+
+* Analyze and tune for resource-specific scenarios
+* Applying tuning profiles with the tuned tool
+* Tune in virtual environments (hosts and guests)
+* Trace and profile system events and activities
+* Tune resource limits and utilization using systemd-integrated cgroups
+* Gather performance metrics and benchmarking data
+
+*Audience for this course*
+
+* Senior Linux system administrators responsible for maximizing resource utilization through performance tuning
+
+*Prerequisites for this course*
+
+* Become a Red Hat Certified Engineer (RHCE(R)), or demonstrate equivalent experience
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh442-red-hat-enterprise-performance-tuning

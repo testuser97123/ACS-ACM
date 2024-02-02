@@ -1,0 +1,770 @@
+#!/bin/bash
+
+CONTENT_DIR="content"
+CANNED_CONTENT_DIR="canned-content"
+
+if [ -d "$CONTENT_DIR" ]; then
+        echo "content folder exists. It looks like your CER is already initialized. Aborting." >&2
+        exit 100
+fi
+
+if [ -d "$CANNED_CONTENT_DIR" ]; then
+        CER_LANG_OPTIONS=( $(find ./canned-content/ -mindepth 1 -maxdepth 1 -type d | xargs -n 1 basename | sort) )
+else
+        echo "canned-content folder is missing. It looks like your CER is already initialized. Aborting." >&2
+        exit 101
+fi
+
+CER_TYPE_OPTIONS=()
+YES_NO_OPTIONS=("Yes" "No")
+TOP_MENU_OPTION=( "Execute Initialization" "Set Language" "Set CER Type" "Set page layout" "Set Customer Name" "Set Customer Short Name" "Set Git URL" "Set Cleanup canned-content" "Set upload to par/CER" "Quit")
+
+CER_CLONE_REPO=false
+INITIALIZE=false
+QUIT=false
+
+CER_TYPE_OPTIONS_SELECTED_INDEXES=()
+
+# args
+CER_LANG=""
+CER_TYPES=()
+CLEANUP_CANNED_CONTENT=Yes
+CUSTOMER_NAME=""
+CUSTOMER_SHORT_NAME=""
+ADD_TO_PARCER=Yes
+
+GIT_VERSION=( $(git --version | awk '{print $3}' | awk -F. '{print $1, $2}') )
+
+GIT_URL_ORIGIN=""
+PAGE_LAYOUT="A4"
+OTHER_ARGUMENTS=()
+
+function main() {
+  # parse args
+  parse_args "$@"
+
+  # make initial selections if args didn't say to initialize
+  if [ ${INITIALIZE} == true ]; then
+    verify_args
+  else
+    if [ -z "${CER_LANG}" ]; then
+      choose_lang_type
+    fi
+
+    if [[ ${#CER_TYPES[@]} -lt 1 ]]; then
+      choose_cer_type
+    fi
+
+    if [ -z "${CUSTOMER_NAME}" ]; then
+      set_customer_name
+    fi
+
+    if [ -z "${CUSTOMER_SHORT_NAME}" ]; then
+      set_customer_short_name
+    fi
+
+    if [ -z "${GIT_URL_ORIGIN}" ]; then
+      set_git_url_origin
+    fi
+  fi
+
+  echo
+  while [ ${QUIT} == false ] && [ ${INITIALIZE} == false ]; do
+    print_selected_options
+    menu_top
+  done
+
+  if [ ${INITIALIZE} == true ]; then
+    print_selected_options
+    initialize
+    init_numberize
+    init_cleanup
+    init_add_to_parcer
+    init_git
+
+    if [ ${CER_CLONE_REPO} == true ]
+    then
+      echo
+      echo "Go to '${CUSTOMER_REPO}' to edit and generate your CER for ${CUSTOMER_NAME}."
+      echo "Note that the repo 'CER-${CUSTOMER_SHORT_NAME}' can be moved to wherever you need it."
+    fi
+  fi
+}
+
+function error() {
+  printf 'ERROR: %s\n' "$1" >&2
+  exit 1
+}
+
+function verify_args() {
+  if [ -z "${CER_LANG}" ]; then
+    usage_and_exit '--lang argument is required'
+  fi
+
+  if [ -z "${CUSTOMER_NAME}" ]; then
+    usage_and_exit '--customer-name argument is required'
+  fi
+
+  if [ -z "${CUSTOMER_SHORT_NAME}" ]; then
+    usage_and_exit '--customer-short-name argument is required'
+  fi
+}
+
+# function to output command usage and exit, either with return code 0
+# or using the error function if an error message is given as parameter
+function usage_and_exit() {
+	cat <<@EndOfUsage
+
+Usage: $0 [options]
+    --clone
+        create a parallel customer repo named CER-<customer-short-name> instead
+        of modifying the current one. This allows for offline work.
+    --initialize
+        directly initialize the repo, language, customer name and short name
+        are required as well.
+    --cleanup-canned-content
+        remove the provided canned content you haven't selected (the default).
+    --keep-canned-content
+        keep the provided canned content you haven't selected.
+    --add-to-parcer
+        add this CER to par/CER, the CER full-text search engine.
+        Adds .add-to-parcer file to the repo root.
+        (Default behavour. Works only for 'Client CERs' subgroup)
+    --skip-parcer
+        do not add this document to par/CER, the CER full-text search engine.
+    --lang <xx_XX>
+        the language_COUNTRY code (required for initialization), one of:
+        $(find canned-content -maxdepth 1 -type d -name '??_??' -exec basename {} \; | tr '\n' ' ').
+    --page-layout <format>
+        the format of the pages in the PDF (A4 -default- or Letter).
+    --customer-name <Customer Name>
+        the full "official" name of the customer (required for initialization).
+    --customer-short-name <Abbr. Customer Name>
+        a shortcut name of the customer, no blanks, fit for filename (required.
+        for initialization)
+    --git-origin-url <target Git URL>
+        the Git repo to which you'd like to push your customer repo to.
+    --cer-type <canned content>
+        which content you'd like to use to your draft (can be used multiple
+        times to add multiple content types).
+	Check available ones for your language under "canned-content/xx_XX".
+
+Examples:
+    ./init-cer --clone --initialize --lang=en_US \\
+               --customer-name "My Customer" --customer-short-name mycust \\
+               --cer-type Ansible-Tower --cer-type RHV-4x \\
+	       --git-origin-url ssh://git@gitlab.consulting.redhat.com:2222/kmo-consulting-engagement-reports/client-cers/2020/emea/germany/mycust/myproject.git
+        will create non-interactively a customer repo under ../CER-mycust with
+        the pre-defined content for Ansible Tower and RHV 4, ready to be pushed
+	to the repository you must have created, together with its sub-groups
+        hierarchy, under
+        https://gitlab.consulting.redhat.com/kmo-consulting-engagement-reports/client-cers
+    ./init-cer
+        will completely interactively transform the current repository into a
+        customer repository.
+
+@EndOfUsage
+
+	if [ -n "$1" ]
+	then
+		error "$@"
+	else
+		exit 0
+	fi
+}
+
+function parse_args() {
+  CER_TYPES=("Base")
+
+  while :
+  do
+    case $1 in
+      -h|--help)
+	usage_and_exit
+        ;;
+
+      --clone)
+        CER_CLONE_REPO=true
+        shift
+        ;;
+
+      --initialize)
+        INITIALIZE=true
+        shift
+        ;;
+
+      --cleanup-canned-content)
+        CLEANUP_CANNED_CONTENT=Yes
+        shift
+        ;;
+      --keep-canned-content)
+        CLEANUP_CANNED_CONTENT=No
+        shift
+        ;;
+      
+      --add-to-parcer)
+        ADD_TO_PARCER=Yes
+        shift
+        ;;
+      --skip-parcer)
+        ADD_TO_PARCER=No
+        shift
+        ;;
+
+      --lang=*)
+        CER_LANG="${1#*=}"
+        shift
+        ;;
+      --lang)
+        CER_LANG="$2"
+        shift
+        shift
+        ;;
+
+      --page-layout=*)
+        PAGE_LAYOUT="${1#*=}"
+        shift
+        ;;
+      --page-layout)
+        PAGE_LAYOUT="$2"
+        shift
+        shift
+        ;;
+
+      --customer-name=*)
+        CUSTOMER_NAME="${1#*=}"
+        shift
+        ;;
+      --customer-name)
+        CUSTOMER_NAME="$2"
+        shift
+        shift
+        ;;
+
+      --customer-short-name=*)
+        CUSTOMER_SHORT_NAME="${1#*=}"
+        shift
+        ;;
+      --customer-short-name)
+        CUSTOMER_SHORT_NAME="$2"
+        shift
+        shift
+        ;;
+
+      --git-origin-url=*)
+        GIT_URL_ORIGIN="${1#*=}"
+        shift
+        ;;
+      --git-origin-url)
+        GIT_URL_ORIGIN="$2"
+        shift
+        shift
+        ;;
+
+      --cer-type=*)
+        CER_TYPES+=("${1#*=}")
+        shift
+        ;;
+      --cer-type)
+        CER_TYPES+=("$2")
+        shift
+        shift
+        ;;
+
+      "")
+        break
+        ;;
+
+      *)
+        OTHER_ARGUMENTS+=("$1")
+        shift # Remove generic argument from processing
+        ;;
+    esac
+  done
+}
+
+function print_selected_options() {
+  echo
+  DISPLAYCER=""
+  for THECER in "${CER_TYPES[@]}"; do
+    [[ ${DISPLAYCER} = "" ]] || DISPLAYCER+=", "
+    DISPLAYCER+="${THECER}"
+  done
+  echo Selected Options:
+  printf "%25s:  "     "  Language";              printf "%s " "${CER_LANG[@]}"; printf "\n"
+  printf "%25s:  "     "  CER Type";              printf "%s " "${DISPLAYCER}"; printf "\n"
+  printf "%25s:  "     "  Page type";             printf "%s " "${PAGE_LAYOUT}"; printf "\n"
+  printf "%25s:  %s\n" "  Cleanup canned-content" "${CLEANUP_CANNED_CONTENT}"
+  printf "%25s:  %s\n" "  Add to par/CER" "${ADD_TO_PARCER}"
+  printf "%25s:  %s\n" "  Customer Name"          "${CUSTOMER_NAME}"
+  printf "%25s:  %s\n" "  Customer Short Name"    "${CUSTOMER_SHORT_NAME}"
+  printf "%25s:  %s\n" "  Git URL"                "${GIT_URL_ORIGIN}"
+  echo
+}
+
+# SOURCE: https://jonlabelle.com/snippets/view/shell/multi-select-menu-in-bash
+function print_cer_type_menu() {
+  echo "Available CERs:"
+  for i in ${!CER_TYPE_OPTIONS[@]}; do
+    printf "%3d%s) %s\n" $((i+1)) "${CER_TYPE_OPTIONS_SELECTED_INDEXES[i]:- }" "${CER_TYPE_OPTIONS[i]}${j}"
+    unset j
+  done
+  [[ "$msg" ]] && echo "$msg"; :
+}
+
+function choose_lang_type() {
+  echo
+  PS3="Choose language (${CER_LANG}): "
+  select CER_LANG_OPT in "${CER_LANG_OPTIONS[@]}"
+  do
+    if [[ " ${CER_LANG_OPTIONS[@]} " =~ " ${CER_LANG_OPT} " ]]; then
+      # if selecting a new language then need to select new CER types, otherwise do not.
+      if [[ "${CER_LANG_OPT}" != "${CER_LANG}" ]] ; then
+        CER_TYPE_OPTIONS_SELECTED_INDEXES=()
+        CER_LANG=${CER_LANG_OPT}
+        CER_TYPE_OPTIONS=()
+        # Sort the CER Types by the contents of .nicename
+        unsorted_CER_TYPE_OPTIONS=()
+        for directory in $(find ./canned-content/"${CER_LANG}"/ -mindepth 1 -maxdepth 1 -type d \( -iname "*" ! -iname "Base" \) -print0 | xargs -0 -n 1 basename); do
+            nicename=canned-content/${CER_LANG[*]}/${directory}/.nicename
+            cername="${directory}"
+            if [ -f "${nicename}" ] ; then
+              cername="$( head -1 "${nicename}" )"
+            fi
+            # Limit the length of the nice name to 50 characters
+            unsorted_CER_TYPE_OPTIONS+=("$(printf "%-50.50s (%s)" "${cername}" "${directory}")")
+        done
+
+        old_IFS=${IFS}
+        IFS=$'\n'
+        CER_TYPE_OPTIONS=($(sort <<<"${unsorted_CER_TYPE_OPTIONS[*]}"))
+        IFS=${old_IFS}
+
+        # force chosing CER types after selecting a new language since CER types are dependent on language
+        CER_LANG_OPT=""
+        msg=""
+        choose_cer_type
+        break
+      else
+        break
+      fi
+    else
+      echo
+      echo "Invalid option ${REPLY}"
+    fi
+  done
+}
+
+function choose_page_layout() {
+  echo
+  PAGE_LAYOUTS=("A4" "Letter")
+  PS3="Choose page layout (${PAGE_LAYOUTS}):"
+  select PAGE_LAYOUT in "${PAGE_LAYOUTS[@]}" ; do
+    if [[ " ${PAGE_LAYOUT[@]} " =~ " ${PAGE_LAYOUT} " ]]; then
+      break
+    else
+      echo
+      echo "Invalid option ${REPLY}"
+    fi
+  done
+}
+
+# SOURCE: https://jonlabelle.com/snippets/view/shell/multi-select-menu-in-bash
+function choose_cer_type() {
+  # Regex to extract the directory name from the menu item
+  CER_TYPE_REGEX='^.*\((.*)\)$'
+
+  printf "\nThe Base CER is always added, not selecting any CER will result in a Base CER only.\n\n"
+  prompt="Check an option (again to uncheck, ENTER when done): "
+  while print_cer_type_menu && read -rp "$prompt" cer_type_index && [[ "$cer_type_index" ]]; do
+    [[ "$cer_type_index" != *[![:digit:]]* ]] &&
+    (( cer_type_index > 0 && cer_type_index <= ${#CER_TYPE_OPTIONS[@]} )) ||
+    { msg="Invalid option: $cer_type_index"; continue; }
+
+    ((cer_type_index--));
+
+    # Only use the directory name for the message
+    [[ "${CER_TYPE_OPTIONS[cer_type_index]}" =~ $CER_TYPE_REGEX ]]
+    msg="${BASH_REMATCH[1]} was ${CER_TYPE_OPTIONS_SELECTED_INDEXES[cer_type_index]:+un}selected"
+    [[ "${CER_TYPE_OPTIONS_SELECTED_INDEXES[cer_type_index]}" ]] && CER_TYPE_OPTIONS_SELECTED_INDEXES[cer_type_index]="" || CER_TYPE_OPTIONS_SELECTED_INDEXES[cer_type_index]="+"
+  done
+
+  CER_TYPES=("Base")
+  for i in ${!CER_TYPE_OPTIONS[@]}; do
+    # Only use the directory name for the selected types array
+    [[ "${CER_TYPE_OPTIONS[i]}" =~ $CER_TYPE_REGEX ]]
+    [[ "${CER_TYPE_OPTIONS_SELECTED_INDEXES[i]}" ]] && { CER_TYPES+=("${BASH_REMATCH[1]}"); }
+  done
+}
+
+function set_customer_name() {
+  echo
+  read -p "Customer Name [${CUSTOMER_NAME}]: " new_customer_name
+  CUSTOMER_NAME=${new_customer_name:-${CUSTOMER_NAME}}
+  while [[ -z "${CUSTOMER_NAME}" ]]
+  do
+    read -p "Customer Name [${CUSTOMER_NAME}]: " new_customer_name
+    CUSTOMER_NAME=${new_customer_name:-${CUSTOMER_NAME}}
+  done
+}
+
+function set_customer_short_name() {
+  echo
+  read -p "Customer Short Name [${CUSTOMER_SHORT_NAME}]: " new_customer_short_name
+  CUSTOMER_SHORT_NAME=${new_customer_short_name:-${CUSTOMER_SHORT_NAME}}
+  while [[ -z "${CUSTOMER_SHORT_NAME}" ]]
+  do
+    read -p "Customer Short Name [${CUSTOMER_SHORT_NAME}]: " new_customer_short_name
+    CUSTOMER_SHORT_NAME=${new_customer_short_name:-${CUSTOMER_SHORT_NAME}}
+  done
+}
+
+function set_git_url_origin() {
+  echo
+  read -p "New Git Remote origin URL [${GIT_URL_ORIGIN}]: " new_git_url
+  GIT_URL_ORIGIN=${new_git_url:-${GIT_URL_ORIGIN}}
+  while [[ -z "${CUSTOMER_SHORT_NAME}" ]]
+  do
+    read -p "New Git Remote origin URL [${GIT_URL_ORIGIN}]: " new_git_url
+    GIT_URL_ORIGIN=${new_git_url:-${GIT_URL_ORIGIN}}
+  done
+}
+
+function menu_cleanup_canned_content() {
+  echo
+  PS3="Cleanup canned-content directory? (${CLEANUP_CANNED_CONTENT}) "
+  select CLEANUP_CANNED_CONTENT in "${YES_NO_OPTIONS[@]}"
+  do
+    if [[ " ${YES_NO_OPTIONS[@]} " =~ " ${CLEANUP_CANNED_CONTENT} " ]]; then
+      break
+    else
+      echo
+      echo "Invalid option ${REPLY}"
+    fi
+  done
+  PS3=""
+}
+
+function menu_add_to_parcer() {
+  echo
+  PS3="Add the document to par/CER, the CER full-text search engine? (${ADD_TO_PARCER}) "
+  select ADD_TO_PARCER in "${YES_NO_OPTIONS[@]}"
+  do
+    if [[ " ${YES_NO_OPTIONS[@]} " =~ " ${ADD_TO_PARCER} " ]]; then
+      break
+    else
+      echo
+      echo "Invalid option ${REPLY}"
+    fi
+  done
+  PS3=""
+}
+
+function menu_top() {
+  PS3="Selection option to update: "
+  select top_menu_option in "${TOP_MENU_OPTION[@]}"
+  do
+    case ${top_menu_option} in
+      "Set Language")
+        choose_lang_type
+        break
+        ;;
+      "Set CER Type")
+        choose_cer_type
+        break
+        ;;
+      "Set page layout")
+        choose_page_layout
+        break
+        ;;
+      "Set Customer Name")
+        set_customer_name
+        break
+        ;;
+      "Set Customer Short Name")
+        set_customer_short_name
+        break
+        ;;
+      "Set Git URL")
+        set_git_url_origin
+        break
+        ;;
+      "Set Cleanup canned-content")
+        menu_cleanup_canned_content
+        break
+        ;;
+      "Set upload to par/CER")
+        menu_add_to_parcer
+        break
+        ;;
+      "Execute Initialization")
+        echo
+        if [ -z "${CER_TYPES}" ]; then
+          echo "ERROR: CER Type must be set before initialization"
+          break
+        fi
+
+        if [ -z "${CUSTOMER_NAME}" ]; then
+          echo "ERROR: Customer Name must be set before initialization"
+          break
+        fi
+
+        if [ -z "${CUSTOMER_SHORT_NAME}" ]; then
+          echo "ERROR: Customer Short Name must be set before initialization"
+          break
+        fi
+
+        echo
+        PS3="Are you sure you want to initialize the CER content? "
+        select ARE_YOU_SURE_INIT in "${YES_NO_OPTIONS[@]}"
+        do
+          case ${ARE_YOU_SURE_INIT} in
+            "Yes")
+              INITIALIZE=true
+              break
+              ;;
+            *)
+              INITIALIZE=false
+              break
+              ;;
+          esac
+        done
+        PS3=""
+
+        break
+        ;;
+      "Quit")
+        echo
+        PS3="Are you sure you want to quit without initializing? "
+        select ARE_YOU_SURE_QUIT in "${YES_NO_OPTIONS[@]}"
+        do
+          case ${ARE_YOU_SURE_QUIT} in
+            "Yes")
+              QUIT=true
+              break
+              ;;
+            *)
+              QUIT=false
+              break
+              ;;
+          esac
+        done
+        PS3=""
+
+        break
+        ;;
+      *)
+        echo
+        echo "Invalid menu option"
+        break
+        ;;
+    esac
+
+    print_selected_options
+  done
+  PS3=""
+}
+
+function initialize() {
+  # Execute
+  echo
+  echo "Executing Initalization"
+
+  if [ ${CER_CLONE_REPO} == true ]
+  then
+      echo "  Refresh content (if possible, potential errors are ignored)"
+      git pull --quiet || :
+
+      ORIGIN_REPO=$(pwd)
+      CUSTOMER_REPO=$(dirname "${ORIGIN_REPO}")/CER-${CUSTOMER_SHORT_NAME}
+
+      if [ -d "${CUSTOMER_REPO}" ]; then
+          error "Customer repo '${CUSTOMER_REPO}' exists. It looks like your CER is already initialized. Aborting."
+      fi
+
+      echo "  Cloning current repo into customer repo '${CUSTOMER_REPO}'."
+      git clone "file://${ORIGIN_REPO}" "${CUSTOMER_REPO}"
+      cd "${CUSTOMER_REPO}"
+  fi
+
+  if [ ${GIT_VERSION[0]} -lt 2 ] || ([ ${GIT_VERSION[0]} -eq 2 ] && [ ${GIT_VERSION[1]} -lt 7 ]) ; then
+      GIT_URL_OLD_ORIGIN=$(git config --get remote.origin.url)
+  else
+      GIT_URL_OLD_ORIGIN=$(git remote get-url origin)
+  fi
+
+  echo "  Initialize content"
+  echo "    Initalizing README.adoc"
+  cp ./${CANNED_CONTENT_DIR}/${CER_LANG}/cer.adoc README.adoc
+
+  # Layer selected type content
+  echo "    Layer content"
+  for cer_type in ${CER_TYPES[@]}; do
+    cer_type_path="./${CANNED_CONTENT_DIR}/${CER_LANG}/${cer_type}"
+    echo "    Cer DIR: ${cer_type_path}"
+
+    # https://www.cyberciti.biz/tips/handling-filenames-with-spaces-in-bash.html
+    SAVEIFS=$IFS
+    IFS=$'\n'
+    files=($(find ${cer_type_path}))
+    IFS=$SAVEIFS
+    filesLen=${#files[@]}
+    for (( i=0; i<${filesLen}; i++)); do
+      src_file="${files[$i]}"
+
+      if [[ ${src_file} =~ "/images" ]]; then
+        dest_file="./images"
+        dest_file+=$(echo "${src_file}" | sed "s~${cer_type_path}/images~~g")
+      else
+        dest_file="./content"
+        dest_file+=$(echo "${src_file}" | sed "s~${cer_type_path}~~g")
+      fi
+
+      if [[ -d ${src_file} ]] && [[ ! -d ${dest_file} ]]; then
+        mkdir -p ${dest_file}
+        echo "      created directory: '${dest_file}'"
+      elif [[ -d ${dest_file} ]]; then
+        echo "      directory alredy exists: '${dest_file}'"
+      else
+        if [[ ! -f ${dest_file} ]] ; then
+          cp -n "${src_file}" "${dest_file}"
+          echo "      copied '${src_file}' to '${dest_file}'"
+        else
+          echo -en "\n" >> ${dest_file}
+          cat ${src_file} >> ${dest_file}
+          echo "      appended '${src_file}' to '${dest_file}'"
+        fi
+      fi
+    done
+  done
+
+  echo "Saving language ${CER_LANG} as global for CER."
+  echo "LANGUAGE=${CER_LANG}" >> .cer-config
+
+
+  # Update customer-vars
+  # HACK NOTE:
+  #  Can't use sed -i here because it does not work the same on BSD and GNU versions of sed
+  #  * https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i
+  #  * https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification
+  echo "    Initialize vars/customer-vars.adoc"
+  echo "      Set var #customer: '${CUSTOMER_NAME}'"
+  sed "s#customer:.*#customer: ${CUSTOMER_NAME//&/\\&}#" vars/customer-vars.adoc > vars/customer-vars.adoc.new; mv vars/customer-vars.adoc.new vars/customer-vars.adoc
+  echo "      Set var #cust: '${CUSTOMER_SHORT_NAME}'"
+  sed "s#cust:.*#cust: ${CUSTOMER_SHORT_NAME//&/\\&}#" vars/customer-vars.adoc > vars/customer-vars.adoc.new; mv vars/customer-vars.adoc.new vars/customer-vars.adoc
+
+  echo "      Set var #PDFPAGESIZE (PDF page layout): '${PAGE_LAYOUT}'"
+  sed "s/#PDFPAGESIZE/${PAGE_LAYOUT}/" vars/render-vars.adoc > vars/render-vars.adoc.new ; mv vars/render-vars.adoc.new vars/render-vars.adoc
+
+  echo "      Tracking included cer_types as adoc variables"
+  for cer_type in ${CER_TYPES[@]}; do
+    echo ":included_cer_${cer_type}: true" >> vars/render-vars.adoc
+  done
+
+  # setup gitlab-ci
+  echo "  Move customer.gitlab-ci.yml to .gitlab-ci.yml"
+  mv customer.gitlab-ci.yml .gitlab-ci.yml
+}
+
+init_cleanup() {
+  echo "  Cleanup"
+  # Cleanup canned-content
+  if [ "${CLEANUP_CANNED_CONTENT}" == "Yes" ]; then
+    echo "    Deleteing canned-content/*"
+    rm -rf ./${CANNED_CONTENT_DIR}/
+  fi
+
+  # Cleanup cer-template docs not relivant to Client CER
+  echo "    Cleanup cer-template documentation"
+  # files
+  for I in README.md README-Windows.md LICENSE README-initialize-a-new-CER.md  README-MacOS.md  README-runner.md   README-writing.md README-linux.md STYLES.md ;
+  do
+    rm -f ./${I}
+  done
+  # directories
+  rm -rf .gitlab-ci/*
+}
+
+init_add_to_parcer() {
+  # Users can also add (or delete) '.add-to-parcer' file at any time manually
+  if [ "${ADD_TO_PARCER}" == "Yes" ]; then
+    echo "  Setting up upload to par/CER"
+    echo "    Creating .add-to-parcer file"
+    echo "This file ensures indexing in par/CER (CER full-text search)" > .add-to-parcer
+    echo "You can prevent further indexing by deleting it," >> .add-to-parcer
+    echo "but the existing document WILL NOT be dropped from par/CER." >> .add-to-parcer
+    echo "(Re)creating .add-to-parcer manually restarts indexing again." >> .add-to-parcer
+  fi
+}
+
+#FUNCTION FOR PUTTING THE ADOC IN CONTENT IN NUMERIC ORDER
+###ASSUMES INIT HAS ALREADY RAN
+init_numberize() {
+unset cur_seq cur_path dest_path
+content_dir="./content/"
+read_file="README.adoc"
+file_content=$( cat "${read_file}" )
+printf "  %s\n" "Putting content in ${content_dir} in numeric order"
+  #LOOP READS THROUGH README FOR ADOC IN CONTENT
+  ARR_A_DOC=()
+  while IFS= read -r line ; do
+        unset c_line
+        if  [ "${line/.adoc//}" != "${line}" ]          && \
+            [ "${line/::content//}" != "${line}" ]      && \
+            [ "${line/legal-approved//}" == "${line}" ]
+        then
+            c_line="${line##*/}" ; c_line="${c_line%[*}"
+            ARR_A_DOC+=( "${c_line}" )
+        else
+            continue
+        fi
+  done < "${read_file}"
+  #LOOPS THROUGH NUMERIC VALUES OF FOUND CONTENT IN README
+  for adoc in ${!ARR_A_DOC[@]} ; do
+      #PADDING FOR 00X
+        cur_seq=$( printf "%02d0" "${adoc}" )
+      dest_path="${content_dir}${cur_seq}_${ARR_A_DOC[adoc]}"
+       cur_path="${content_dir}${ARR_A_DOC[adoc]}"
+
+      printf "      %s\n" "Moving \"${cur_path}\" To \"${dest_path}\""
+      mv     "${cur_path}" "${dest_path}"
+      file_content=$(
+        sed "s,${cur_path#*/},${dest_path#*/}," <(echo "${file_content}")
+      )
+  done
+  echo "${file_content}" > "${read_file}"
+}
+
+init_git() {
+  # update git
+  echo "  Git"
+  echo "    Remove old Git repo (to get rid of template history)"
+  rm -rf ./.git
+  echo "    Init new Git repo"
+  # Not using the --initial-branch=main option for git init as it requires git version 2.28.0 or newer
+  git init
+  git checkout -b main
+  git branch -d master
+  if [ "${GIT_URL_ORIGIN}" ]; then
+    echo "    Add remote: origin: ${GIT_URL_ORIGIN}"
+    git remote add origin ${GIT_URL_ORIGIN}
+  else
+    echo "    Add remote: origin: skipping due to none provided"
+  fi
+  if [ "${GIT_URL_OLD_ORIGIN}" ]; then
+    echo "    Add remote: old origin"
+    git remote add old-origin ${GIT_URL_OLD_ORIGIN}
+  else
+    echo "    Add remote: old-origin: skipping due to none provided"
+  fi
+  echo "    Stage all files"
+  git add . --all
+
+  #force execute permissions to work around windows
+  git update-index --chmod=+x scripts/* generate-pdf init-cer verify-broken-links
+
+  echo "    Create initial commit"
+  git commit -am "Initial CER for ${CUSTOMER_SHORT_NAME}"
+}
+
+main "$@"

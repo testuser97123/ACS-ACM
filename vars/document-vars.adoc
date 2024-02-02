@@ -1,0 +1,27 @@
+// --------------------------------
+// Document Information
+// This document-vars.adoc file contains mainly static/routine variables for the CER
+// It should not contain customer specific variables related to the customer name and related information
+// --------------------------------
+:toc-title: Table of Contents
+
+:subject: Consulting Engagement Report
+// docstatus - indicates where in the lifecycle CER is (draft, in-progress, final)
+// only 'draft' gets special handling, but remember that the docstatus is printed in every page header.
+:docstatus: final
+
+
+ifeval::[ "{docstatus}" == "draft"]
+:page-background-image: image:draft.png[]
+endif::[]
+
+:revnumber: 1.0
+
+ifeval::[ "{sethash}" == "yes"]
+:revnumber: {githash}
+endif::[]
+
+
+// --------------------------------
+// Other Vars
+// --------------------------------

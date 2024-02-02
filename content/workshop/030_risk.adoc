@@ -1,0 +1,61 @@
+Acs provide a risk based approach to security by correlating vulnerabilities and their severity with rich context data derived from deep integration with kubernetes, to prioritize risks in your environment.
+
+== Risk approach
+
+The {rhacs} Kubernetes Security Platform scores and sorts all deployments acorss all clusters for risk, by a multi-factor risk metric that takes into account possible risk factors such as policy violations, image content, deployment configuration, and others factors. This heps you decide which developments require immediate attention by security teams. 
+
+== Risk Indicators
+
+A complete view of the risks by deployments in all the cluster of the system is accesible in the Risk Tab from the lef-hand navigation menu. The deployments at the top of the list present the most risk. You can click on the heading of each column (↑↓) to sort in ascending or descending order. 
+
+
+image::workshop/risk-dashboard-view.png[pdfwidth=95%]
+
+Clicking on a risky deployment allow to gain an understanding of how risk is assesed during deploy time. 
+
+The Risk indicators tab provides a listing of everything in your environment that contributes to risk of
+this deployment. This includes a listing of the {rhacs} policies that have been violated, including those
+provided with {rhacs} Platform and those you have edited or created, as well as a compilation of the CVEs
+with their accompanying CVSS scores that have contributed to risk. Our deep integration with kubernetes allows us to consume aspects of the configurations that may be a problem, such as read-write (RW)
+capability, whether capabilities have been dropped, and the presence of privileged containers as well as
+issues with container ports being exposed (or not exposed).
+
+The following image reprensent an exemple of a risk tab (same as presented during the demo) :
+
+image::workshop/risk-indicators.png[pdfwidth=95%]
+
+== Tracking processes
+
+The advent of container infrastructure provides a unique opportunity to solve some of the long standing
+problems in security. The immutable nature of containers means that we have a container specification from a base image that should not change during the lifetime of the container. When a process executes inside a container that is not part of the original image, it shows that the container specification has changed, which is an indicator of potential malicious activity. This combined with discovering processes that have never executed before allows the {rhacs} Kubernetes Security Platform to discover abnormal process executions in your environment.
+
+In the process discovery tab of the risk section , you can see the baseline of processes established. If an unexpected process is executed, he is detected by {rhacs} and alerts are created. If this is a false positif you can add this process to the baseline with the + sign and silence the alert. 
+{rhacs} also provides context information suck as the complete executed command or an event timeline to shows for each pod the process activity that has occured over time.
+
+== Create Policies and Find Vulnerabilities with filters
+
+In the Risk view, {rhacs} has a filter bar at the top that allows to narrow the reporting view to matching or non-matching criteria. This is very usefull when you know what you are looking for. The following image show the result for the following request "What applications have CVE-2020-1008 present"
+
+image::workshop/filter-bash-process.png[pdfwidth=95%]
+
+You can also create new security policies based on filtering criteria. {rhacs} transforms the filtering criteria into policy criteria by converting the cluster, namespace, and deployment filters to equivalent policy scopes. The followinf procedure is an exmple to create a policy that block the use of bash in the cluster production : 
+
+. Click the + (Create Policy) next to the filter bar and complete the required fields to create a new policy:
+. Name: No bash allowed
+. Severity: High
+. Description: No bash allowed
+. Rationale: Too many known vulns
+. Remediation: Use ZSH
+. Categories: Anomalous Activity
+. Restrict to Scope: Cluster: production
+
+. At the top of the panel, click → Next. (Next may not appear if your window is narrow).
+. Confirm the process name of bash and click Next again.
+. Click Next to approve the warning about creating a policy that generates violations.
+. For the Runtime Enforcement Behavior option, click On.
+. Click Save.
+
+You can the see your policy in the list of System Policies. 
+
+NOTE: See the link: https://docs.openshift.com/acs/3.68/operating/evaluate-security-risks.html#understanding-filtering-to-policy-mapping_evaluate-security-risks[Understanding the filtering criteria into policy criteria documentation] for more information.
+

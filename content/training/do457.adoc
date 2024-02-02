@@ -1,0 +1,36 @@
+= Ansible for Network Automation | (DO457)
+
+*Course description*
+
+Configure and manage network infrastructure using Red Hat Ansible Automation for Networking
+
+Red Hat Ansible for Network Automation (DO457) is designed for network administrators or infrastructure automation engineers who want to use network automation to centrally manage the switches, routers, and other devices in the organization's network infrastructure.
+
+This course is based on Red Hat(R) Ansible Engine 2.5 and Red Hat(R) Ansible Tower 3.2.
+
+Learn how to use Red Hat Ansible Automation for Networking to remotely automate configuration of network devices, test and validate the current network state, and perform compliance checks to detect and correct configuration drift.
+
+*Course summary*
+
+* Install and configure Red Hat Ansible Automation for Networking on a management system
+* Use Ansible to run ad hoc commands and playbooks to automate tasks
+* Write effective Ansible playbooks for network automation
+* Gather information about network infrastructure configuration and backup
+* Automate specific network administration use cases, including configuration of routers and switches, ports, VLANs, SNMP monitoring, and routing protocols
+* Use Ansible playbooks to target devices from various hardware vendors, including Cisco, Juniper, and Arista
+
+*Audience for this course*
+
+This course is designed for network administrators, network automation engineers, and infrastructure automation engineers who want to learn how to use Ansible to automate the administration, deployment, and configuration management of the network infrastructure of their organization or enterprise.
+
+*Prerequisites for this course*
+
+* Experience with network administration, including a solid understanding of TCP/IP, routers, and managed switches 
+* Familiarity with managing network devices from the command line, preferably with one or more of Cisco IOS, IOS XR, or NX-OS; Juniper JUNOS; Arista EOS; or VyOS 
+* You will work with text files and run commands in a Red Hat Enterprise Linux environment. A working knowledge of Linux, including how to edit text files and run commands from the shell, and how to use SSH to log in to remote systems 
+* Knowledge equivalent to Red Hat System Administration I (RH124) or better is recommended 
+* Prior Ansible knowledge is not required
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do457-ansible-network-automation

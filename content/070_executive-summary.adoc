@@ -1,0 +1,22 @@
+////
+Purpose
+-------
+Briefly repeat in one or two sentences describe the principle purpose of the
+engagement.  Then at a high level summarize the outcomes of the engagement.
+Where applicable be sure to note the scope of achievements, i.e. how many
+systems were improved/affected, which environments were acted upon etc...
+Be sure to include a summary of any knowledge transfer activities such as
+executive demos and KT sessions. Try to end with one or two sentences
+summarizing next steps.
+
+Why was Red Hat there
+What did Red Hat do
+Obstacles and/or lingering blockers
+Next steps
+
+Sample
+------
+Red Hat Consulting was engaged by Acme Inc. to assist with the Application Standardization 2.0 Project.  Three Ansible Tower clusters were established to serve Dev, Test and Prod environments.  Red Hat Consulting collaborated on the creation of 135 compliance and remediation playbooks, and over the course of the engagement scanned the entire Dev environment automatically bringing nearly 200 non-compliant services into compliance and flagging an additional 50 for manual remediation.  Acme's ServiceNow environment now has up-to-date compliance status on every application identified in the Dev environment.  During the course of the engagement three separate demonstrations were provided to Acme executive management as well as several knowledge transfer sessions crafted to ensure that Acme is enabled to begin scanning Test and Prod environments on their own after the necessary approvals.
+
+////
+Red Hat Consulting was engaged by {customer} to assist with (#TODO# high level description of project)

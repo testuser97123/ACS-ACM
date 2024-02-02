@@ -1,0 +1,66 @@
+////
+Purpose
+-------
+This section is a placeholder which should be replaced by technical (next-step)
+recommendations specific to the product(s) being delivered.
+
+Technical recommendations for products not being delivered, including non-Red Hat
+products can also be added here.
+
+If you are trying to generate a product specific version of this placeholder,
+please observe the following guidelines and the structure demonstrated in the
+Sample area.
+
+Candidates for recommendation:
+- Follow-on engagements
+- Advice for customer-led expansion
+- Upgrade recommendations
+- Security improvements (specific to the product)
+- Permanent solutions to replace workarounds
+
+
+Sample
+------
+= Additional Satellite Capsules
+== Indication
+During this engagement a single Satellite Server was implemented as that was sufficient for the scope of management.  During the course of the engagement it became clear that {cust} was considering management of additional sites based on performance.
+== Recommendation
+Red Hat recommends utilizing separate Capsule Servers for remote locations or to balance the load as environments grow.  Documentation is available at https://access.redhat.com/documentation/en-us/red_hat_satellite (look for "Installing Capsule Server").  Adding of Capsule Servers and expansion of the environment can be handled by {cust} or as a follow-on engagement with Red Hat Consulting.
+
+= Satellite Hardening
+== Indication
+Although out of scope for this engagement, interest was expressed in making Satellite more secure.
+== Recommendation
+Consider reviewing the documentation on Satellite Security compliance here:
+https://access.redhat.com/documentation/en-us/red_hat_satellite/6.6/html-single/administering_red_hat_satellite/index#chap-Red_Hat_Satellite-Administering_Red_Hat_Satellite-Security_Compliance_Management
+
+
+= Ansible Tower Performance
+== Indication
+Provisioning callbacks to Ansible Tower are being impacted by a significant variance in the time required to complete Jobs. The same Job may take 10 minutes for one server and 45 minutes for the next.  Rudimentary investigation suggests that the cause is related to locality.
+== Recommendation
+Consider a more in-depth analysis of the slower systems to see if the issue may be caused by network failures or DNS configuration problems.
+
+= Ansible Vault
+== Indication
+While configuration of Ansible Tower was outside the scope of this RHV engagement, it was observed that playbooks were being created with plain text passwords inline.
+
+== Recommendation
+Consider implementing Ansible Vault to protect passwords at rest.
+
+
+= Other technical recommendations
+== Identity setup
+Using only locally defined users is considered to be a back practice. As {cust} has an extensive Identity Management setup, the aim should be to ensure this is used in all systems.
+
+== Root on Linux VDIs
+Users are not allowed to install any software outside of the centrally managed software components onto their Microsoft Windows XP VDIs. However, it is possible to request a {rhel} based workstation where everything can be installed as users get *root* on these instances. This should be considered as a big risk as the internal Wiki indicates to execute the following to ensure the proper setup of the VDI:
+[source,shell]
+---
+# curl http://tenheuvel.net/setup-vdi.sh | bash
+---
+
+
+////
+
+#TODO#

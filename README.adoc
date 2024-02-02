@@ -1,0 +1,131 @@
+include::vars/render-vars.adoc[]
+include::vars/document-vars.adoc[]
+include::vars/redhat-vars.adoc[]
+include::vars/customer-vars.adoc[]
+include::content/000_vars.adoc[]
+include::locale/attributes.adoc[]
+
+= {subject}: {customer} - {description}
+
+<<<
+toc::[]
+
+<<<
+include::content/legal-approved/preface.adoc[leveloffset=+1]
+
+<<<
+== Project Information
+
+=== Originator
+include::content/010_originator.adoc[leveloffset=+3]
+
+=== Owner
+include::content/020_owner.adoc[leveloffset=+3]
+
+=== Document Conventions
+include::content/030_document-conventions.adoc[leveloffset=+3]
+
+=== Additional Copies
+include::content/040_additional-copies.adoc[leveloffset=+3]
+
+=== Participants of the Engagement
+
+==== Red Hat
+include::content/050_red-hat-participants.adoc[leveloffset=+4]
+
+==== {customer}
+include::content/060_customer-participants.adoc[leveloffset=+4]
+
+<<<
+//== Executive Summary
+//include::content/070_executive-summary.adoc[leveloffset=+2]
+
+//<<<
+//== Overview
+
+//=== About {cust}
+//include::content/080_about-the-customer.adoc[leveloffset=+3]
+
+//=== Documentation Provided By {cust}
+//include::content/090_customer-provided-documentation.adoc[leveloffset=+3]
+
+//=== Purpose And Engagement Approach
+//include::content/100_purpose-and-approach.adoc[leveloffset=+3]
+
+//=== Scope Summary
+//include::content/110_scope-summary.adoc[leveloffset=+3]
+
+//=== Engagement Requirement Criteria
+//include::content/120_requirement_criteria.adoc[leveloffset=+3]
+
+//== Navigate
+//include::content/130_navigate.adoc[leveloffset=+2]
+
+<<<
+== Implementation Details
+
+<<<
+=== Advanced Cluster Management with Red Hat OpenShift Container Platform
+include::content/150_architecture.adoc[leveloffset=+3]
+
+<<<
+=== Advance Cluster Security for Red Hat OpenShift Container Platform    
+include::content/ACS/acs-architecture.adoc[leveloffset=+3]
+
+////
+<<<
+=== Validation Procedure
+include::content/170_validation.adoc[leveloffset=+3]
+
+<<<
+=== Knowledge Transfer
+include::content/180_knowledge-transfer.adoc[leveloffset=+3]
+
+<<<
+=== Challenges, Resolutions, and Recommendations
+include::content/190_challenges.adoc[leveloffset=+3]
+
+// this is included ONLY if the OCP 4 archreview is selected in
+// init-cer.
+ifeval::[ "{included_cer_OCP-4x-healthcheck}" == "true"]
+include::content/200_healthcheck.adoc[opts=optional]
+endif::[]
+
+<<<
+== Recommendations
+
+=== Technical Next Steps
+include::content/210_recommendations-technical.adoc[leveloffset=+3]
+
+=== Relevant Training
+include::content/220_recommendations-relevant-training.adoc[leveloffset=+3]
+
+=== Other
+include::content/230_recommendations-other.adoc[leveloffset=+3]
+////
+
+<<<
+[appendix]
+== Glossary
+include::content/240_glossary.adoc[leveloffset=+2]
+
+<<<
+// It is expected that anyone using additional-appendices.adoc will include one or more [appendix] blocks
+include::content/250_additional-appendices.adoc[leveloffset=+1]
+
+<<<
+[appendix]
+== Relevant Links
+include::content/260_relevant-links.adoc[leveloffset=+2]
+
+//<<<
+//[appendix]
+//== Statement of Work
+//include::content/270_statement-of-work.adoc[leveloffset=+2]
+
+<<<
+[appendix]
+include::content/legal-approved/subscriptions.adoc[leveloffset=+1]
+
+<<<
+include::content/legal-approved/support.adoc[leveloffset=+1]

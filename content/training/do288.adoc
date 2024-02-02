@@ -1,0 +1,40 @@
+= Red Hat OpenShift Development II: Containerizing Applications (DO288)
+
+*Course description*
+
+Design, build, and deploy containerized applications on Red Hat OpenShift
+
+Red Hat OpenShift Development II: Containerizing Applications (DO288) teaches you how to design, build, and deploy containerized software applications on an OpenShift cluster
+
+Whether you are migrating existing applications or writing container-native applications, you will learn how to boost developer productivity powered by Red Hat(R) OpenShift Container Platform, a containerized application platform that allows enterprises to manage container deployments and scale their applications using Kubernetes.
+
+This course is based on Red Hat OpenShift Container Platform 4.6.
+
+*Course content summary*
+
+* Design containerized applications for OpenShift.
+* Manage and trigger application builds using Source-to-Image (S2I).
+* Customize an existing source-to-image base image.
+* Deploy multi-container applications using Helm Charts.
+* Create health checks to monitor and improve application reliability.
+* Create and deploy cloud-native applications on OpenShift.
+
+*Audience for this course*
+
+* Enterprise application developers
+* DevOps site reliability engineers
+
+*Recommended for this course*
+
+* Take our free assessment to gauge whether this offering is the best fit for your skills.
+* Complete Red Hat OpenShift I: Containers & Kubernetes (DO180), or have equivalent knowledge
+* Being a Red Hat Certified System Administrator or having earned a higher certification is helpful for navigation and usage of the command line, but is not required
+
+*Technology considerations*
+
+* This course uses a lab environment provisioned in the Red Hat Online Learning (ROL) cloud.
+* Internet access is required to run the exercises and labs.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do288-red-hat-openshift-development-ii-containerizing-applications

@@ -1,0 +1,37 @@
+= Red Hat Enterprise Linux 8 New Features for Experienced Linux Administrators (RH354)
+
+*Course description*
+
+Prepare yourself for Red Hat Enterprise Linux 8 by learning about changes to the operating system
+
+Red Hat Enterprise Linux 8 New Features for Experienced Linux Administrators (RH354) introduces you to updates in the upcoming Red Hat(R) Enterprise Linux(R) release. Intended for experienced Linux system administrators, this course offers a rapid orientation to Red Hat Enterprise Linux 8 based on the pre-release beta. The offering prepares operators, managers, principal system administrators, and other IT professionals with experience in Red Hat Enterprise Linux 7 for deployments and migrations to the new release.
+
+This course is based on Red Hat Enterprise Linux 8.
+
+*Course content summary*
+
+* Install Red Hat Enterprise Linux 8 using the new packaging, modularity, and appstream features.
+* Upgrade from Red Hat Enterprise Linux 7 to Red Hat Enterprise Linux 8 using new tools.
+* Perform integrated file system and volume management using Stratis.
+* Use Cockpit for system management.
+* Create system images with Composer.
+* Configure Identity Management using authselect.
+* Understand the Wayland graphical display server.
+* Deploy containers using the new integrated OCI runtime and tools.
+* Configure firewall rules that use the new NFT back end.
+
+*Audience for this course*
+
+This course is designed to provide a preview of Red Hat Enterprise Linux 8 to experienced IT professionals, including:
+
+* Linux system administrators
+* DevOps engineers
+* Cloud administrators
+
+*Prerequisites for this course*
+
+* Become a Red Hat Certified System Administrator (RHCSA), or demonstrate equivalent knowledge of and experience with Red Hat Enterprise Linux
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh354-red-hat-enterprise-linux-8-new-features-experienced-linux-administrators

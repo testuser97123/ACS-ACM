@@ -1,0 +1,40 @@
+= Red Hat Security: Identity Management and Active Directory Integration (RH362)
+
+*Course description*
+
+Configure and manage Red Hat Identity Management (IdM)
+
+Red Hat Security: Identity Management and Active Directory Integration (RH362) provides the skills to configure and manage IdM, the comprehensive Identity Management solution bundled with Red Hat(R) Enterprise Linux.
+
+This course is based on Red Hat Identity Manager 4.5 (bundled with RHEL), Red Hat Enterprise Linux 7.4, Microsoft Windows Server 2016, Red Hat Satellite 6.3, Red Hat Ansible Tower 3.2.2, and Red Hat Ansible 2.5. 
+
+This course teaches you skills on the most requested Red Hat Identity Management (IdM) capabilities, including Active Directory trusts, multi-product federation, configuration management with Ansible, integrated certificate management, single sign-on, one-time passwords, and cybersecurity policy conformance. 
+
+*Course summary*
+
+* Install Red Hat Identity Management servers, replicas, and clients.
+* Configure and manage Kerberos authentication and secure services.
+* Create and manage a trust relationship with Microsoft Active Directory.
+* Configure highly secure user authentication—local and remote—including two-factor authentication.
+* Manage secrets, vaults, certificates, and keys.
+* Troubleshoot identity management processes.
+* Integrate Satellite 6 with IdM.
+* Integrate Tower with IdM.
+* Configure IdM backup and recovery.
+
+*Audience for this course*
+
+* Red Hat Certified System Administrator (RHCSA) who wants to learn how to provision and configure IdM technologies across both Linux and Windows applications
+* Identity management specialist or engineer
+* Access management specialist or engineer
+* Web application developer
+* DevOps specialist
+
+*Prerequisites for this course*
+
+* Be certified as a Red Hat Certified System Administrator (RHCSA) (required)
+* Be certified as a Red Hat Certified Engineer (RHCE) (recommended, but not required)
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/rh362-red-hat-security-identity-management-and-active-directory-integration

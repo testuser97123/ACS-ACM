@@ -1,0 +1,17 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: acm-operator-subscription
+spec:
+  sourceNamespace: openshift-marketplace
+  source: redhat-operators
+  channel: release-2.4
+  installPlanApproval: auto
+  name: advanced-cluster-management
+  config:
+    nodeSelector:
+      node-role.kubernetes.io/acm: "true"
+    tolerations:
+    - key: node-role.kubernetes.io/acm
+      effect: NoExecute
+      operator: Exists

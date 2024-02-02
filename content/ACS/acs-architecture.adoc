@@ -1,0 +1,593 @@
+
+{rhacs} installs as a set of containers in the hub cluster and managed clusters and it includes multiple components.
+You can categorize these components as follows:
+
+* Centralized components
+* Per-cluster components
+* Per-node component
+
+[cols="3",options="header"]
+|===
+
+|Category
+|Quantity
+|Components
+
+1.2+.^|Centralized components
+1.2+.^|1 for multiple clusters.
+|Central
+|Scanner
+
+1.2+.^|Per-cluster components
+1.2+.^|1 for each cluster.
+|Sensor
+|Admission controller
+
+|Per-node component
+|1 on each node.
+|Collector
+
+|===
+
+image::acs/acs-arch.png[{acs} architecture overview]
+
+
+= Centralized components
+You deploy centralized components only once and you can monitor multiple separate clusters by using the same installation.
+{acs} includes the following centralized components:
+
+* Central
+* Scanner
+
+== Central
+Central is the main component of {acs} and it is installed as a Kubernetes deployment.
+It handles data persistence, API interactions, and user interface (Portal) access.
+You can use the same Central instance to secure multiple {ocp} or Kubernetes clusters.
+
+== Scanner
+{acs} includes an image vulnerability scanning component called Scanner.
+It analyzes all image layers to check for known vulnerabilities from the Common Vulnerabilities and Exposures (CVEs) list.
+Scanner also identifies vulnerabilities in packages installed by package managers and in dependencies for multiple programming languages.
+//TODO: Add link to Examine images topic.
+
+[NOTE]
+====
+Scanner only scans those images that are not already scanned by other integrated vulnerability scanners.
+It means that if you have integrated {acs} with other vulnerability scanners, Scanner checks and uses the scanning results from the integrated scanner if available.
+====
+//TODO: Add link to integrate-with-vulnerability-scanners topic
+
+= Per-cluster components
+You deploy the per-cluster components into each cluster that you want to monitor.
+{acs} includes the following per-cluster components:
+
+* Sensor
+* Admission controller
+
+== Sensor
+{acs} uses the Sensor component to monitor Kubernetes and {ocp} clusters.
+It handles interactions with the {ocp} or Kubernetes API server for policy detection and enforcement, and it coordinates with Collector.
+
+== Admission controller
+The admission controller prevents users from creating workloads that violate security policies in {acs}.
+//TODO: Add link to admission-controller-enforcement.
+
+== Per-node components
+You deploy the per-node components in all nodes that you want to monitor.
+{acs} includes the following per-cluster components:
+
+* Collector
+
+== Collector
+
+Collector collects and monitors information about container runtime and network activity.
+It then sends the collected information to Sensor.
+
+= Installation
+
+== {rhacs} operator installation on EPaaS cluster
+
+You can install RHACS using the Advanced Cluster Security for Kubernetes operator, Helm charts, or the roxctl command. Red Hat recommends using the Advanced Cluster Security for Kubernetes operator if available in the supporting infrastructure.
+
+image::acs/install.png[{acs} Operator Installation]
+
+After the operator installation is complete, you have to install Central with custom resource. 
+You can create a Central custom resource from the Installed Operators page in the RHOCP web UI, or using a YAML file.
+
+Red Hat recommends installing the Central custom resource in the stackrox namespace for compatibility with pre-existing RHACS policies.
+
+An example of a Central custom resource definition YAML file follows.
+
+```yaml
+apiVersion: platform.stackrox.io/v1alpha1
+kind: Central
+metadata:
+name: stackrox-central-services
+namespace: stackrox
+spec:
+central:
+    exposure:
+    loadBalancer:
+        enabled: false
+        port: 443
+    nodePort:
+        enabled: false
+    route:
+        enabled: true
+    persistence:
+    persistentVolumeClaim:
+        claimName: stackrox-db
+        storageClassName: san-hbnputs1ocp1
+egress:
+    connectivityPolicy: Online
+scanner:
+    analyzer:
+    scaling:
+        autoScaling: Enabled
+        maxReplicas: 5
+        minReplicas: 2
+        replicas: 3
+    scannerComponent: Enabled
+```
+
+* Once the Central CR is created, you should see the console route created in the same project.
+
+Select the `Networking` section in the navigation tab and select on `Route`.
+
+Open the Route with the admin user to check if the Central is deployed properly or not. 
+
+image::acs/cinstall.png[{acs} Console]
+
+You can configure Central settings, Scanner settings, and others when you create the Central custom resource. 
+Visit link:https://docs.openshift.com/acs/3.69/installing/install-ocp-operator.html#central-configuration-options-operator_install-ocp-operator[link] for a complete list of Central configuration options.
+
+== Importing Secured Clusters into {rhacs}
+
+When the RHACS Central instance is ready, you can import secured clusters into RHACS.
+
+There are three methods for importing clusters into RHACS:
+
+* Creating a SecuredCluster resource, which is provided by the Advanced Cluster Security for Kubernetes operator.
+
+* Using the secured-cluster-services Helm chart, available at https://mirror.openshift.com/pub/rhacs/charts/.
+
+* Using the roxctl command.
+
+The method to import clusters into RHACS depends on the method you used to install the RHACS centralized services. 
+When Red Hat Advanced Cluster Management for Kubernetes (RHACM) is available, you can create an RHACM policy to automatically import RHACM managed clusters into RHACS. This method is equivalent to creating a SecuredCluster resource, provided by the Advanced Cluster Security for Kubernetes operator.
+Secured clusters require the Central certificates to be able to communicate with the RHACS centralized services. The bundle containing this certificates is named init bundle.
+
+You can generate the init bundle from the {rhacs} web UI. 
+Alternatively, you can generate an API token from the {rhacs} web UI and generate the bundle using the roxctl command. This is useful for automating the addition of secured clusters from the CLI.
+
+=== Generating an Init Bundle
+The init bundle contains the Central server certificates. You must import these certificates to every secured cluster before creating the SecuredCluster resource. {rhacs} provides the Central certificates in the init bundle as a list of Kubernetes secrets in a YAML file.
+
+From the RHACS portal, follow the steps below to generate the init bundle YAML files:
+
+* Navigate to Platform Configuration --> Integrations.
+
+* Click Generate Bundle.
+
+* Enter a name for the init bundle and click Generate.
+
+* Click Download Kubernetes Secret File.
+
+image::acs/inti.png[{acs} Console Init Bundle]
+
+The preceding steps generate the download of a YAML file. Use that YAML file to create the secrets in the namespace where you plan to create the SecuredCluster resource. Import the same init bundle in every secured cluster to the namespace where the SecuredCluster resource will reside.
+
+=== Creating Secured Clusters
+
+After importing the Central certificates by using the init bundle, you can import a cluster into {rhacs}.
+
+You import secured clusters into {rhacs} by creating the SecuredCluster custom resource. Before creating the SecuredCluster custom resource, you must install the Advanced Cluster Security for Kubernetes operator in every secured cluster to create the SecuredCluster custom resource definition. When the operator is installed, you can create a Secured Cluster from the Installed Operators page in the RHOCP web UI, or using a YAML file.
+
+Red Hat recommends installing the SecuredCluster custom resource in the stackrox namespace for compatibility with pre-existing {rhacs} policies.
+
+The following is the default YAML code for creating a SecuredCluster custom resource, provided by the operator.
+
+```yaml
+apiVersion: platform.stackrox.io/v1alpha1
+kind: SecuredCluster
+metadata:
+  name: stackrox-secured-cluster-services
+  namespace: stackrox
+spec:
+  auditLogs:
+    collection: Auto
+  admissionControl:
+    listenOnUpdates: true
+    bypass: BreakGlassAnnotation
+    contactImageScanners: DoNotScanInline
+    listenOnCreates: true
+    timeoutSeconds: 3
+    listenOnEvents: true
+  scanner:
+    analyzer:
+      scaling:
+        autoScaling: Enabled
+        maxReplicas: 5
+        minReplicas: 2
+        replicas: 3
+    scannerComponent: AutoSense
+  perNode:
+    collector:
+      collection: KernelModule
+      imageFlavor: Regular
+    taintToleration: TolerateTaints
+  clusterName: hbnputs1ocp2
+  centralEndpoint: 'central-stackrox.apps.hbnputs1ocp1.corp.hdfcbank.com:443'
+```
+
+Ensure that that the value of the clusterName key is not already used by other secured clusters in RHACS.
+
+The secured cluster communicates with Central using the URL defined in the centralEndpoint key.
+
+You can find the Central endpoint address in the Routes page within the Networking menu of the cluster running Central.
+
+You can configure Admission Controller, Scanner, Sensor, and other settings when you create the Secured Cluster instance.
+Visit link:https://docs.openshift.com/acs/3.69/installing/install-ocp-operator.html#secured-cluster-configuration-options-operator_install-ocp-operator[link] for a complete list of Secured Cluster configuration options[].
+
+* Follow the same procedure to import other clusters as secured cluster into Central Console.
+
+  ** hbnputs2ocp1 (Non-PCI Bangalore UAT cluster)
+  ** hbpiuts2ocp1 (PCI Bangalore UAT cluster)
+  ** digitaluat (PCI CDVL UAT cluster)
+
+image::acs/cluster.png[{acs} Console Init Bundle]  
+
+= Integrating HDFC Quay Registry with ACS console
+
+Red Hat Advanced Cluster Security for Kubernetes (RHACS) integrates with a variety of image registries so that you can understand your images and apply security policies for image usage.
+
+When you integrate with image registries, you can view important image details, such as image creation date and Dockerfile details (including image layers).
+
+After you integrate RHACS with your registry, you can scan images, view image components, and apply security policies to images before or after deployment
+
+== Integrating with Quay Container Registry to scan images
+
+You can integrate Red Hat Advanced Cluster Security for Kubernetes with Quay Container Registry for scanning images.
+
+* Prerequisites
+You must have an OAuth token for authentication with the Quay Container Registry to scan images.
+
+* Procedure
+
+  ** On the RHACS portal, navigate to `Platform Configuration → Integrations`.
+
+  ** Under the Image Integrations section, select `Red Hat Quay.io`.
+
+  ** Click `New integration`.
+
+  ** Enter the `Integration name`.
+
+  ** Under Type, select Scanner. (If you are also integrating with the registry, select Scanner + Registry.) Enter information in the following fields:
+
+    *** Endpoint: Enter the address of the registry.
+
+    *** OAuth token: Enter the OAuth token that RHACS uses to authenticate by using the API.
+
+    *** Optional: Robot username: If you are configuring Scanner + Registry and are accessing the registry by using a Quay robot account, enter the user name in the format <namespace>+<accountname>.
+
+    *** Optional: Robot password: If you are configuring Scanner + Registry and are accessing the registry by using a Quay robot account, enter the password for the robot account user name.
+
+  ** Optional: If you are not using a TLS certificate when connecting to the registry, select Disable TLS certificate validation (insecure).
+
+  ** Optional: To create the integration without testing, select Create integration without testing.
+
+  ** Select Save.
+
+image::acs/quay.png[pdfwidth=100%]  
+
+= Integrating Identity provider with ACS Central Console
+
+== Configuring OpenShift Oauth server as Identity Provider
+
+To integrate the built-in OpenShift Container Platform OAuth server as an identity provider for RHACS, use the instructions in this section.
+
+* Prerequisites
+
+You must have the AuthProvider permission to configure identity providers in RHACS.
+
+You must have already configured users and groups in OpenShift Container Platform OAuth server through an identity provider. For information about the identity provider requirements, see Understanding identity provider configuration.
+
+* Procedure
+
+  ** On the RHACS portal, navigate to Platform Configuration → Access Control.
+
+  ** Click Create auth provider and select OpenShift Auth from the drop-down list.
+
+  ** Enter a name for the authentication provider in the Name field.
+
+  ** Assign a Minimum access role for users that access RHACS using the selected identity provider. A user must have the permissions granted to this role or a role with higher permissions to log in to RHACS.
+
+  ** Optional: To add access rules for users and groups accessing RHACS, click Add new rule in the Rules section, then enter the rule information and click Save. You will need attributes for the user or group so that you can configure access.  
+
+image::acs/ldap.png[pdfwidth=100%]    
+
+= Vulnerability management
+
+The container running in a Kubernetes cluster are all running instance of container images. Each image will contain third party components with known vulnerability (CVEs). Vulnerability management, then is the process of identifying vulnerabilities in compoenents used in container images, understanding the impact of these vulnerabilities, and mitigating that impact. 
+
+== Vulnerability Management implementation
+
+First, {rhacs} implements a vulnerability scanner to decompose image, identify the components (whether installed byt the package manager in the base OS layer or added Python, Java, Ruby, or NodeJS packages ...), and enumerate vulnerabilities in these packages. In the case of {cust} that already use an image vulnerability scanner (XRAY with Artifactory), their findings are shown into {rhacs}. 
+
+Second, the {rhacs} Kubernetes Security Platform can automatically enforce policies on what images can be used to launch containers and can also identify security issues, including vulnerabilities and problematics package, in image layers separate from the underlying base operating system (OS) image. It provides visibility and analysis by enumerating these contents of images. {rhacs}'s policy engine provides out-of-the-box policies (such as alerting on vulnerabilities with a CVSS score >= 7 where a fix is available) and can be used to define more specific policies to reflect an organization's risk tolerance and guidelines. These policies can be applied to both the Build and Deploy lifecycles stages.
+
+Finally, {rhacs} provides rich analytics at both build and deployment level, 
+giving all stackholders a viez of which deployments are particularly risky (combining the discovered vulnerabilities with other sources of data such as how the deployments is exposed outside the cluster, whether the deployment is also configured in problematic ways, and whether the deployment is experiencing anomalous runtime behavior) and a view of vulnerability management accorss all protected deployment.
+
+== Review Vulnerability Management Dashboard
+
+The Vulnerabilty Management Dashboard is accessible from the RHACS portal in ```Vulnerability Management``` -> ```Dashboard```
+
+image::workshop/Vulnerability-Management-dashboard.png[pdfwidth=95%]
+
+Buttons along the top of the dashboard link to the policies, CVEs, nodes, and images. The Application & Infrastructure button displays a list that gives reports by cluster, namesapce, deployment and component. A filter CVES buttons also provides reports for only fixable CVEs or all CVEs.
+
+The {rhacs} vulnerability management dashboard offers different ways to tackle vulnerabilities by looking
+at the:
+
+. most critical CVEs (by Impact)
+. most critical components
+. identify vulnerabilities by image layer
+. filter to display only fixable (or all) CVEs
+. base OS of the image
+
+
+NOTE: CVE stands for Common Vulnerabilities and Exposures, and is managed by the link:https://www.cve.org/[CVE Program website].
+
+
+On the dashboard image are listed in order of risk, based
+on the number and severity of the vulnerabilities present in the components in the images. 
+
+As presented during the demonstration an overview of the vulnerability present on the images is provides by {rhacs}. Here is the exemple of the overview provide for an images with the images summary section (providing relevant information about the analyzed image), the dockerfile section that reveal details of the image's dockerfile and the image finding section with all CVEs information.
+
+image::workshop/image_overview.png[pdfwidth=95%]
+
+On this last section you can manage risk acceptance. In the case of a fix that can be defferal or a false postivice you can accepth the risk by acknoledging the vulnerability and deffing resolution to a later time. A deferal and a requesting approval can be created with the pollowing processes : 
+
+. Click the Image Findings tab.
+. Locate a fixable CVE in the list and click the options menu icon "options_menu_icon" in the right column and select Defer CVE to open the Mark CVEs for deferral dialog box.
+. Select the delay of defferal and click Request Approval. The CVE updates with a blue information icon next to the CVE name.
+. Click the blue information icon to the right of the CVE and copy the approval link to share with your organization’s deferral approver.
+
+The risk acceptance is then managed by the person responsible of the security in ``` Vulnerability Management``` -> ```Risk Acceptance``` section. The approver can then review the vulnerability's comments, scope, and action to decide if he want to approve it. He can also click through to the deployment that has that vulnerability and see its Risk Priority.
+
+==  Reporting vulnerabilties
+
+[rhacs] can be use to schedule reporting through email. For sending this comminucation you can follow this procedure : 
+
+. From the {rhacs} portal, navigate to ```Vulnerability management``` --> ```Reporting```
+
+. Click Create report.
+. Enter a name for your report in the Report name field.
+. Select the cadence for your report under.
+. Enter a description for the report.
+. On the next line, there is a series of dropdown boxes to select which vulnerabilities to report. There are options to report fixable vulnerabilities, vulnerabilities of a specific severity, or only vulnerabilities that have appeared since the last scheduled report. 
+. Under Configure resource scope, click Create resource scope and create one for the namespace of your choice, and under Allowed resources use the switch to under Manual selection to select your cluster.
+. Click Save, which returns you to the Create a vulnerability report page.
+. Select or create an email notifier to send your report by email and configure your distribution list under Notification and distribution.
+. Click Save
+
+= ACS & OpenShift Pipeline Integration
+
+{rhacs} offers rich capabilities to shift-left and find vulnerabilities and misconfigurations earlier in the
+SDLC. There are two ways to integrate {rhacs} with CICD:
+
+. {rhacs} comes with the roxctl CLI binary and container image that enables integration with CICD tooling
+
+. Jenkins plugin
+
+For all CI tools, the integration works the same way, by using roxctl to scan for vulnerabilities and check
+images against policy violations. The following commands perform this actions
+
+Check images: 
+
+```shell
+roxctl -e “$ROX_CENTRAL_ADDRESS” image check --image=<image-name>
+```
+
+Scan images:
+
+```shell
+roxctl -e “$ROX_CENTRAL_ADDRESS” image scan --image <image-name>
+```
+
+NOTE: You can refer to the {contributions repo}[https://github.com/stackrox/contributions] for examples of integrations with popular CICD tools
+
+== Integration with Tekton
+
+During the workshop a demonstration of integration with Tekton has been provided. The procedure is similar with other CICD tools. 
+
+Two task has been created for the pipelines with the following yaml.
+
+rox-image-check.yaml :
+
+```yaml
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+[...]
+spec:
+  params:
+    - description: >-
+        Secret containing the address:port tuple for StackRox Central (example -
+        rox.stackrox.io:443)
+      name: rox_central_endpoint
+      type: string
+    - description: Secret containing the StackRox API token with CI permissions
+      name: rox_api_token
+      type: string
+    - description: 'Full name of image to scan (example -- gcr.io/rox/sample:5.0-rc1)'
+      name: image
+      type: string
+  results:
+    - description: Output of `roxctl image check`
+      name: check_output
+  steps:
+    - env:
+        - name: ROX_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: rox_api_token
+              name: $(params.rox_api_token)
+        - name: ROX_CENTRAL_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              key: rox_central_endpoint
+              name: $(params.rox_central_endpoint)
+      image: centos
+      name: rox-image-check
+      resources: {}
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
+        https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output
+        ./roxctl  > /dev/null
+
+        chmod +x ./roxctl  > /dev/null
+
+        ./roxctl image check --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT
+        --image $(params.image) 
+```
+rox-image-scan.yaml
+
+```yaml
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+[...]
+spec:
+  params:
+    - description: >-
+        Secret containing the address:port tuple for StackRox Central (example -
+        rox.stackrox.io:443)
+      name: rox_central_endpoint
+      type: string
+    - description: Secret containing the StackRox API token with CI permissions
+      name: rox_api_token
+      type: string
+    - description: 'Full name of image to scan (example -- gcr.io/rox/sample:5.0-rc1)'
+      name: image
+      type: string
+    - default: json
+      description: Output format (json | csv | pretty)
+      name: output_format
+      type: string
+  steps:
+    - env:
+        - name: ROX_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: rox_api_token
+              name: $(params.rox_api_token)
+        - name: ROX_CENTRAL_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              key: rox_central_endpoint
+              name: $(params.rox_central_endpoint)
+      image: centos
+      name: rox-image-scan
+      resources: {}
+      script: >-
+        #!/usr/bin/env bash
+
+        set +x
+
+        export NO_COLOR="True"
+
+        curl -s -k -L -H "Authorization: Bearer $ROX_API_TOKEN"
+        https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output
+        ./roxctl  > /dev/null
+
+        chmod +x ./roxctl > /dev/null
+
+        ./roxctl image scan --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT
+        --image $(params.image) --format $(params.output_format) 
+
+```
+
+The script at the end of this task are used to perform the check and scan actions.  The tasks are integrate on a pipeline.
+
+rox-pipeline.yaml
+
+```yaml
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+[...]
+spec:
+  description: Rox demo pipeline
+  params:
+    - description: 'Full name of image to scan (example -- gcr.io/rox/sample:5.0-rc1)'
+      name: image
+      type: string
+  tasks:
+    - name: image-scan
+      params:
+        - name: image
+          value: $(params.image)
+        - name: rox_api_token
+          value: roxsecrets
+        - name: rox_central_endpoint
+          value: roxsecrets
+        - name: output_format
+          value: pretty
+      taskRef:
+        kind: ClusterTask
+        name: rox-image-scan
+    - name: image-check
+      params:
+        - name: image
+          value: $(params.image)
+        - name: rox_api_token
+          value: roxsecrets
+        - name: rox_central_endpoint
+          value: roxsecrets
+      taskRef:
+        kind: ClusterTask
+        name: rox-image-check
+```
+
+When we run the pipeline and past the container image URL on the windows that appear our tasks makes the call to the stackrox API to perform the scan with the image scan task and the check with the image check task.
+
+image::workshop/tekton1.png[pdfwidth=95%]
+
+= ACS & Compliance Operator
+
+{rhacs} provide a broad approach to all the compliance standards. The idea is to have compliance build in and ready to go for DevSecOps. The {rhacs} platform currently offers six different standards to
+scan against. The six are CIS Docker, CIS K8s, HIPPA, PCI, NIST 800-190 and NIST 800-53. Each one
+of the standards can be drilled into for finer grain information. In addition, each standard’s results can
+be exported for an evidence report. The platform has an API for this functionality making the exports
+completely automatable. One added benefit of the compliance reports is that it can help enforce the
+internal security policies.
+
+The following images show the compliance dashboard of {rhacs} : 
+
+image::workshop/compliance.png[pdfwidth=95%]
+
+
+Compliance dashboard are a good tool to highlight areas for improvement within the cluster. {rhacs} help with the understanding of the control and provide
+guidance in a simple language. The guidance will help the administrators understand what the control
+is looking for.
+* By clicking on a compliance standard security personas can inspect individual controls.
+* On demand scans can be performed using the Scan button on the top right of the page.
+* After the data collection is complete, Central performs checks on the data to determine results.
+
+image::workshop/compliance_board.png[pdfwidth=95%]
+
+
+Compliance provides a way to export rules and score from the compliance menu . 
+
+* On the left navigation menu, click the Compliance tab.  A final note about compliance—you are only as compliant as you can prove!
+
+* In the upper right, click Export to show the Download Evidence as CSV option:
+
+image::workshop/export.png[pdfwidth=95%]
+
+So, The compliance reports gather information for configuration, industry standards, and best practices for container-based workloads running in OpenShift.
+In many ways, the compliance features are aleready seen - because they’re tied to controls that we saw in Risk, in the Network Graph, and in Policies.
+Each standard represents a series of controls, with guidance provided by {rhacs} on the specific OpenShift configuration or DevOps process required to meet that control.

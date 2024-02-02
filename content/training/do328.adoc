@@ -1,0 +1,38 @@
+= Building Resilient Microservices with Istio and Red Hat OpenShift Service Mesh | DO328
+
+*Course description*
+
+Control, manage, trace, monitor, and test your microservices with Red Hat OpenShift Service Mesh
+
+Building Resilient Microservices with Istio and Red Hat OpenShift Service Mesh (DO328) is an introduction to Red Hat OpenShift Service Mesh that teaches students installation, service monitoring, service resilience, and service security with Red Hat OpenShift Service Mesh. 
+
+Red Hat OpenShift created an enterprise-ready, multitenant platform that made deploying and scaling microservice applications efficient and repeatable. But as these architectures become larger and more complex, defining how these services interact with each other is increasingly difficult. Red Hat OpenShift Service Mesh comprises three products: Istio, Jaeger, and Kiali, facilitating a zero-trust network for managing secure service interactions, providing service tracing, and creating a visual representation of communication pathways.
+
+This course is based on Red Hat OpenShift(R) Container Platform 4.6 and Red Hat OpenShift Service Mesh 1.1.
+
+*Course content summary*
+
+* Install Red Hat OpenShift Service Mesh on a Red Hat OpenShift cluster.
+* Apply release strategies by controlling service traffic.
+* Build service resilience with load balancing and failovers.
+* Test service resilience with chaos testing.
+* Enforce service security.
+* Observe, measure, and trace network traffic with OpenShift Service Mesh.
+
+*Audience for this course*
+
+This course is designed for developers who want to deploy, manage, and secure microservices applications on Red Hat OpenShift.
+
+*Prerequisites for this course*
+
+* Take our free assessment to gauge whether this offering is the best fit for your skills.
+* Attending Red Hat Cloud-native Microservices Development with Quarkus (DO378) or demonstrating equivalent experience in creating microservice applications is recommended, but not required
+* Attending Red Hat OpenShift I: Containers & Kubernetes (DO180) and Red Hat OpenShift Development II: Containerizing Applications (DO288), and passing the Red Hat Certified Specialist in OpenShift Application Development exam (EX288), or possessing basic OpenShift experience, is strongly recommended.
+
+*Technology considerations*
+
+Internet access is required.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do328-building-resilient-microservices-with-istio-and-red-hat-openshift-service-mesh

@@ -1,0 +1,31 @@
+.{rhacm} Specific Terminology
+[cols="3,8",options=header]
+|===
+<|Term <|Definition
+
+|ACM
+|Advanced Cluster Management
+
+|Channel
+|A custom resource definition that points to repositories where Kubernetes resources are stored, such as a GitHub repository, Helm chart repository, object store, or hub cluster namespace
+
+|Hub Cluster
+|The central controller that runs in a Red Hat Advanced Cluster Management for Kubernetes cluster
+
+|Managed Cluster
+|Created and imported clusters with the multicluster-endpoint, which is the agent that initiates a connection to the Red Hat Advanced Cluster Management for Kubernetes hub cluster
+
+|Multicluster-endpoint
+|The agent on the managed cluster that initiates a connection to the Red Hat Advanced Cluster Management for Kubernetes hub cluster
+
+|Placement Policy
+|A policy that defines where the application components should be deployed and how many replicas there should be
+
+|Placement Rule
+|A rule that defines the target clusters where subscriptions are delivered. For instance, verify the cluster name, resource annotations, or resource label(s)
+
+|Subscriptions
+|Identify Kubernetes resources within channels (resource repositories)
+
+|===
+

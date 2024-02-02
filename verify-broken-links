@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# 2020/03/27 jtudelag
+#
+# Script to verify broken links inside the content/ folder files.
+
+podman container runlabel run quay.io/jtudelag/link-verifier:latest

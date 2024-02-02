@@ -1,0 +1,33 @@
+{rhacs} provide a broad approach to all the compliance standards. The idea is to have compliance build in and ready to go for DevSecOps. The {rhacs} platform currently offers six different standards to
+scan against. The six are CIS Docker, CIS K8s, HIPPA, PCI, NIST 800-190 and NIST 800-53. Each one
+of the standards can be drilled into for finer grain information. In addition, each standard’s results can
+be exported for an evidence report. The platform has an API for this functionality making the exports
+completely automatable. One added benefit of the compliance reports is that it can help enforce the
+internal security policies.
+
+The following images show the compliance dashboard of {rhacs} : 
+
+image::workshop/compliance.png[pdfwidth=95%]
+
+
+Compliance dashboard are a good tool to highlight areas for improvement within the cluster. {rhacs} help with the understanding of the control and provide
+guidance in a simple language. The guidance will help the administrators understand what the control
+is looking for.
+* By clicking on a compliance standard security personas can inspect individual controls.
+* On demand scans can be performed using the Scan button on the top right of the page.
+* After the data collection is complete, Central performs checks on the data to determine results.
+
+image::workshop/compliance_board.png[pdfwidth=95%]
+
+
+Compliance provides a way to export rules and score from the compliance menu . 
+
+* On the left navigation menu, click the Compliance tab.  A final note about compliance—you are only as compliant as you can prove!
+
+* In the upper right, click Export to show the Download Evidence as CSV option:
+
+image::workshop/export.png[pdfwidth=95%]
+
+So, The compliance reports gather information for configuration, industry standards, and best practices for container-based workloads running in OpenShift.
+In many ways, the compliance features are aleready seen - because they’re tied to controls that we saw in Risk, in the Network Graph, and in Policies.
+Each standard represents a series of controls, with guidance provided by {rhacs} on the specific OpenShift configuration or DevOps process required to meet that control.

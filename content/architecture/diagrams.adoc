@@ -1,0 +1,27 @@
+////
+Purpose
+-------
+Representing deployed/configured systems and their related/relevant preexisting system pictorially.
+
+Note
+----
+Be sure to include links to source that generates any static images so the Client can update
+the pictures in future as things change.
+
+Enablement
+----------
+* Drawing diagrams the red hat way: https://redhatdemocentral.gitlab.io/portfolio-architecture-workshops/
+
+Resources
+---------
+* Standard draw.io libraries: https://gitlab.com/redhatdemocentral/portfolio-architecture-tooling/-/tree/main/Libraries
+* standard Red Hat icons: https://drive.google.com/drive/folders/1YMP7wtoWgSAovc4OuMHdUZwVqwjnvwPg
+////
+
+[id="diagrams_{context}"]
+= Diagrams
+
+Pictorial representations of the deployed systems.
+
+#TODO - insert logical, schematic, detail, and workflow diagrams representing the deployed and
+related/relevant systems#

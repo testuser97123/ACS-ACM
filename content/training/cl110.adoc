@@ -1,0 +1,35 @@
+= Red Hat OpenStack Administration I: Core Operations for Cloud Operators (CL110)
+
+*Course description*
+
+Learn to operate a Red Hat(R) OpenStack Platform private cloud and manage domain resources to secure and deploy modern, scalable cloud applications, networks and storage
+
+Red Hat OpenStack Administration I: Core Operations for Domain Operators (CL110) teaches you how to operate and manage a production Red Hat OpenStack Platform (RHOSP) single-site overcloud. You will learn how to create secure project environments in which to provision resources and manage security privileges that cloud users need to deploy scalable cloud applications. You will learn about OpenShift integration with load balancers, identity management, monitoring, proxies, and storage. You will also develop more troubleshooting and Day 2 operations skills in this course.
+
+This course is based on Red Hat OpenStack Platform 16.1.
+
+*Course content summary*
+
+Students in the Red Hat OpenStack Administration I: Core Operations for Domain Operators (CL110) course will focus on performing both routine and specialized tasks that are necessary to manage a production OpenStack overcloud domain. Students will manage OpenStack using both web-based and command-line interfaces.  Essential skills covered in the course include the following:
+
+* Launch instances to satisfy various use case examples.
+* Manage domains, projects, users, roles, and quota in a multitenant environment.
+* Manage networks, subnets, routers, and floating IP addresses.
+* Manage instance security with group rules and access keys.
+* Create and manage block, object and shared storage within OpenStack.
+* Perform instance launch customization with cloud-init.
+* Deploy scalable applications using stack templates.
+
+*Audience for this course*
+
+This course is designed for cloud users who deploy application instances and stacks, domain operators who manage resources and security for cloud users, and any other cloud personnel interested in, or responsible for, maintaining applications on private or hybrid OpenStack clouds.  Any cloud persona, or personnel with roles that include performing technology evaluation, should attend this course to learn RHOSP operation and application deployment methods.
+
+*Prerequisites for this course*
+
+* Become a Red Hat Certified System Administrator (RHCSA) or demonstrate equivalent experience
+
+* If you are not a RHCSA, you can take a skill assessment to gauge your level of knowledge.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/cl110-red-hat-openstack-administration-i

@@ -1,0 +1,36 @@
+= Red Hat Openshift Migration Lab | DO326
+
+*Course description*
+
+Migrate application workloads, including its Kubernetes resources, data, and container images, when upgrading from OpenShift 3 to 4 or from OpenShift 4.x to the latest version.
+
+Red Hat Openshift Migration Lab (DO326) is designed for OpenShift professionals migrating workloads from legacy deployments of OpenShift Container Platform running 3.11 onto a 4.6 installation.  Students will gain practical working experience with the Migration Toolkit for Containers (MTC) to leverage in real-world migration scenarios.
+
+*Course content summary*
+
+* Assessing OpenShift 3 to OpenShift 4 migration scenarios.
+* Discussion of OpenShift 4 minor version migration scenarios.
+* Deploying the Migration Toolkit for Containers.
+* Migrating Persistent Volumes application data between OpenShift clusters.
+* Migrating application images from the internal registry between OpenShift clusters.
+* Moving Kubernetes manifests application resources between OpenShift clusters.
+* Migrating Kubernetes cluster settings between OpenShift clusters.
+
+*Audience for this course*
+
+* Red Hat consultants and partners responsible for customer success and who want to migrate from OpenShift 3 to OpenShift 4.
+* OpenShift professionals responsible for the transition of workloads onto OpenShift 4.
+
+*Recommended training*
+
+* Take our free assessment to gauge whether this offering is the best fit for your skills.
+* Red Hat OpenShift Administration II: Operating a Production Kubernetes Cluster (DO280) is highly recommended in order to be successful in this course.
+* Red Hat OpenShift Installation Lab (DO322) is suggested.
+
+*Technology considerations*
+
+* Labs are provided in the Red Hat Training &amp; Certification cloud only. Internet access is required to access the classroom environment.
+
+
+For full details, or to enroll: +
+https://www.redhat.com/en/services/training/do326-red-hat-openshift-migration-lab

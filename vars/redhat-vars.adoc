@@ -1,0 +1,65 @@
+// --------------------------------
+// Various params for products
+// Please improve where needed!
+// --------------------------------
+:rh: Red Hat
+:rhservices: {rh} Services
+:rhprojectmanager: Flavio Passa
+
+:rhel: {rh} Enterprise Linux
+
+:sat: Satellite
+:rhsat: {rh} {sat}
+:satver: 6.10
+:sat65: {rhsat} 6.5
+:sat66: {rhsat} 6.6
+
+:rhv: {rh} Virtualization
+
+:osp: OpenStack Platform
+:rhosp: {rh} {osp}
+
+:ceph: Ceph Storage
+:rhceph: {rh} Ceph Storage
+
+:cf: CloudForms
+:rhcf: {rh} CloudForms
+
+:ipa: FreeIPA
+:idm: Identity Management
+:rhidm: {rh} {idm}
+
+:rhds: {rh} Directory Server
+
+:rhsso: {rh} Single Sign-On
+
+:ocp: OpenShift Container Platform
+:rhocp: {rh} {ocp}
+
+:ocs: OpenShift Container Storage
+:rhocs: {rh} {ocs}
+
+:odf: OpenShift Data Foundation
+:rhodf: {rh} {odf}
+
+:ocp_gitops: {ocp} GitOps
+
+:ans: Ansible
+:aap: {ans} Automation Platform
+:rhaap: {rh} {aap}
+:pb: {ans} Playbook
+:twr: {rh} {ans} Tower
+:ctlr: Automation Controller
+:rhctlr: {rh} {ctlr}
+:hub: Automation Hub
+:rhhub: {rh} {hub}
+:mesh: Automation Mesh
+:rhmesh: {rh} {mesh}
+
+:vm: Virtual Machine
+
+:acm: Advanced Cluster Management for Kubernetes
+:rhacm: {rh} {acm}
+
+:acs: Advanced Cluster Security for Kubernetes
+:rhacs: {rh} {acs}
