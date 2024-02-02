@@ -14,33 +14,3 @@ was actively involved (i.e. attending status calls, escalations etc...)
 |Name
 |Role
 |E-mail address
-
-// Name
-| Sushil More
-// Role
-| Service Consulting Program Manager
-// Email Address
-| sumore@redhat.com
-
-// Name
-| Madhu Somannavar
-// Role
-| Project Manager
-// Email Address
-| msomanna@redhat.com
-
-// Name
-| Sahil Sethi
-// Role
-| Senior Consultant
-// Email Address
-| sasethi@redhat.com
-
-// Name
-| Jatan Malde
-// Role
-| App Dev Consultant
-// Email Address
-| jmalde@redhat.com
-
-|===
